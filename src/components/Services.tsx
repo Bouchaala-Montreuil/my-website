@@ -10,12 +10,12 @@ export default function Services() {
   const sectionRef = useRef<HTMLElement>(null);
 
   const services = [
-    { title: t('services.strategy'), desc: t('services.strategy.desc'), icon: '◆' },
-    { title: t('services.brand'), desc: t('services.brand.desc'), icon: '●' },
-    { title: t('services.web'), desc: t('services.web.desc'), icon: '■' },
-    { title: t('services.seo'), desc: t('services.seo.desc'), icon: '▲' },
-    { title: t('services.marketing'), desc: t('services.marketing.desc'), icon: '◇' },
-    { title: t('services.automation'), desc: t('services.automation.desc'), icon: '○' },
+    { title: t('services.content'), desc: t('services.content.desc'), icon: '◆' },
+    { title: t('services.video'), desc: t('services.video.desc'), icon: '●' },
+    { title: t('services.funnels'), desc: t('services.funnels.desc'), icon: '■' },
+    { title: t('services.comm'), desc: t('services.comm.desc'), icon: '▲' },
+    { title: t('services.seo'), desc: t('services.seo.desc'), icon: '◇' },
+    { title: t('services.ads'), desc: t('services.ads.desc'), icon: '○' },
   ];
 
   useEffect(() => {

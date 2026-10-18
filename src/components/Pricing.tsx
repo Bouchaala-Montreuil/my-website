@@ -12,10 +12,10 @@ export default function Pricing() {
 
   const plans = [
     {
-      name: t('pricing.foundation'),
-      price: '3,500',
-      desc: t('pricing.foundation.desc'),
-      features: ['5-page website', 'Mobile responsive', 'Basic SEO', 'Contact forms', 'Analytics', '30-day support'],
+      name: t('pricing.starter'),
+      price: '490',
+      desc: t('pricing.starter.desc'),
+      features: [t('pricing.starter.f1'), t('pricing.starter.f2'), t('pricing.starter.f3'), t('pricing.starter.f4')],
       bg: 'bg-cream',
       text: 'text-charcoal',
       accent: 'text-teal',
@@ -24,9 +24,9 @@ export default function Pricing() {
     },
     {
       name: t('pricing.growth'),
-      price: '7,500',
+      price: '990',
       desc: t('pricing.growth.desc'),
-      features: ['10+ page website', 'Brand identity', 'Advanced SEO', 'Booking system', 'Email automation', 'Google Business', '90-day support'],
+      features: [t('pricing.growth.f1'), t('pricing.growth.f2'), t('pricing.growth.f3'), t('pricing.growth.f4'), t('pricing.growth.f5')],
       bg: 'bg-coral',
       text: 'text-white',
       accent: 'text-mustard',
@@ -34,10 +34,10 @@ export default function Pricing() {
       popular: true,
     },
     {
-      name: t('pricing.enterprise'),
+      name: t('pricing.full'),
       price: 'Custom',
-      desc: t('pricing.enterprise.desc'),
-      features: ['Everything in Growth', 'Custom integrations', 'Ad management', 'Monthly calls', 'Dedicated manager', 'Ongoing optimization'],
+      desc: t('pricing.full.desc'),
+      features: [t('pricing.full.f1'), t('pricing.full.f2'), t('pricing.full.f3'), t('pricing.full.f4'), t('pricing.full.f5')],
       bg: 'bg-navy',
       text: 'text-cream',
       accent: 'text-coral',
@@ -153,6 +153,7 @@ export default function Pricing() {
             <div className={`flex items-baseline gap-1 mb-4 ${plan.text}`}>
               {plan.price !== 'Custom' && <span className="body-lg opacity-60">€</span>}
               <span className="display-lg">{plan.price}</span>
+              {plan.price !== 'Custom' && <span className="body-lg opacity-60">{t('pricing.permonth')}</span>}
             </div>
 
             <p className={`body-md ${plan.text} opacity-60 mb-8 pb-8 border-b ${

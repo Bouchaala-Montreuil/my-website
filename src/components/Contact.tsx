@@ -12,7 +12,7 @@ gsap.registerPlugin(ScrollTrigger);
 const FORMSPREE_ENDPOINT = ''; // e.g. 'https://formspree.io/f/YOUR_ID'
 // Option B (fallback, zero setup): opens the visitor's email client
 // with the message pre-filled, addressed to:
-const CONTACT_EMAIL = 'hello@weekza.com';
+const CONTACT_EMAIL = 'hello@feekza.com';
 // ────────────────────────────────────────────────────────────────
 
 export default function Contact() {
@@ -152,7 +152,7 @@ export default function Contact() {
 
             <div className="space-y-6">
               {[
-                { icon: '✉️', label: t('contact.email'), value: 'hello@weekza.com' },
+                { icon: '✉️', label: t('contact.email'), value: 'hello@feekza.com' },
                 { icon: '⚡', label: t('contact.response'), value: t('contact.response.val') },
                 { icon: '🌍', label: t('contact.location'), value: t('contact.location.val') },
               ].map((c) => (

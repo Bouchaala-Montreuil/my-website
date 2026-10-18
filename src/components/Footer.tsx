@@ -80,9 +80,9 @@ export default function Footer() {
           <div className="footer-col col-span-2 md:col-span-4">
             <div className="flex items-center gap-2 mb-4">
               <div className="w-8 h-8 rounded-lg bg-coral flex items-center justify-center">
-                <span className="text-white font-bold text-sm" style={{ fontFamily: 'var(--font-display)' }}>W</span>
+                <span className="text-white font-bold text-sm" style={{ fontFamily: 'var(--font-display)' }}>F</span>
               </div>
-              <span className="text-cream font-bold text-lg" style={{ fontFamily: 'var(--font-display)' }}>WEEKZA</span>
+              <span className="text-cream font-bold text-lg" style={{ fontFamily: 'var(--font-display)' }}>FEEKZA</span>
             </div>
             <p className="body-sm text-cream/40 max-w-[260px]">
               {t('footer.desc')}
@@ -90,7 +90,7 @@ export default function Footer() {
           </div>
 
           {[
-            { title: t('footer.services'), items: [t('services.strategy'), t('services.brand'), t('services.web'), t('services.seo'), t('services.marketing'), t('services.automation')] },
+            { title: t('footer.services'), items: [t('services.content'), t('services.video'), t('services.funnels'), t('services.comm'), t('services.seo'), t('services.ads')] },
             { title: t('footer.company'), items: [t('nav.about'), t('nav.work'), t('nav.pricing'), t('nav.contact')] },
             { title: t('footer.legal'), items: [t('footer.privacy'), t('footer.terms'), t('footer.cookies')] },
           ].map((col) => (

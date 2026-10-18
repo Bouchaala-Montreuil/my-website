@@ -69,10 +69,10 @@ export default function Navigation() {
           {/* Logo */}
           <MagneticButton href="#" className="flex items-center gap-2 relative z-50" data-cursor="Home">
             <div className="w-9 h-9 rounded-xl bg-coral flex items-center justify-center transition-transform hover:scale-110 duration-300">
-              <span className="text-white font-bold text-sm" style={{ fontFamily: 'var(--font-display)' }}>W</span>
+              <span className="text-white font-bold text-sm" style={{ fontFamily: 'var(--font-display)' }}>F</span>
             </div>
             <span className="text-cream font-bold text-lg tracking-tight hidden sm:block" style={{ fontFamily: 'var(--font-display)' }}>
-              WEEKZA
+              FEEKZA
             </span>
           </MagneticButton>
 

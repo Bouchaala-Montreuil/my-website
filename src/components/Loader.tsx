@@ -137,7 +137,7 @@ export default function Loader({ onComplete }: LoaderProps) {
       {/* Text */}
       <div ref={textRef} className="text-center mb-8">
         <h1 className="text-cream text-2xl font-bold mb-2" style={{ fontFamily: 'var(--font-display)' }}>
-          WEEKZA
+          FEEKZA
         </h1>
         <p className="text-cream/50 text-sm">{t('loading.text')}</p>
       </div>

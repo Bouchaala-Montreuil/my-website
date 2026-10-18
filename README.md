@@ -1,6 +1,6 @@
-# WEEKZA — We Build Growth
+# FEEKZA — We Build Growth
 
-Site vitrine de l'agence **WEEKZA** : une page, trois langues (🇬🇧 EN / 🇫🇷 FR / 🇸🇦 AR avec support RTL).
+Site vitrine de l'agence **FEEKZA** : une page, trois langues (🇬🇧 EN / 🇫🇷 FR / 🇸🇦 AR avec support RTL).
 
 ## Tech
 
