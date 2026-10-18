@@ -84,7 +84,7 @@ export default function Footer() {
               </div>
               <span className="text-cream font-bold text-lg" style={{ fontFamily: 'var(--font-display)' }}>FEEKZA</span>
             </div>
-            <p className="body-sm text-cream/40 max-w-[260px]">
+            <p className="body-sm text-cream/55 max-w-[260px]">
               {t('footer.desc')}
             </p>
           </div>
@@ -95,7 +95,7 @@ export default function Footer() {
             { title: t('footer.legal'), items: [t('footer.privacy'), t('footer.terms'), t('footer.cookies')] },
           ].map((col) => (
             <div key={col.title} className="footer-col md:col-span-2">
-              <p className="label-sm text-cream/40 mb-4">{col.title}</p>
+              <p className="label-sm text-cream/60 mb-4">{col.title}</p>
               <ul className="space-y-2">
                 {col.items.map((item) => (
                   <li key={item}>
@@ -113,8 +113,8 @@ export default function Footer() {
       {/* Bottom bar */}
       <div className="border-t border-white/10 px-8 md:px-16 lg:px-20 py-5">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
-          <span className="body-sm text-cream/30">{t('footer.rights').replace('{year}', String(year))}</span>
-          <span className="body-sm text-cream/20">{t('footer.built')}</span>
+          <span className="body-sm text-cream/50">{t('footer.rights').replace('{year}', String(year))}</span>
+          <span className="body-sm text-cream/40">{t('footer.built')}</span>
         </div>
       </div>
     </footer>

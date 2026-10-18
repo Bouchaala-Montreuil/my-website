@@ -106,8 +106,8 @@ export default function Hero() {
   }, [dir]);
 
   return (
-    <section ref={sectionRef} className="min-h-screen relative overflow-hidden">
-      <div className="grid grid-cols-1 lg:grid-cols-2 min-h-screen">
+    <section ref={sectionRef} className="min-h-dvh relative overflow-hidden">
+      <div className="grid grid-cols-1 lg:grid-cols-2 min-h-dvh">
         {/* Left — Text */}
         <div className="bg-teal flex flex-col justify-center px-8 md:px-16 lg:px-20 py-32 lg:py-20 relative overflow-hidden">
           {/* Decorative shapes */}

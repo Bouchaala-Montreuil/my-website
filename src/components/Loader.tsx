@@ -106,7 +106,10 @@ export default function Loader({ onComplete }: LoaderProps) {
   return (
     <div
       ref={containerRef}
-      className="fixed inset-0 z-[10000] bg-charcoal flex flex-col items-center justify-center"
+      onClick={onComplete}
+      className="fixed inset-0 z-[10000] bg-charcoal flex flex-col items-center justify-center cursor-pointer"
+      role="button"
+      aria-label="Skip intro"
     >
       {/* Soft background glows */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -155,6 +158,7 @@ export default function Loader({ onComplete }: LoaderProps) {
             {progress}%
           </span>
         </div>
+        <p className="text-center text-cream/30 text-xs mt-4">tap to skip</p>
       </div>
     </div>
   );
