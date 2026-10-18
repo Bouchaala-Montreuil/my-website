@@ -115,6 +115,7 @@ const translations: Record<Lang, Record<string, string>> = {
     'contact.name': 'Name',
     'contact.company': 'Company',
     'contact.budget': 'Budget',
+    'contact.budget.placeholder': 'Select a range',
     'contact.goals': 'Your Goals',
     'contact.goals.placeholder': 'What does success look like?',
     'contact.send': 'Send Message',
@@ -128,8 +129,11 @@ const translations: Record<Lang, Record<string, string>> = {
     'footer.services': 'Services',
     'footer.company': 'Company',
     'footer.legal': 'Legal',
-    'footer.rights': '© 2024 Weekza. All rights reserved.',
+    'footer.rights': '© {year} Weekza. All rights reserved.',
     'footer.built': 'Built with the same care we put into client work.',
+    'footer.privacy': 'Privacy',
+    'footer.terms': 'Terms',
+    'footer.cookies': 'Cookies',
     
     // Loading
     'loading.text': 'Building Growth...',
@@ -240,6 +244,7 @@ const translations: Record<Lang, Record<string, string>> = {
     'contact.name': 'Nom',
     'contact.company': 'Entreprise',
     'contact.budget': 'Budget',
+    'contact.budget.placeholder': 'Sélectionnez une fourchette',
     'contact.goals': 'Vos Objectifs',
     'contact.goals.placeholder': 'À quoi ressemble le succès pour vous ?',
     'contact.send': 'Envoyer',
@@ -253,8 +258,11 @@ const translations: Record<Lang, Record<string, string>> = {
     'footer.services': 'Services',
     'footer.company': 'Entreprise',
     'footer.legal': 'Légal',
-    'footer.rights': '© 2024 Weekza. Tous droits réservés.',
+    'footer.rights': '© {year} Weekza. Tous droits réservés.',
     'footer.built': 'Construit avec le même soin que nos projets clients.',
+    'footer.privacy': 'Confidentialité',
+    'footer.terms': 'Conditions',
+    'footer.cookies': 'Cookies',
     
     // Loading
     'loading.text': 'Création en cours...',
@@ -365,6 +373,7 @@ const translations: Record<Lang, Record<string, string>> = {
     'contact.name': 'الاسم',
     'contact.company': 'الشركة',
     'contact.budget': 'الميزانية',
+    'contact.budget.placeholder': 'اختر نطاقًا',
     'contact.goals': 'أهدافك',
     'contact.goals.placeholder': 'كيف يبدو النجاح بالنسبة لك؟',
     'contact.send': 'إرسال الرسالة',
@@ -378,8 +387,11 @@ const translations: Record<Lang, Record<string, string>> = {
     'footer.services': 'الخدمات',
     'footer.company': 'الشركة',
     'footer.legal': 'قانوني',
-    'footer.rights': '© 2024 Weekza. جميع الحقوق محفوظة.',
+    'footer.rights': '© {year} Weekza. جميع الحقوق محفوظة.',
     'footer.built': 'صُنع بنفس العناية التي نضعها في مشاريع عملائنا.',
+    'footer.privacy': 'الخصوصية',
+    'footer.terms': 'الشروط',
+    'footer.cookies': 'الكوكيز',
     
     // Loading
     'loading.text': 'جاري التحميل...',

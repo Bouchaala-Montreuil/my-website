@@ -8,6 +8,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 export default function Footer() {
   const { t } = useLang();
+  const year = new Date().getFullYear();
   const footerRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -89,9 +90,9 @@ export default function Footer() {
           </div>
 
           {[
-            { title: t('footer.services'), items: ['Strategy', 'Branding', 'Development', 'SEO', 'Marketing', 'Automation'] },
-            { title: t('footer.company'), items: ['About', 'Work', 'Pricing', 'Contact'] },
-            { title: t('footer.legal'), items: ['Privacy', 'Terms', 'Cookies'] },
+            { title: t('footer.services'), items: [t('services.strategy'), t('services.brand'), t('services.web'), t('services.seo'), t('services.marketing'), t('services.automation')] },
+            { title: t('footer.company'), items: [t('nav.about'), t('nav.work'), t('nav.pricing'), t('nav.contact')] },
+            { title: t('footer.legal'), items: [t('footer.privacy'), t('footer.terms'), t('footer.cookies')] },
           ].map((col) => (
             <div key={col.title} className="footer-col md:col-span-2">
               <p className="label-sm text-cream/40 mb-4">{col.title}</p>
@@ -112,7 +113,7 @@ export default function Footer() {
       {/* Bottom bar */}
       <div className="border-t border-white/10 px-8 md:px-16 lg:px-20 py-5">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
-          <span className="body-sm text-cream/30">{t('footer.rights')}</span>
+          <span className="body-sm text-cream/30">{t('footer.rights').replace('{year}', String(year))}</span>
           <span className="body-sm text-cream/20">{t('footer.built')}</span>
         </div>
       </div>
