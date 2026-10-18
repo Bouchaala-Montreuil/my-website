@@ -8,37 +8,37 @@ gsap.registerPlugin(ScrollTrigger);
 
 const projects = [
   {
-    title: 'Maison Laurent',
-    type: 'Fine Dining',
-    result: '+212%',
-    resultLabel: 'reservations',
-    image: 'https://images.pexels.com/photos/8856502/pexels-photo-8856502.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=700&w=1200',
+    titleKey: 'portfolio.p1.title',
+    typeKey: 'portfolio.p1.type',
+    highlightKey: 'portfolio.p1.highlight',
+    highlightLabelKey: 'portfolio.p1.label',
+    image: 'https://images.pexels.com/photos/16999510/pexels-photo-16999510.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=700&w=1200',
     bg: 'bg-teal',
     textColor: 'text-cream',
   },
   {
-    title: 'Noir Coffee Lab',
-    type: 'Specialty Café',
-    result: '+340%',
-    resultLabel: 'online sales',
-    image: 'https://images.pexels.com/photos/16999510/pexels-photo-16999510.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=700&w=1200',
+    titleKey: 'portfolio.p2.title',
+    typeKey: 'portfolio.p2.type',
+    highlightKey: 'portfolio.p2.highlight',
+    highlightLabelKey: 'portfolio.p2.label',
+    image: 'https://images.pexels.com/photos/8856502/pexels-photo-8856502.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=700&w=1200',
     bg: 'bg-coral',
     textColor: 'text-white',
   },
   {
-    title: 'Dr. Chen Aesthetics',
-    type: 'Medical Practice',
-    result: '+178%',
-    resultLabel: 'new patients',
+    titleKey: 'portfolio.p3.title',
+    typeKey: 'portfolio.p3.type',
+    highlightKey: 'portfolio.p3.highlight',
+    highlightLabelKey: 'portfolio.p3.label',
     image: 'https://images.pexels.com/photos/5619462/pexels-photo-5619462.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=700&w=1200',
     bg: 'bg-navy',
     textColor: 'text-cream',
   },
   {
-    title: 'APEX Performance',
-    type: 'Fitness Studio',
-    result: '+267%',
-    resultLabel: 'memberships',
+    titleKey: 'portfolio.p4.title',
+    typeKey: 'portfolio.p4.type',
+    highlightKey: 'portfolio.p4.highlight',
+    highlightLabelKey: 'portfolio.p4.label',
     image: 'https://images.pexels.com/photos/7031706/pexels-photo-7031706.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=700&w=1200',
     bg: 'bg-mustard',
     textColor: 'text-charcoal',
@@ -80,7 +80,6 @@ export default function Portfolio() {
         const content = row.querySelector('.project-content');
         const image = row.querySelector('.project-image');
         const img = row.querySelector('.project-image img');
-        const result = row.querySelector('.result-number');
 
         if (!content || !image || !img) return;
 
@@ -115,19 +114,6 @@ export default function Portfolio() {
               duration: 1.4,
               ease: 'power2.out',
             });
-
-            // Counter animation
-            if (result) {
-              const target = parseInt(result.getAttribute('data-value') || '0');
-              gsap.to({ val: 0 }, {
-                val: target,
-                duration: 2,
-                ease: 'power2.out',
-                onUpdate: function() {
-                  result.textContent = '+' + Math.round(this.targets()[0].val) + '%';
-                }
-              });
-            }
           },
           once: true,
         });
@@ -170,24 +156,23 @@ export default function Portfolio() {
 
       {/* Projects */}
       {projects.map((p, i) => (
-        <div key={p.title} className={`project-row grid grid-cols-1 lg:grid-cols-2`}>
+        <div key={p.titleKey} className={`project-row grid grid-cols-1 lg:grid-cols-2`}>
           {/* Content */}
           <div
             className={`project-content ${p.bg} flex flex-col justify-center px-8 md:px-16 lg:px-20 py-16 md:py-24 ${
               i % 2 === 1 ? 'lg:order-2' : ''
             }`}
           >
-            <p className={`label-sm ${p.textColor} opacity-60 mb-4`}>{p.type}</p>
-            <h3 className={`display-lg ${p.textColor} mb-4`}>{p.title}</h3>
-            <div className="flex items-baseline gap-2 mb-8">
-              <span
-                className={`result-number display-xl ${p.textColor}`}
-                data-value={p.result.replace(/[^0-9]/g, '')}
-              >
-                +0%
+            <p className={`label-sm ${p.textColor} opacity-60 mb-4`}>{t(p.typeKey)}</p>
+            <h3 className={`display-lg ${p.textColor} mb-6`}>{t(p.titleKey)}</h3>
+            <div className="flex items-baseline gap-2 mb-4">
+              <span className={`display-xl ${p.textColor}`}>
+                {t(p.highlightKey)}
               </span>
-              <span className={`body-lg ${p.textColor} opacity-70`}>{p.resultLabel}</span>
             </div>
+            <p className={`body-lg ${p.textColor} opacity-70 mb-8 max-w-md`}>
+              {t(p.highlightLabelKey)}
+            </p>
             <MagneticButton
               href="#contact"
               className={`btn self-start ${p.textColor === 'text-charcoal' ? 'btn-outline-dark' : 'btn-outline-light'}`}
@@ -208,7 +193,7 @@ export default function Portfolio() {
           >
             <img
               src={p.image}
-              alt={p.title}
+              alt={t(p.titleKey)}
               className="absolute inset-0 w-full h-full object-cover"
               loading="lazy"
             />

@@ -155,9 +155,9 @@ export default function Hero() {
           <div ref={statsRef} className="absolute bottom-0 left-0 right-0 bg-coral p-8 md:p-10">
             <div className="flex flex-wrap items-center justify-between gap-4">
               <div className="flex items-center gap-6">
-                <StatPill value="147" label={t('hero.stat1')} />
-                <StatPill value="€11M+" label={t('hero.stat2')} />
-                <StatPill value="94%" label={t('hero.stat3')} />
+                <StatPill value="EN · FR · AR" label={t('hero.stat1')} />
+                <StatPill value="100%" label={t('hero.stat2')} />
+                <StatPill value="24h" label={t('hero.stat3')} />
               </div>
               <a href="#about" className="label-sm text-white/80 hover:text-white transition-colors flex items-center gap-2" data-cursor="More">
                 {t('hero.learn')}

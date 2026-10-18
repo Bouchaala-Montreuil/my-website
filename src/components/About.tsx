@@ -62,12 +62,13 @@ export default function About() {
           onEnter: () => {
             if (isNumeric) {
               const num = parseInt(value);
+              const suffix = value.replace(/[0-9]/g, '');
               gsap.to({ val: 0 }, {
                 val: num,
                 duration: 2,
                 ease: 'power2.out',
                 onUpdate: function() {
-                  stat.textContent = Math.round(this.targets()[0].val) + (value.includes('%') ? '%' : value.includes('M') ? 'M+' : '+');
+                  stat.textContent = Math.round(this.targets()[0].val) + suffix;
                 }
               });
             }
@@ -154,10 +155,10 @@ export default function About() {
       {/* Stats */}
       <div className="bg-coral grid grid-cols-2 md:grid-cols-4">
         {[
-          { val: '147', label: t('about.stat1') },
-          { val: '€11M', label: t('about.stat2') },
-          { val: '94%', label: t('about.stat3') },
-          { val: '4.8yr', label: t('about.stat4') },
+          { val: '3', label: t('about.stat1') },
+          { val: '100%', label: t('about.stat2') },
+          { val: '24h', label: t('about.stat3') },
+          { val: '0', label: t('about.stat4') },
         ].map((s) => (
           <div key={s.label} className="p-8 md:p-10 text-center border-r border-white/15 last:border-r-0">
             <div
