@@ -28,7 +28,15 @@ npm run preview # prévisualiser le build
 Le site en ligne est servi depuis le dossier **`docs/`** (le build est un fichier
 HTML unique grâce à `vite-plugin-singlefile`).
 
-➡️ URL : https://bouchaala-montreuil.github.io/my-website/
+➡️ URL : https://feekza.com (custom domain, via `docs/CNAME`)
+Ancienne URL : https://bouchaala-montreuil.github.io/my-website/
+
+### DNS (à configurer une fois chez le registrar)
+
+- 4 enregistrements **A** pour `@` :
+  `185.199.108.153` · `185.199.109.153` · `185.199.110.153` · `185.199.111.153`
+- Optionnel : **CNAME** `www` → `bouchaala-montreuil.github.io`
+- Puis : repo Settings → Pages → Custom domain → `feekza.com` → Enforce HTTPS
 
 ### Mettre le site à jour
 
