@@ -85,7 +85,7 @@ export default function Footer() {
           </div>
 
           {[
-            { title: t('footer.services'), items: [t('services.web'), t('services.social'), t('services.design'), t('services.ads')] },
+            { title: t('footer.services'), items: [t('included.design'), t('included.hosting'), t('included.maintenance'), t('included.mods'), t('included.email'), t('included.domain')] },
             { title: t('footer.company'), items: [t('nav.about'), t('nav.work'), t('nav.pricing'), t('nav.contact')] },
             { title: t('footer.legal'), items: [t('footer.privacy'), t('footer.terms'), t('footer.cookies')] },
           ].map((col) => (

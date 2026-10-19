@@ -11,10 +11,10 @@ export default function Navigation() {
   const menuRef = useRef<HTMLDivElement>(null);
 
   const links = [
-    { label: t('nav.discover'), href: '#services' },
+    { label: t('nav.discover'), href: '#included' },
     { label: t('nav.work'), href: '#work' },
     { label: t('nav.about'), href: '#about' },
-    { label: t('nav.pricing'), href: '#pricing' },
+    { label: t('nav.pricing'), href: '#order' },
   ];
 
   useEffect(() => {

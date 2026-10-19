@@ -3,17 +3,9 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useLang } from '../context/LanguageContext';
 import MagneticButton from './MagneticButton';
+import { FORMSPREE_ENDPOINT, CONTACT_EMAIL } from '../config';
 
 gsap.registerPlugin(ScrollTrigger);
-
-// ─── Form backend ───────────────────────────────────────────────
-// Option A (recommended): create a free form at https://formspree.io,
-// paste your endpoint here, and submissions will be emailed to you.
-const FORMSPREE_ENDPOINT = 'https://formspree.io/f/xoejbykw';
-// Option B (fallback, zero setup): opens the visitor's email client
-// with the message pre-filled, addressed to:
-const CONTACT_EMAIL = 'hello@feekza.com';
-// ────────────────────────────────────────────────────────────────
 
 export default function Contact() {
   const { t, dir } = useLang();

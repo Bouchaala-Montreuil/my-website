@@ -9,11 +9,13 @@ export default function Services() {
   const { t } = useLang();
   const sectionRef = useRef<HTMLElement>(null);
 
-  const services = [
-    { title: t('services.web'), desc: t('services.web.desc'), icon: '◆' },
-    { title: t('services.social'), desc: t('services.social.desc'), icon: '●' },
-    { title: t('services.design'), desc: t('services.design.desc'), icon: '■' },
-    { title: t('services.ads'), desc: t('services.ads.desc'), icon: '▲' },
+  const included = [
+    { title: t('included.design'), desc: t('included.design.desc'), icon: '◆' },
+    { title: t('included.hosting'), desc: t('included.hosting.desc'), icon: '●' },
+    { title: t('included.maintenance'), desc: t('included.maintenance.desc'), icon: '■' },
+    { title: t('included.mods'), desc: t('included.mods.desc'), icon: '▲' },
+    { title: t('included.email'), desc: t('included.email.desc'), icon: '◇' },
+    { title: t('included.domain'), desc: t('included.domain.desc'), icon: '○' },
   ];
 
   useEffect(() => {
@@ -21,10 +23,9 @@ export default function Services() {
     if (!section) return;
 
     const ctx = gsap.context(() => {
-      // Header animation
       const headerElements = section.querySelectorAll('.services-header > *');
       gsap.set(headerElements, { opacity: 0, y: 50 });
-      
+
       ScrollTrigger.create({
         trigger: section.querySelector('.services-header'),
         start: 'top 80%',
@@ -40,7 +41,6 @@ export default function Services() {
         once: true,
       });
 
-      // Service cards with stagger
       const cards = section.querySelectorAll('.service-card');
       gsap.set(cards, { opacity: 0, y: 60, scale: 0.95 });
 
@@ -59,17 +59,16 @@ export default function Services() {
         once: true,
       });
 
-      // Card hover effects
       cards.forEach((card) => {
         const icon = card.querySelector('.service-icon');
         const title = card.querySelector('.service-title');
-        
+
         card.addEventListener('mouseenter', () => {
           gsap.to(icon, { scale: 1.2, rotation: 90, duration: 0.4, ease: 'power2.out' });
           gsap.to(title, { color: '#D4A843', duration: 0.3 });
           gsap.to(card, { backgroundColor: 'rgba(255,255,255,0.08)', duration: 0.3 });
         });
-        
+
         card.addEventListener('mouseleave', () => {
           gsap.to(icon, { scale: 1, rotation: 0, duration: 0.4, ease: 'power2.out' });
           gsap.to(title, { color: '#F5EDE3', duration: 0.3 });
@@ -82,20 +81,20 @@ export default function Services() {
   }, []);
 
   return (
-    <section id="services" ref={sectionRef}>
+    <section id="included" ref={sectionRef}>
       {/* Header on cream */}
       <div className="bg-cream px-8 md:px-16 lg:px-20 py-20 md:py-28">
         <div className="max-w-7xl mx-auto services-header">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-end">
             <div>
-              <p className="label-sm text-coral mb-4">{t('services.label')}</p>
+              <p className="label-sm text-coral mb-4">{t('included.label')}</p>
               <h2 className="display-xl text-charcoal">
-                {t('services.title1')} <br className="hidden md:block" />
-                {t('services.title2')} <span className="text-coral">{t('services.title3')}</span>
+                {t('included.title1')} <br className="hidden md:block" />
+                {t('included.title2')} <span className="text-coral">{t('included.title3')}</span>
               </h2>
             </div>
             <p className="body-xl text-charcoal/70 max-w-md">
-              {t('services.subtitle')}
+              {t('included.subtitle')}
             </p>
           </div>
         </div>
@@ -103,8 +102,8 @@ export default function Services() {
 
       {/* Grid on navy */}
       <div className="bg-navy px-8 md:px-16 lg:px-20 py-16 md:py-24 relative noise">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-0 relative z-10">
-          {services.map((s) => (
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0 relative z-10">
+          {included.map((s) => (
             <div
               key={s.title}
               className="service-card p-8 md:p-10 border-b border-r border-white/10 transition-all duration-300"

@@ -9,6 +9,7 @@ import Portfolio from './components/Portfolio';
 import About from './components/About';
 import Pricing from './components/Pricing';
 import FAQ from './components/FAQ';
+import OrderFlow from './components/OrderFlow';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 
@@ -45,6 +46,7 @@ function AppContent() {
           <About />
           <Pricing />
           <FAQ />
+          <OrderFlow />
           <Contact />
         </main>
         <Footer />

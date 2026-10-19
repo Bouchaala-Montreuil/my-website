@@ -10,51 +10,11 @@ export default function Pricing() {
   const { t } = useLang();
   const sectionRef = useRef<HTMLElement>(null);
 
-  const plans = [
-    {
-      name: t('pricing.single'),
-      price: '150',
-      from: false,
-      desc: t('pricing.single.desc'),
-      features: [t('pricing.single.f1'), t('pricing.single.f2'), t('pricing.single.f3'), t('pricing.single.f4')],
-      bg: 'bg-cream',
-      text: 'text-charcoal',
-      accent: 'text-teal',
-      btnClass: 'btn-dark',
-      popular: false,
-    },
-    {
-      name: t('pricing.combo'),
-      price: '210',
-      from: true,
-      desc: t('pricing.combo.desc'),
-      features: [t('pricing.combo.f1'), t('pricing.combo.f2'), t('pricing.combo.f3'), t('pricing.combo.f4'), t('pricing.combo.f5')],
-      bg: 'bg-coral',
-      text: 'text-white',
-      accent: 'text-mustard',
-      btnClass: 'btn-light',
-      popular: true,
-    },
-    {
-      name: t('pricing.full'),
-      price: '387',
-      from: false,
-      desc: t('pricing.full.desc'),
-      features: [t('pricing.full.f1'), t('pricing.full.f2'), t('pricing.full.f3'), t('pricing.full.f4'), t('pricing.full.f5')],
-      bg: 'bg-navy',
-      text: 'text-cream',
-      accent: 'text-coral',
-      btnClass: 'btn-outline-light',
-      popular: false,
-    },
-  ];
-
   useEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
 
     const ctx = gsap.context(() => {
-      // Header
       const header = section.querySelector('.pricing-header');
       if (header) {
         gsap.set(header.children, { opacity: 0, y: 40 });
@@ -74,47 +34,43 @@ export default function Pricing() {
         });
       }
 
-      // Cards with 3D entrance
-      const cards = section.querySelectorAll('.pricing-card');
-      gsap.set(cards, { opacity: 0, y: 80, rotateX: -15 });
+      const card = section.querySelector('.pricing-card');
+      if (card) {
+        gsap.set(card, { opacity: 0, y: 80, rotateX: -15 });
+        ScrollTrigger.create({
+          trigger: card,
+          start: 'top 75%',
+          onEnter: () => {
+            gsap.to(card, {
+              opacity: 1,
+              y: 0,
+              rotateX: 0,
+              duration: 1,
+              ease: 'power3.out',
+            });
+          },
+          once: true,
+        });
 
-      ScrollTrigger.create({
-        trigger: section.querySelector('.pricing-cards'),
-        start: 'top 75%',
-        onEnter: () => {
-          gsap.to(cards, {
-            opacity: 1,
-            y: 0,
-            rotateX: 0,
-            duration: 1,
-            stagger: 0.15,
-            ease: 'power3.out',
-          });
-        },
-        once: true,
-      });
-
-      // Card hover scale
-      cards.forEach((card) => {
         card.addEventListener('mouseenter', () => {
-          gsap.to(card, { 
-            scale: 1.02, 
+          gsap.to(card, {
+            scale: 1.02,
             y: -10,
             boxShadow: '0 30px 60px rgba(0,0,0,0.3)',
-            duration: 0.4, 
-            ease: 'power2.out' 
+            duration: 0.4,
+            ease: 'power2.out',
           });
         });
         card.addEventListener('mouseleave', () => {
-          gsap.to(card, { 
-            scale: 1, 
+          gsap.to(card, {
+            scale: 1,
             y: 0,
             boxShadow: 'none',
-            duration: 0.4, 
-            ease: 'power2.out' 
+            duration: 0.4,
+            ease: 'power2.out',
           });
         });
-      });
+      }
     }, section);
 
     return () => ctx.revert();
@@ -135,55 +91,49 @@ export default function Pricing() {
         </div>
       </div>
 
-      {/* Cards */}
-      <div className="pricing-cards grid grid-cols-1 md:grid-cols-3" style={{ perspective: '1000px' }}>
-        {plans.map((plan) => (
-          <div
-            key={plan.name}
-            className={`pricing-card ${plan.bg} px-8 md:px-10 py-14 md:py-20 flex flex-col`}
-            style={{ transformStyle: 'preserve-3d' }}
-            data-cursor={plan.popular ? 'Popular' : 'Select'}
-          >
-            {plan.popular && (
-              <span className="inline-block self-start px-3 py-1 rounded-full bg-white/20 text-white text-xs font-bold mb-4 pulse-glow"
-                    style={{ fontFamily: 'var(--font-display)' }}>
-                {t('pricing.popular')}
-              </span>
-            )}
+      {/* Single plan */}
+      <div className="bg-cream px-8 md:px-16 lg:px-20 pb-20 md:pb-28">
+        <div className="max-w-md mx-auto" style={{ perspective: '1000px' }}>
+          <div className="pricing-card bg-coral px-8 md:px-10 py-14 flex flex-col" style={{ transformStyle: 'preserve-3d' }} data-cursor="Order">
+            <h3 className="display-md text-white mb-3">{t('pricing.plan')}</h3>
 
-            <h3 className={`display-md ${plan.text} mb-3`}>{plan.name}</h3>
-
-            <div className={`flex items-baseline gap-1 mb-4 ${plan.text}`}>
-              {plan.from && <span className="body-lg opacity-60">{t('pricing.from')}</span>}
-              <span className="body-lg opacity-60">€</span>
-              <span className="display-lg">{plan.price}</span>
-              <span className="body-lg opacity-60">{t('pricing.permonth')}</span>
+            <div className="flex items-baseline gap-1 mb-4 text-white">
+              <span className="body-lg opacity-70">€</span>
+              <span className="display-lg">195</span>
+              <span className="body-lg opacity-70">{t('pricing.permonth')}</span>
             </div>
 
-            <p className={`body-md ${plan.text} opacity-60 mb-8 pb-8 border-b ${
-              plan.bg === 'bg-cream' ? 'border-charcoal/10' : 'border-white/15'
-            }`}>
-              {plan.desc}
+            <p className="body-md text-white opacity-70 mb-8 pb-8 border-b border-white/20">
+              {t('pricing.plan.desc')}
             </p>
 
             <ul className="space-y-3 mb-10 flex-1">
-              {plan.features.map((f) => (
-                <li key={f} className={`body-md ${plan.text} opacity-80 flex items-start gap-2`}>
-                  <span className={`${plan.accent} mt-0.5`}>✓</span>
+              {[
+                t('pricing.plan.f1'),
+                t('pricing.plan.f2'),
+                t('pricing.plan.f3'),
+                t('pricing.plan.f4'),
+                t('pricing.plan.f5'),
+                t('pricing.plan.f6'),
+                t('pricing.plan.f7'),
+              ].map((f) => (
+                <li key={f} className="body-md text-white opacity-90 flex items-start gap-2">
+                  <span className="text-mustard mt-0.5">✓</span>
                   {f}
                 </li>
               ))}
             </ul>
 
-            <MagneticButton
-              href="#contact"
-              className={`btn ${plan.btnClass} justify-center`}
-              data-cursor="Go"
-            >
-              {plan.price === 'Custom' ? t('pricing.contact') : t('pricing.cta')}
+            <MagneticButton href="#order" className="btn btn-dark justify-center" data-cursor="Order">
+              {t('pricing.cta')}
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="flip-rtl">
+                <path d="M1 13L13 1M13 1H4M13 1V10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
             </MagneticButton>
           </div>
-        ))}
+        </div>
+
+        <p className="body-md text-charcoal/50 text-center mt-8">{t('pricing.note')}</p>
       </div>
     </section>
   );
