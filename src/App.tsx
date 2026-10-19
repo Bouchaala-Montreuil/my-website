@@ -5,6 +5,7 @@ import CustomCursor from './components/CustomCursor';
 import Navigation from './components/Navigation';
 import Hero from './components/Hero';
 import Services from './components/Services';
+import HowItWorks from './components/HowItWorks';
 import Portfolio from './components/Portfolio';
 import About from './components/About';
 import Pricing from './components/Pricing';
@@ -42,6 +43,7 @@ function AppContent() {
         <main>
           <Hero />
           <Services />
+          <HowItWorks />
           <Portfolio />
           <About />
           <Pricing />

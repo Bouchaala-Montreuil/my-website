@@ -50,6 +50,19 @@ const translations: Record<Lang, Record<string, string>> = {
     'included.domain': 'Domain, Year 1 Free',
     'included.domain.desc': 'Then you pay the registrar directly (~€15/year).',
     
+    // How it works
+    'how.label': 'The Process',
+    'how.title1': 'How it',
+    'how.title2': 'works',
+    'how.s1': 'Order',
+    'how.s1.desc': 'Answer a few questions and pay online. 2 minutes, from anywhere.',
+    'how.s2': 'Preview',
+    'how.s2.desc': 'Within 48–72 hours your first version is ready — a private link to review.',
+    'how.s3': 'Refine',
+    'how.s3.desc': 'Approve it, or ask for changes. Revisions within 24 hours.',
+    'how.s4': 'Launch',
+    'how.s4.desc': 'You approve → the order finalizes → your site goes live.',
+    
     // Portfolio
     'portfolio.label': 'Examples',
     'portfolio.title1': 'Websites we',
@@ -204,6 +217,19 @@ const translations: Record<Lang, Record<string, string>> = {
     'included.domain': 'Domaine offert 1 an',
     'included.domain.desc': 'Puis vous payez le registrar directement (~15 €/an).',
     
+    // How it works
+    'how.label': 'Le Processus',
+    'how.title1': 'Comment',
+    'how.title2': 'ça marche',
+    'how.s1': 'Commande',
+    'how.s1.desc': 'Répondez à quelques questions et payez en ligne. 2 minutes, de partout.',
+    'how.s2': 'Prévisualisation',
+    'how.s2.desc': 'Sous 48–72 heures, votre première version est prête — un lien privé pour la consulter.',
+    'how.s3': 'Ajustements',
+    'how.s3.desc': 'Approuvez-la ou demandez des modifications. Révisions sous 24 heures.',
+    'how.s4': 'Lancement',
+    'how.s4.desc': 'Vous approuvez → la commande est finalisée → votre site est en ligne.',
+    
     // Portfolio
     'portfolio.label': 'Exemples',
     'portfolio.title1': 'Des sites',
@@ -357,6 +383,19 @@ const translations: Record<Lang, Record<string, string>> = {
     'included.email.desc': 'بريد باسم نشاطك التجاري، مشمول.',
     'included.domain': 'النطاق مجاني السنة الأولى',
     'included.domain.desc': 'بعدها تدفع للمسجل مباشرة (~15 يورو/سنة).',
+    
+    // How it works
+    'how.label': 'العملية',
+    'how.title1': 'كيف',
+    'how.title2': 'تعمل',
+    'how.s1': 'الطلب',
+    'how.s1.desc': 'أجب عن بعض الأسئلة وادفع أونلاين. دقيقتان، من أي مكان.',
+    'how.s2': 'المعاينة',
+    'how.s2.desc': 'خلال 48–72 ساعة، نسختك الأولى جاهزة — رابط خاص لمراجعتها.',
+    'how.s3': 'التعديل',
+    'how.s3.desc': 'وافق أو اطلب تعديلات. التعديلات خلال 24 ساعة.',
+    'how.s4': 'الإطلاق',
+    'how.s4.desc': 'توافق → تُنهى الطلب → موقعك ينطلق.',
     
     // Portfolio
     'portfolio.label': 'أمثلة',

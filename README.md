@@ -1,6 +1,7 @@
-# FEEKZA — We Build Growth
+# FEEKZA — Custom Websites
 
-Site vitrine de l'agence **FEEKZA** : une page, trois langues (🇬🇧 EN / 🇫🇷 FR / 🇸🇦 AR avec support RTL).
+Site vitrine de **FEEKZA** : une offre unique (sites web sur mesure,
+195 €/mois tout compris), une page, trois langues (🇬🇧 EN / 🇫🇷 FR / 🇸🇦 AR avec support RTL).
 
 ## Tech
 
@@ -56,21 +57,30 @@ Puis commit + push sur `main` — le site est mis à jour en 1–2 minutes.
 ├── src/
 │   ├── App.tsx                 # assemblage des sections
 │   ├── index.css               # design system (Tailwind + typographie + couleurs)
+│   ├── config.ts               # Formspree, email, lien de paiement
 │   ├── context/
 │   │   └── LanguageContext.tsx # traductions EN/FR/AR + direction RTL
 │   └── components/             # une section par composant
 │       ├── Loader.tsx          # écran de chargement
 │       ├── Navigation.tsx      # barre de navigation + switch de langue
 │       ├── Hero.tsx            # bannière principale
-│       ├── Services.tsx        # services
-│       ├── Portfolio.tsx       # réalisations
+│       ├── Services.tsx        # ce qui est inclus
+│       ├── HowItWorks.tsx      # le processus en 4 étapes
+│       ├── Portfolio.tsx       # exemples de sites
 │       ├── About.tsx           # à propos
-│       ├── Testimonials.tsx    # témoignages
-│       ├── Pricing.tsx         # tarifs
+│       ├── Pricing.tsx         # l'offre unique (195 €/mois)
 │       ├── FAQ.tsx             # questions fréquentes
+│       ├── OrderFlow.tsx       # tunnel de commande (5 étapes)
 │       ├── Contact.tsx         # formulaire de contact
 │       └── Footer.tsx          # pied de page
 └── docs/index.html             # build de production (servi par GitHub Pages)
+
+## Configuration
+
+Tous les points d'entrée externes sont dans `src/config.ts` :
+- `FORMSPREE_ENDPOINT` — recevoir les commandes/contact par email
+- `CONTACT_EMAIL` — email affiché + fallback mailto
+- `PAYMENT_LINK` — lien de paiement Stripe/PayPal (laisser vide = paiement manuel)
 ```
 
 ## Modifier les textes / traductions

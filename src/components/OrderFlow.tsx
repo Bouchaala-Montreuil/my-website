@@ -333,7 +333,7 @@ export default function OrderFlow() {
             {error && <p className="text-coral text-sm mt-4 text-center">⚠ {c.fields[error]}</p>}
 
             {/* Nav buttons */}
-            <div className="flex items-center justify-between gap-4 mt-10">
+            <div className="flex flex-wrap items-center justify-between gap-4 mt-10">
               <button
                 onClick={() => setStep((s) => Math.max(s - 1, 0))}
                 disabled={step === 0}
@@ -343,7 +343,7 @@ export default function OrderFlow() {
                 {c.back}
               </button>
               {step < 3 && (
-                <div className="flex gap-3">
+                <div className="flex flex-wrap gap-3">
                   <button onClick={next} className="btn btn-dark" data-cursor="Next">{c.next}</button>
                   <button onClick={() => setStep((s) => s + 1)} className="btn btn-outline-dark opacity-70" data-cursor="Skip">{c.skip}</button>
                 </div>
