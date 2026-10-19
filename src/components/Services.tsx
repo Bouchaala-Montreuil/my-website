@@ -10,12 +10,10 @@ export default function Services() {
   const sectionRef = useRef<HTMLElement>(null);
 
   const services = [
-    { title: t('services.content'), desc: t('services.content.desc'), icon: '◆' },
-    { title: t('services.video'), desc: t('services.video.desc'), icon: '●' },
-    { title: t('services.funnels'), desc: t('services.funnels.desc'), icon: '■' },
-    { title: t('services.comm'), desc: t('services.comm.desc'), icon: '▲' },
-    { title: t('services.seo'), desc: t('services.seo.desc'), icon: '◇' },
-    { title: t('services.ads'), desc: t('services.ads.desc'), icon: '○' },
+    { title: t('services.web'), desc: t('services.web.desc'), icon: '◆' },
+    { title: t('services.social'), desc: t('services.social.desc'), icon: '●' },
+    { title: t('services.design'), desc: t('services.design.desc'), icon: '■' },
+    { title: t('services.ads'), desc: t('services.ads.desc'), icon: '▲' },
   ];
 
   useEffect(() => {
@@ -105,7 +103,7 @@ export default function Services() {
 
       {/* Grid on navy */}
       <div className="bg-navy px-8 md:px-16 lg:px-20 py-16 md:py-24 relative noise">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0 relative z-10">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-0 relative z-10">
           {services.map((s) => (
             <div
               key={s.title}

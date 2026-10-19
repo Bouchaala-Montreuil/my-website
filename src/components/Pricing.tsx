@@ -12,10 +12,11 @@ export default function Pricing() {
 
   const plans = [
     {
-      name: t('pricing.starter'),
-      price: '490',
-      desc: t('pricing.starter.desc'),
-      features: [t('pricing.starter.f1'), t('pricing.starter.f2'), t('pricing.starter.f3'), t('pricing.starter.f4')],
+      name: t('pricing.single'),
+      price: '150',
+      from: false,
+      desc: t('pricing.single.desc'),
+      features: [t('pricing.single.f1'), t('pricing.single.f2'), t('pricing.single.f3'), t('pricing.single.f4')],
       bg: 'bg-cream',
       text: 'text-charcoal',
       accent: 'text-teal',
@@ -23,10 +24,11 @@ export default function Pricing() {
       popular: false,
     },
     {
-      name: t('pricing.growth'),
-      price: '990',
-      desc: t('pricing.growth.desc'),
-      features: [t('pricing.growth.f1'), t('pricing.growth.f2'), t('pricing.growth.f3'), t('pricing.growth.f4'), t('pricing.growth.f5')],
+      name: t('pricing.combo'),
+      price: '210',
+      from: true,
+      desc: t('pricing.combo.desc'),
+      features: [t('pricing.combo.f1'), t('pricing.combo.f2'), t('pricing.combo.f3'), t('pricing.combo.f4'), t('pricing.combo.f5')],
       bg: 'bg-coral',
       text: 'text-white',
       accent: 'text-mustard',
@@ -35,7 +37,8 @@ export default function Pricing() {
     },
     {
       name: t('pricing.full'),
-      price: 'Custom',
+      price: '387',
+      from: false,
       desc: t('pricing.full.desc'),
       features: [t('pricing.full.f1'), t('pricing.full.f2'), t('pricing.full.f3'), t('pricing.full.f4'), t('pricing.full.f5')],
       bg: 'bg-navy',
@@ -151,9 +154,10 @@ export default function Pricing() {
             <h3 className={`display-md ${plan.text} mb-3`}>{plan.name}</h3>
 
             <div className={`flex items-baseline gap-1 mb-4 ${plan.text}`}>
-              {plan.price !== 'Custom' && <span className="body-lg opacity-60">€</span>}
+              {plan.from && <span className="body-lg opacity-60">{t('pricing.from')}</span>}
+              <span className="body-lg opacity-60">€</span>
               <span className="display-lg">{plan.price}</span>
-              {plan.price !== 'Custom' && <span className="body-lg opacity-60">{t('pricing.permonth')}</span>}
+              <span className="body-lg opacity-60">{t('pricing.permonth')}</span>
             </div>
 
             <p className={`body-md ${plan.text} opacity-60 mb-8 pb-8 border-b ${
