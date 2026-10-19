@@ -119,11 +119,9 @@ export default function Loader({ onComplete }: LoaderProps) {
 
       {/* Logo — CIRCLE with orbiting dot */}
       <div ref={logoRef} className="relative mb-8">
-        {/* Main circle */}
-        <div className="logo-circle w-20 h-20 rounded-full bg-coral flex items-center justify-center shadow-lg">
-          <span className="text-white font-bold text-3xl" style={{ fontFamily: 'var(--font-display)' }}>
-            W
-          </span>
+        {/* Main mark */}
+        <div className="logo-circle w-20 h-20 rounded-xl overflow-hidden shadow-lg">
+          <img src="emblem.png" alt="Feekza" className="w-full h-full object-cover" />
         </div>
 
         {/* Orbiting dot — spins on a larger circular path */}

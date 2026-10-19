@@ -68,8 +68,8 @@ export default function Navigation() {
         <div className="flex items-center justify-between px-6 md:px-10 h-[70px]">
           {/* Logo */}
           <MagneticButton href="#" className="flex items-center gap-2 relative z-50" data-cursor="Home">
-            <div className="w-9 h-9 rounded-xl bg-coral flex items-center justify-center transition-transform hover:scale-110 duration-300">
-              <span className="text-white font-bold text-sm" style={{ fontFamily: 'var(--font-display)' }}>F</span>
+            <div className="w-9 h-9 rounded-xl overflow-hidden flex items-center justify-center transition-transform hover:scale-110 duration-300">
+              <img src="emblem.png" alt="Feekza logo" className="w-full h-full object-cover" />
             </div>
             <span className="text-cream font-bold text-lg tracking-tight hidden sm:block" style={{ fontFamily: 'var(--font-display)' }}>
               FEEKZA

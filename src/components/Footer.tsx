@@ -78,12 +78,7 @@ export default function Footer() {
         <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-12 gap-8 md:gap-6">
           {/* Brand */}
           <div className="footer-col col-span-2 md:col-span-4">
-            <div className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 rounded-lg bg-coral flex items-center justify-center">
-                <span className="text-white font-bold text-sm" style={{ fontFamily: 'var(--font-display)' }}>F</span>
-              </div>
-              <span className="text-cream font-bold text-lg" style={{ fontFamily: 'var(--font-display)' }}>FEEKZA</span>
-            </div>
+            <img src="wordmark.png" alt="Feekza" className="h-9 w-auto rounded-lg mb-4" />
             <p className="body-sm text-cream/55 max-w-[260px]">
               {t('footer.desc')}
             </p>
