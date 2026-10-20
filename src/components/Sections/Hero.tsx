@@ -7,10 +7,12 @@ export function Hero({ c }: { c: Content }) {
   return (
     <section className="hero" aria-labelledby="titre-accueil">
       <div className="wrap">
-        <div className="hero__kicker">
-          <span className="hero__rule" aria-hidden="true" />
-          <span className="tag tag--bare">{c.hero.badge}</span>
-          <span className="tag tag--bare tag--muted">{c.hero.tag}</span>
+        <div className="hero__top">
+          <p className="hero__eyebrow">
+            <span className="hero__rule" aria-hidden="true" />
+            {c.hero.badge}
+          </p>
+          <p className="hero__tag">{c.hero.tag}</p>
         </div>
 
         <h1 className="hero__title" id="titre-accueil">
@@ -22,12 +24,12 @@ export function Hero({ c }: { c: Content }) {
           <Split text={c.hero.titleAfter} mode="load" step={18} offset={240} />
         </h1>
 
-        <div className="hero__body">
+        <div className="hero__bottom">
           <div className="hero__intro">
             <p className="hero__lead">{c.hero.lead}</p>
 
             <div className="hero__cta">
-              <a className="btn btn--coral btn--sweep" href="#dossier">
+              <a className="btn btn--coral" href="#dossier">
                 {c.hero.ctaPrimary}
                 <ArrowRight />
               </a>
@@ -41,41 +43,23 @@ export function Hero({ c }: { c: Content }) {
             </p>
           </div>
 
-          <aside className="spec" aria-labelledby="fiche-offre">
-            <div className="spec__head">
-              <p className="spec__title" id="fiche-offre">
-                {c.hero.specTitle}
-              </p>
-              <p className="spec__ref">{c.hero.specRef}</p>
-            </div>
-
-            <div className="spec__price">
-              <strong>
-                <Amount value={c.hero.price} />
-              </strong>
-              <span>{c.hero.priceUnit}</span>
-              <small>{c.hero.priceNote}</small>
-            </div>
-
-            <ul className="spec__rows">
-              {c.hero.specRows.map((row) => (
+          <aside className="hero__rail" aria-label={c.hero.specTitle}>
+            <p className="hero__rail-label">
+              {c.hero.specTitle}
+              <span>{c.hero.specRef}</span>
+            </p>
+            <p className="hero__rail-price">
+              <Amount value={c.hero.price} />
+              <span className="hero__rail-unit">{c.hero.priceUnit}</span>
+            </p>
+            <ul>
+              {c.hero.specRows.slice(0, 3).map((row) => (
                 <li key={row.k}>
-                  <span className="k">{row.k}</span>
-                  <span className="v">
-                    {row.v}
-                    {row.note ? <em> {row.note}</em> : null}
-                  </span>
+                  <span>{row.k}</span>
+                  <b>{row.v}</b>
                 </li>
               ))}
             </ul>
-
-            <a className="btn btn--coral btn--sweep" href="#dossier">
-              {c.hero.specCta}
-              <ArrowRight />
-            </a>
-            <p className="spec__stamp">
-              <span className="stamp">{c.hero.stamp}</span>
-            </p>
           </aside>
         </div>
 
