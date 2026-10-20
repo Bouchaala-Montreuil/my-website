@@ -283,3 +283,55 @@ Easing curves and durations are therefore an interpretation, not a measurement.
 `/` 99 / 100 / 100 / 100, LCP 1.8 s, CLS 0; `/realisations/` 100 / 100 / 100 / 100, LCP 1.9 s;
 desktop `/` 100, LCP 0.6 s. axe-core 4.14: 0 violations on 15 routes × 390/1440 px. Reduced motion
 verified: no glyph transforms, no marquee, no reveal offsets.
+
+---
+
+## 20 Oct 2026 — palette and composition pass
+
+**Hard constraint, recorded rather than worked around.** The reference still cannot be rendered in
+this sandbox: `https://legencymedia.com/`, `https://cdn.prod.website-files.com/` and
+`https://assets.awwwards.com/` all return HTTP 000 from the runner, and `fetch_page` returns HTTP 500
+for its image assets. There are therefore **no computed styles, no colour picker values, no timing
+curve measurements** from the live site. Everything below is derived from (a) the rendered DOM text
+fetched server-side, (b) the Awwwards/Webflow metadata, and (c) a published capture of an earlier
+iteration — and is labelled as an interpretation, not a measurement.
+
+### Tokens
+
+| Token | Value | Role |
+| --- | --- | --- |
+| `--paper` | `#F1EFEA` | primary ground (warm off-white) |
+| `--paper-2` | `#E7E4DC` | secondary ground |
+| `--paper-3` | `#FBFAF7` | raised surface |
+| `--ink` | `#101113` | main text, dark bands |
+| `--ink-soft` | `#2B2D30` | body copy |
+| `--muted` | `#5F6266` | secondary text, labels |
+| `--accent` | `#2C4BFF` | primary accent, primary button |
+| `--accent-deep` | `#1B33C9` | hover / pressed |
+| `--accent-wash` | `#DFE3FF` | tint (tags only) |
+| `--rule` / `--rule-strong` | `rgba(16,17,19,.13)` / `.34` | hairlines, dividers |
+| `--fs-display` | `clamp(3.3rem, 8.9vw, 8rem)` | hero |
+| `--section` / `--max` | `clamp(4rem, 8vw, 7.5rem)` / `1360px` | vertical rhythm, container |
+
+**Rules that follow from the evidence.** One accent, used on primary actions, numerals and hairlines;
+no gradients anywhere (the reference's surfaces are flat); no drop shadows — separation is done with
+1 px rules and ground changes; pill buttons; square-cornered surfaces; a boxed wordmark. Feekza's own
+coral/ochre pair is retired; `--coral`/`--ochre` remain as aliases so no component silently keeps the
+old palette.
+
+### Composition changes
+
+- Header: boxed wordmark, hairline under the bar only after scroll, pill primary CTA, `FR · EN · AR`
+  collapsed into a single segmented control.
+- Hero: label row with rule + locale line, display heading at 0.88 leading, then an asymmetric
+  two-column base — prose and buttons on the left, a ruled "fiche offre" rail on the right — closed by
+  a five-cell fact table spanning the grid.
+- Services: the three-card grid is gone. Three full-width rows, each with index, title, tag, body and a
+  circular arrow; hovering inverts the row to ink, shifts its padding and moves the arrow.
+- Dark bands, the four-step list, the offer table and the footer now share one hairline language.
+
+### Still not claimed
+
+No pixel-level comparison against the reference is possible in this environment. The QC loop compares
+Feekza at 390 / 768 / 1440 against the *documented* system above, not against a rendering of the
+reference. Motion timings remain an interpretation (see the table above).
