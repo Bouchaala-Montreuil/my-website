@@ -3,18 +3,40 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useLang } from '../context/LanguageContext';
 import MagneticButton from './MagneticButton';
+import { FORMSPREE_ENDPOINT, CONTACT_EMAIL } from '../config';
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function Contact() {
   const { t, dir } = useLang();
   const [submitted, setSubmitted] = useState(false);
+  const [sending, setSending] = useState(false);
   const [form, setForm] = useState({ name: '', email: '', company: '', budget: '', message: '' });
   const sectionRef = useRef<HTMLElement>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+    setSending(true);
+
+    try {
+      if (FORMSPREE_ENDPOINT) {
+        await fetch(FORMSPREE_ENDPOINT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify(form),
+        });
+      } else {
+        // Zero-setup fallback: prefill the visitor's email client
+        const subject = encodeURIComponent(`New project inquiry — ${form.name}${form.company ? ` (${form.company})` : ''}`);
+        const body = encodeURIComponent(
+          `Name: ${form.name}\nEmail: ${form.email}\nCompany: ${form.company || '—'}\nBudget: ${form.budget || '—'}\n\nGoals:\n${form.message}`
+        );
+        window.location.href = `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`;
+      }
+    } catch {
+      // Even if sending fails, we still show confirmation (mailto may have opened)
+    }
+
     // Animate form out
     const formEl = sectionRef.current?.querySelector('.contact-form');
     if (formEl) {
@@ -22,10 +44,11 @@ export default function Contact() {
         opacity: 0,
         y: -20,
         duration: 0.4,
-        onComplete: () => setSubmitted(true),
+        onComplete: () => { setSubmitted(true); setSending(false); },
       });
     } else {
       setSubmitted(true);
+      setSending(false);
     }
   };
 
@@ -121,7 +144,7 @@ export default function Contact() {
 
             <div className="space-y-6">
               {[
-                { icon: '✉️', label: t('contact.email'), value: 'hello@weekza.com' },
+                { icon: '✉️', label: t('contact.email'), value: 'redabouchaala73@gmail.com' },
                 { icon: '⚡', label: t('contact.response'), value: t('contact.response.val') },
                 { icon: '🌍', label: t('contact.location'), value: t('contact.location.val') },
               ].map((c) => (
@@ -163,19 +186,27 @@ export default function Contact() {
                   onChange={(v) => setForm({ ...form, company: v })}
                 />
                 <div>
-                  <label className="label-sm text-cream/50 mb-2 block">{t('contact.budget')}</label>
-                  <select
-                    value={form.budget}
-                    onChange={(e) => setForm({ ...form, budget: e.target.value })}
-                    className="w-full px-4 py-3 bg-white/5 border-2 border-white/10 rounded-xl text-cream focus:border-coral focus:outline-none transition-colors appearance-none cursor-pointer"
-                    data-cursor="Select"
-                  >
-                    <option value="" className="bg-charcoal">Select...</option>
-                    <option value="3-5k" className="bg-charcoal">€3k – €5k</option>
-                    <option value="5-10k" className="bg-charcoal">€5k – €10k</option>
-                    <option value="10-25k" className="bg-charcoal">€10k – €25k</option>
-                    <option value="25k+" className="bg-charcoal">€25k+</option>
-                  </select>
+                  <label className="label-sm text-cream/60 mb-2 block">{t('contact.budget')}</label>
+                  <div className="relative">
+                    <select
+                      value={form.budget}
+                      onChange={(e) => setForm({ ...form, budget: e.target.value })}
+                      className="w-full px-4 py-3 pe-10 bg-white/5 border-2 border-white/10 rounded-xl text-cream focus:border-coral focus:outline-none transition-colors appearance-none cursor-pointer"
+                      data-cursor="Select"
+                    >
+                      <option value="" className="bg-charcoal">{t('contact.budget.placeholder')}</option>
+                      <option value="3-5k" className="bg-charcoal">€3k – €5k</option>
+                      <option value="5-10k" className="bg-charcoal">€5k – €10k</option>
+                      <option value="10-25k" className="bg-charcoal">€10k – €25k</option>
+                      <option value="25k+" className="bg-charcoal">€25k+</option>
+                    </select>
+                    <svg
+                      width="12" height="12" viewBox="0 0 12 12" fill="none"
+                      className="absolute end-4 top-1/2 -translate-y-1/2 pointer-events-none text-cream/60"
+                    >
+                      <path d="M2 4L6 8L10 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </div>
                 </div>
               </div>
               <div>
@@ -191,7 +222,7 @@ export default function Contact() {
                 />
               </div>
               <MagneticButton className="btn btn-coral w-full justify-center" data-cursor="Send">
-                {t('contact.send')}
+                {sending ? '…' : t('contact.send')}
                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="flip-rtl">
                   <path d="M1 13L13 1M13 1H4M13 1V10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>

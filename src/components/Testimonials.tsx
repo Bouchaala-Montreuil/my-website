@@ -5,38 +5,14 @@ import { useLang } from '../context/LanguageContext';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const testimonials = [
-  {
-    quote: {
-      en: "Before Weekza, our website was a brochure. Now it generates 40% of our new patient inquiries. The ROI has been incredible.",
-      fr: "Avant Weekza, notre site était une brochure. Maintenant il génère 40% de nos nouvelles demandes de patients. Le ROI est incroyable.",
-      ar: "قبل Weekza، كان موقعنا مجرد كتيب. الآن يولد 40% من استفسارات المرضى الجدد. العائد على الاستثمار مذهل.",
-    },
-    name: 'Dr. Sarah Chen',
-    role: 'Chen Aesthetics',
-    result: '+178%',
-  },
-  {
-    quote: {
-      en: "They didn't just build us a website — they understood our business. The booking system alone saves us 15 hours a week.",
-      fr: "Ils n'ont pas juste créé un site — ils ont compris notre business. Le système de réservation seul nous fait gagner 15h par semaine.",
-      ar: "لم يبنوا لنا موقعاً فحسب — بل فهموا عملنا. نظام الحجز وحده يوفر لنا 15 ساعة أسبوعياً.",
-    },
-    name: 'Marcus Laurent',
-    role: 'Maison Laurent',
-    result: '+212%',
-  },
-  {
-    quote: {
-      en: "Other agencies showed us templates. Weekza showed us a strategy. Two years later, we're the #1 ranked café in our city.",
-      fr: "D'autres agences nous montraient des templates. Weekza nous a montré une stratégie. Deux ans plus tard, on est le café #1 de la ville.",
-      ar: "الوكالات الأخرى عرضت علينا قوالب. Weekza عرضت استراتيجية. بعد عامين، أصبحنا المقهى الأول في مدينتنا.",
-    },
-    name: 'James Morrison',
-    role: 'Noir Coffee Lab',
-    result: '#1',
-  },
-];
+// Add your real client testimonials here (EN/FR/AR quotes).
+// Section is currently unmounted in App.tsx until real testimonials exist.
+const testimonials: Array<{
+  quote: { en: string; fr: string; ar: string };
+  name: string;
+  role: string;
+  result: string;
+}> = [];
 
 export default function Testimonials() {
   const { t, lang } = useLang();

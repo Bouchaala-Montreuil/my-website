@@ -106,7 +106,10 @@ export default function Loader({ onComplete }: LoaderProps) {
   return (
     <div
       ref={containerRef}
-      className="fixed inset-0 z-[10000] bg-charcoal flex flex-col items-center justify-center"
+      onClick={onComplete}
+      className="fixed inset-0 z-[10000] bg-charcoal flex flex-col items-center justify-center cursor-pointer"
+      role="button"
+      aria-label="Skip intro"
     >
       {/* Soft background glows */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -116,11 +119,9 @@ export default function Loader({ onComplete }: LoaderProps) {
 
       {/* Logo — CIRCLE with orbiting dot */}
       <div ref={logoRef} className="relative mb-8">
-        {/* Main circle */}
-        <div className="logo-circle w-20 h-20 rounded-full bg-coral flex items-center justify-center shadow-lg">
-          <span className="text-white font-bold text-3xl" style={{ fontFamily: 'var(--font-display)' }}>
-            W
-          </span>
+        {/* Main mark */}
+        <div className="logo-circle w-20 h-20 rounded-xl overflow-hidden shadow-lg">
+          <img src="emblem.png" alt="Feekza" className="w-full h-full object-cover" />
         </div>
 
         {/* Orbiting dot — spins on a larger circular path */}
@@ -137,7 +138,7 @@ export default function Loader({ onComplete }: LoaderProps) {
       {/* Text */}
       <div ref={textRef} className="text-center mb-8">
         <h1 className="text-cream text-2xl font-bold mb-2" style={{ fontFamily: 'var(--font-display)' }}>
-          WEEKZA
+          FEEKZA
         </h1>
         <p className="text-cream/50 text-sm">{t('loading.text')}</p>
       </div>
@@ -155,6 +156,7 @@ export default function Loader({ onComplete }: LoaderProps) {
             {progress}%
           </span>
         </div>
+        <p className="text-center text-cream/30 text-xs mt-4">tap to skip</p>
       </div>
     </div>
   );

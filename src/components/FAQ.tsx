@@ -7,43 +7,51 @@ gsap.registerPlugin(ScrollTrigger);
 
 const faqData = [
   {
-    q: { en: 'How long does a project take?', fr: 'Combien de temps dure un projet ?', ar: 'كم تستغرق المشاريع؟' },
-    a: { 
-      en: 'Foundation: 3-4 weeks. Growth: 5-7 weeks. Enterprise: 8-12 weeks.',
-      fr: 'Fondation: 3-4 semaines. Croissance: 5-7 semaines. Entreprise: 8-12 semaines.',
-      ar: 'الأساس: 3-4 أسابيع. النمو: 5-7 أسابيع. المؤسسات: 8-12 أسبوع.'
+    q: { en: 'What does €195/month include?', fr: 'Que comprend 195 €/mois ?', ar: 'ماذا يشمل 195 يورو/شهر؟' },
+    a: {
+      en: 'A custom website (up to 5 pages), hosting, a professional email address, 24/7 maintenance, and any modification — plus your domain free the first year.',
+      fr: 'Un site sur mesure (jusqu’à 5 pages), l’hébergement, un email professionnel, la maintenance 24/7 et toutes les modifications — plus votre domaine offert la première année.',
+      ar: 'موقع مخصص (حتى 5 صفحات)، الاستضافة، بريد احترافي، صيانة 24/7، وأي تعديل — والنطاق مجاني في السنة الأولى.'
     }
   },
   {
-    q: { en: 'Do we own everything you create?', fr: 'Possédons-nous tout ce que vous créez ?', ar: 'هل نملك كل ما تنشئونه؟' },
-    a: { 
-      en: 'Yes. All code, designs, content, and assets. No lock-ins, ever.',
-      fr: 'Oui. Tout le code, designs, contenu et assets. Aucun engagement.',
-      ar: 'نعم. كل الكود والتصاميم والمحتوى والأصول. لا قيود أبداً.'
+    q: { en: 'Is there a commitment?', fr: 'Y a-t-il un engagement ?', ar: 'هل هناك التزام؟' },
+    a: {
+      en: 'Yes — 6 months minimum, then cancel anytime with 1 month’s notice.',
+      fr: 'Oui — 6 mois minimum, puis résiliable à tout moment avec 1 mois de préavis.',
+      ar: 'نعم — 6 أشهر كحد أدنى، ثم إلغاء في أي وقت بإشعار شهر واحد.'
     }
   },
   {
-    q: { en: 'What industries do you work with?', fr: 'Avec quels secteurs travaillez-vous ?', ar: 'ما هي القطاعات التي تعملون معها؟' },
-    a: { 
-      en: 'Restaurants, cafés, medical practices, fitness, retail, construction, hotels, and professional services.',
-      fr: 'Restaurants, cafés, cabinets médicaux, fitness, retail, construction, hôtels, et services professionnels.',
-      ar: 'المطاعم، المقاهي، العيادات الطبية، اللياقة البدنية، البيع بالتجزئة، البناء، الفنادق، والخدمات المهنية.'
+    q: { en: 'How long does delivery take?', fr: 'Combien de temps prend la livraison ?', ar: 'كم يستغرق التسليم؟' },
+    a: {
+      en: 'Your first version within 48–72 hours. Revisions within 24 hours.',
+      fr: 'Votre première version sous 48–72 heures. Révisions sous 24 heures.',
+      ar: 'نسختك الأولى خلال 48–72 ساعة. التعديلات خلال 24 ساعة.'
     }
   },
   {
-    q: { en: 'What happens after launch?', fr: 'Que se passe-t-il après le lancement ?', ar: 'ماذا يحدث بعد الإطلاق؟' },
-    a: { 
-      en: 'All plans include post-launch support. We also offer monthly retainers for ongoing optimization.',
-      fr: 'Tous les plans incluent un support post-lancement. On propose aussi des contrats mensuels.',
-      ar: 'جميع الخطط تشمل دعماً بعد الإطلاق. نقدم أيضاً عقوداً شهرية للتحسين المستمر.'
+    q: { en: 'What if I don’t like the preview?', fr: "Et si la prévisualisation ne me plaît pas ?", ar: 'ماذا لو لم تعجبني المعاينة؟' },
+    a: {
+      en: 'Ask for changes — or a full refund, no questions asked. The order only finalizes when you approve the preview.',
+      fr: 'Demandez des modifications — ou un remboursement complet, sans justification. La commande n’est finalisée qu’à votre approbation.',
+      ar: 'اطلب تعديلات — أو استردادًا كاملاً دون أسئلة. الطلب لا يُنهى إلا بموافقتك على المعاينة.'
     }
   },
   {
-    q: { en: 'Do you offer payment plans?', fr: 'Proposez-vous des facilités de paiement ?', ar: 'هل تقدمون خطط دفع؟' },
-    a: { 
-      en: 'Yes. Milestone-based payments and monthly installments available.',
-      fr: 'Oui. Paiements par étapes et mensualités disponibles.',
-      ar: 'نعم. دفعات على مراحل وأقساط شهرية متاحة.'
+    q: { en: 'What happens if I stop paying?', fr: 'Que se passe-t-il si je cesse de payer ?', ar: 'ماذا لو توقفت عن الدفع؟' },
+    a: {
+      en: 'Your site goes into sleep mode (offline, kept 30 days). Your domain — after year one — and your content always stay yours.',
+      fr: 'Votre site passe en mode veille (hors ligne, conservé 30 jours). Votre domaine — après la première année — et votre contenu restent toujours vôtres.',
+      ar: 'موقعك يدخل وضع السكون (غير متصل، محفوظ 30 يومًا). نطاقك — بعد السنة الأولى — ومحتواك يبقيان ملكك دائمًا.'
+    }
+  },
+  {
+    q: { en: 'Can I add features later?', fr: 'Puis-je ajouter des fonctions plus tard ?', ar: 'هل يمكنني إضافة ميزات لاحقًا؟' },
+    a: {
+      en: 'Yes. Extra features (online shop, booking system…) are quoted separately — you always know the price before we start.',
+      fr: 'Oui. Les fonctions supplémentaires (boutique en ligne, réservation…) sont devisées à part — vous connaissez toujours le prix avant de commencer.',
+      ar: 'نعم. الميزات الإضافية (متجر إلكتروني، نظام حجز…) تُقدَّر بشكل منفصل — تعرف السعر دائمًا قبل البدء.'
     }
   },
 ];

@@ -1,6 +1,7 @@
-# WEEKZA — We Build Growth
+# FEEKZA — Custom Websites
 
-Site vitrine de l'agence **WEEKZA** : une page, trois langues (🇬🇧 EN / 🇫🇷 FR / 🇸🇦 AR avec support RTL).
+Site vitrine de **FEEKZA** : une offre unique (sites web sur mesure,
+195 €/mois tout compris), une page, trois langues (🇬🇧 EN / 🇫🇷 FR / 🇸🇦 AR avec support RTL).
 
 ## Tech
 
@@ -28,7 +29,15 @@ npm run preview # prévisualiser le build
 Le site en ligne est servi depuis le dossier **`docs/`** (le build est un fichier
 HTML unique grâce à `vite-plugin-singlefile`).
 
-➡️ URL : https://bouchaala-montreuil.github.io/my-website/
+➡️ URL : https://feekza.com (custom domain, via `docs/CNAME`)
+Ancienne URL : https://bouchaala-montreuil.github.io/my-website/
+
+### DNS (à configurer une fois chez le registrar)
+
+- 4 enregistrements **A** pour `@` :
+  `185.199.108.153` · `185.199.109.153` · `185.199.110.153` · `185.199.111.153`
+- Optionnel : **CNAME** `www` → `bouchaala-montreuil.github.io`
+- Puis : repo Settings → Pages → Custom domain → `feekza.com` → Enforce HTTPS
 
 ### Mettre le site à jour
 
@@ -48,21 +57,30 @@ Puis commit + push sur `main` — le site est mis à jour en 1–2 minutes.
 ├── src/
 │   ├── App.tsx                 # assemblage des sections
 │   ├── index.css               # design system (Tailwind + typographie + couleurs)
+│   ├── config.ts               # Formspree, email, lien de paiement
 │   ├── context/
 │   │   └── LanguageContext.tsx # traductions EN/FR/AR + direction RTL
 │   └── components/             # une section par composant
 │       ├── Loader.tsx          # écran de chargement
 │       ├── Navigation.tsx      # barre de navigation + switch de langue
 │       ├── Hero.tsx            # bannière principale
-│       ├── Services.tsx        # services
-│       ├── Portfolio.tsx       # réalisations
+│       ├── Services.tsx        # ce qui est inclus
+│       ├── HowItWorks.tsx      # le processus en 4 étapes
+│       ├── Portfolio.tsx       # exemples de sites
 │       ├── About.tsx           # à propos
-│       ├── Testimonials.tsx    # témoignages
-│       ├── Pricing.tsx         # tarifs
+│       ├── Pricing.tsx         # l'offre unique (195 €/mois)
 │       ├── FAQ.tsx             # questions fréquentes
+│       ├── OrderFlow.tsx       # tunnel de commande (5 étapes)
 │       ├── Contact.tsx         # formulaire de contact
 │       └── Footer.tsx          # pied de page
 └── docs/index.html             # build de production (servi par GitHub Pages)
+
+## Configuration
+
+Tous les points d'entrée externes sont dans `src/config.ts` :
+- `FORMSPREE_ENDPOINT` — recevoir les commandes/contact par email
+- `CONTACT_EMAIL` — email affiché + fallback mailto
+- `PAYMENT_LINK` — lien de paiement Stripe/PayPal (laisser vide = paiement manuel)
 ```
 
 ## Modifier les textes / traductions

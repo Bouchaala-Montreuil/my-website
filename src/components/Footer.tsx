@@ -8,6 +8,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 export default function Footer() {
   const { t } = useLang();
+  const year = new Date().getFullYear();
   const footerRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -77,24 +78,19 @@ export default function Footer() {
         <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-12 gap-8 md:gap-6">
           {/* Brand */}
           <div className="footer-col col-span-2 md:col-span-4">
-            <div className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 rounded-lg bg-coral flex items-center justify-center">
-                <span className="text-white font-bold text-sm" style={{ fontFamily: 'var(--font-display)' }}>W</span>
-              </div>
-              <span className="text-cream font-bold text-lg" style={{ fontFamily: 'var(--font-display)' }}>WEEKZA</span>
-            </div>
-            <p className="body-sm text-cream/40 max-w-[260px]">
+            <img src="wordmark.png" alt="Feekza" className="h-9 w-auto rounded-lg mb-4" />
+            <p className="body-sm text-cream/55 max-w-[260px]">
               {t('footer.desc')}
             </p>
           </div>
 
           {[
-            { title: t('footer.services'), items: ['Strategy', 'Branding', 'Development', 'SEO', 'Marketing', 'Automation'] },
-            { title: t('footer.company'), items: ['About', 'Work', 'Pricing', 'Contact'] },
-            { title: t('footer.legal'), items: ['Privacy', 'Terms', 'Cookies'] },
+            { title: t('footer.services'), items: [t('included.design'), t('included.hosting'), t('included.maintenance'), t('included.mods'), t('included.email'), t('included.domain')] },
+            { title: t('footer.company'), items: [t('nav.about'), t('nav.work'), t('nav.pricing'), t('nav.contact')] },
+            { title: t('footer.legal'), items: [t('footer.privacy'), t('footer.terms'), t('footer.cookies')] },
           ].map((col) => (
             <div key={col.title} className="footer-col md:col-span-2">
-              <p className="label-sm text-cream/40 mb-4">{col.title}</p>
+              <p className="label-sm text-cream/60 mb-4">{col.title}</p>
               <ul className="space-y-2">
                 {col.items.map((item) => (
                   <li key={item}>
@@ -112,8 +108,8 @@ export default function Footer() {
       {/* Bottom bar */}
       <div className="border-t border-white/10 px-8 md:px-16 lg:px-20 py-5">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
-          <span className="body-sm text-cream/30">{t('footer.rights')}</span>
-          <span className="body-sm text-cream/20">{t('footer.built')}</span>
+          <span className="body-sm text-cream/50">{t('footer.rights').replace('{year}', String(year))}</span>
+          <span className="body-sm text-cream/40">{t('footer.built')}</span>
         </div>
       </div>
     </footer>

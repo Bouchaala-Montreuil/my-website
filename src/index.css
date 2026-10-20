@@ -351,6 +351,26 @@ html[dir="rtl"] .line-grow {
   transform-origin: right;
 }
 
+/* Anchor offset for fixed header (mobile + desktop) */
+section[id] {
+  scroll-margin-top: 84px;
+}
+
+/* Safe-area padding for mobile footer (iPhone home bar) */
+footer {
+  padding-bottom: max(0px, env(safe-area-inset-bottom));
+}
+
+/* Respect users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 /* Counter animation ready */
 .counter {
   font-variant-numeric: tabular-nums;

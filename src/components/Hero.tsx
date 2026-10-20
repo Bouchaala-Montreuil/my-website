@@ -106,8 +106,8 @@ export default function Hero() {
   }, [dir]);
 
   return (
-    <section ref={sectionRef} className="min-h-screen relative overflow-hidden">
-      <div className="grid grid-cols-1 lg:grid-cols-2 min-h-screen">
+    <section ref={sectionRef} className="min-h-dvh relative overflow-hidden">
+      <div className="grid grid-cols-1 lg:grid-cols-2 min-h-dvh">
         {/* Left — Text */}
         <div className="bg-teal flex flex-col justify-center px-8 md:px-16 lg:px-20 py-32 lg:py-20 relative overflow-hidden">
           {/* Decorative shapes */}
@@ -155,9 +155,9 @@ export default function Hero() {
           <div ref={statsRef} className="absolute bottom-0 left-0 right-0 bg-coral p-8 md:p-10">
             <div className="flex flex-wrap items-center justify-between gap-4">
               <div className="flex items-center gap-6">
-                <StatPill value="147" label={t('hero.stat1')} />
-                <StatPill value="€11M+" label={t('hero.stat2')} />
-                <StatPill value="94%" label={t('hero.stat3')} />
+                <StatPill value="48h" label={t('hero.stat1')} />
+                <StatPill value="24/7" label={t('hero.stat2')} />
+                <StatPill value="€195" label={t('hero.stat3')} />
               </div>
               <a href="#about" className="label-sm text-white/80 hover:text-white transition-colors flex items-center gap-2" data-cursor="More">
                 {t('hero.learn')}
