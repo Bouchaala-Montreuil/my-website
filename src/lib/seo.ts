@@ -213,7 +213,7 @@ export function buildHead(route: Route): HeadData {
       `<meta name="twitter:description" content="${escapeHtml(c.meta.description)}" />`,
       `<meta name="twitter:image" content="${OG_IMAGE}" />`,
       `<link rel="preload" href="/fonts/instrument-sans-latin.woff2" as="font" type="font/woff2" crossorigin />`,
-      `<link rel="preload" href="/fonts/fraunces-italic-latin.woff2" as="font" type="font/woff2" crossorigin />`,
+      `<link rel="preload" href="/fonts/fraunces-latin.woff2" as="font" type="font/woff2" crossorigin />`,
       `<link rel="preload" href="/fonts/plex-mono-400.woff2" as="font" type="font/woff2" crossorigin />`,
       route.locale === "ar"
         ? `<link rel="preload" href="/fonts/noto-kufi-arabic.woff2" as="font" type="font/woff2" crossorigin />`
@@ -256,7 +256,7 @@ export function buildHead(route: Route): HeadData {
       `<meta name="twitter:description" content="${escapeHtml(page.metaDescription)}" />`,
       `<meta name="twitter:image" content="${OG_IMAGE}" />`,
       `<link rel="preload" href="/fonts/instrument-sans-latin.woff2" as="font" type="font/woff2" crossorigin />`,
-      `<link rel="preload" href="/fonts/fraunces-italic-latin.woff2" as="font" type="font/woff2" crossorigin />`,
+      `<link rel="preload" href="/fonts/fraunces-latin.woff2" as="font" type="font/woff2" crossorigin />`,
       `<link rel="preload" href="/fonts/plex-mono-400.woff2" as="font" type="font/woff2" crossorigin />`,
       `<script type="application/ld+json">${json}</script>`,
     ].join("\n    ");
