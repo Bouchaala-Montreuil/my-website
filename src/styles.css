@@ -1634,7 +1634,7 @@ table.compare .feekza th::after {
 }
 
 .callout {
-  border-inline-start: 3px solid var(--coral);
+  border-inline-start: 2px solid var(--accent);
   background: var(--paper-2);
   padding: 0.95rem 1.1rem;
   margin-top: 1.25rem;
@@ -2685,11 +2685,11 @@ table.compare .feekza th::after {
 .todo {
   display: inline-flex;
   align-items: baseline;
-  gap: 0.35rem;
-  background: var(--ochre);
-  color: var(--ink);
-  border: 1px solid var(--ink);
-  padding: 0.05rem 0.4rem;
+  gap: 0.4rem;
+  background: transparent;
+  color: var(--accent-deep);
+  border: 1px solid var(--accent);
+  padding: 0.02rem 0.4rem;
   font-family: var(--font-mono);
   font-size: 0.75rem;
   font-weight: 500;
@@ -2701,17 +2701,28 @@ table.compare .feekza th::after {
   content: "À COMPLÉTER";
   font-size: 0.5625rem;
   letter-spacing: 0.08em;
-  border-inline-end: 1px solid rgba(16, 17, 19, 0.4);
-  padding-inline-end: 0.35rem;
+  color: var(--muted);
+  border-inline-end: 1px solid var(--rule-strong);
+  padding-inline-end: 0.4rem;
 }
 
 .legal__notice {
-  border: 1.5px solid var(--ink);
-  background: var(--ochre);
-  padding: 0.9rem 1rem;
-  margin-bottom: 1.5rem;
-  font-size: 0.875rem;
+  border: 0;
+  border-top: 2px solid var(--accent);
+  border-bottom: 1px solid var(--rule);
+  background: transparent;
+  padding: 1rem 0 1.1rem;
+  margin-bottom: 1.75rem;
+  font-size: 0.9rem;
   line-height: 1.55;
+}
+
+.legal__notice strong {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent-deep);
 }
 
 .legal__notice strong {
