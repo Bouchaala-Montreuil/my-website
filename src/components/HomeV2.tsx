@@ -4,6 +4,7 @@ import { Footer } from "./Footer";
 import { ArrowRight, Check } from "./Icons";
 import { Amount } from "./Amount";
 import { Split } from "./Split";
+import { InkField } from "./InkField";
 import { Order } from "./Sections/Order";
 import { homePromo, homeWork } from "@/content/services.fr";
 
@@ -48,6 +49,8 @@ export function HomeV2({
               {c.hero.titleAfter && !/^[.,;:!?…]/.test(c.hero.titleAfter) ? " " : null}
               <Split text={c.hero.titleAfter} mode="load" step={16} offset={220} />
             </h1>
+
+            <InkField />
 
             <div className="v2-hero__base">
               <div className="v2-hero__copy">

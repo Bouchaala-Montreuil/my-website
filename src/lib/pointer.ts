@@ -85,6 +85,11 @@ export function initPointer(): void {
     if (!target) return;
 
     const kind = target.dataset.cursor;
+    if (kind === "field") {
+      layer.classList.add("is-field");
+      label.textContent = target.dataset.cursorLabel ?? "Champ";
+      return;
+    }
     if (kind === "view") {
       layer.classList.add("is-view");
       label.textContent = target.dataset.cursorLabel ?? "Voir";
@@ -95,10 +100,24 @@ export function initPointer(): void {
       return;
     }
     layer.classList.add("is-link");
+    if (target.closest(".on-ink, [data-on-ink], .footer")) {
+      layer.classList.add("is-ink");
+    }
   };
 
   window.addEventListener("pointermove", onMove, { passive: true });
-  window.addEventListener("pointerdown", () => layer.classList.add("is-press"));
+  window.addEventListener("pointerdown", (event) => {
+    layer.classList.add("is-press");
+
+    // One ripple per press, anywhere on the page: feedback that reads as ink
+    // rather than as a UI effect, and it never blocks the click.
+    const ripple = document.createElement("span");
+    ripple.className = "pointer-ripple";
+    ripple.style.left = `${event.clientX}px`;
+    ripple.style.top = `${event.clientY}px`;
+    document.body.appendChild(ripple);
+    window.setTimeout(() => ripple.remove(), 700);
+  });
   window.addEventListener("pointerup", () => layer.classList.remove("is-press"));
   document.addEventListener("pointerover", (event) => state(event.target as Element));
   document.addEventListener("pointerleave", () => {
