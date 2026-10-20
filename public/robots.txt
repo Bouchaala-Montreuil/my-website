@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://feekza.com/sitemap.xml

@@ -1,74 +1,34 @@
-import { useState, useEffect } from 'react';
-import { LanguageProvider } from './context/LanguageContext';
-import Loader from './components/Loader';
-import CustomCursor from './components/CustomCursor';
-import Navigation from './components/Navigation';
-import Hero from './components/Hero';
-import Services from './components/Services';
-import HowItWorks from './components/HowItWorks';
-import Portfolio from './components/Portfolio';
-import About from './components/About';
-import Pricing from './components/Pricing';
-import FAQ from './components/FAQ';
-import OrderFlow from './components/OrderFlow';
-import Contact from './components/Contact';
-import MobileCtaBar from './components/MobileCtaBar';
-import Footer from './components/Footer';
+import { content } from "@/content";
+import type { Route } from "@/lib/routes";
+import { Home } from "@/components/Home";
+import { LegalView } from "@/components/LegalView";
+import { PageView } from "@/components/PageView";
+import { NotFoundView } from "@/components/NotFoundView";
+import { BrandLoader } from "@/components/BrandLoader";
 
-function AppContent() {
-  const [loading, setLoading] = useState(true);
-  const [ready, setReady] = useState(false);
+export function App({ route }: { route: Route }) {
+  const skipLink =
+    route.kind === "home" ? content[route.locale].skipLink : content.fr.skipLink;
 
-  // Failsafe: never trap the user behind the loader
-  useEffect(() => {
-    const failsafe = setTimeout(() => setLoading(false), 9000);
-    return () => clearTimeout(failsafe);
-  }, []);
-
-  useEffect(() => {
-    // Prevent scroll during loading
-    if (loading) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-  }, [loading]);
-
-  const handleLoadComplete = () => {
-    setLoading(false);
-    // Small delay before showing content
-    setTimeout(() => setReady(true), 100);
-  };
+  let view;
+  if (route.kind === "home") {
+    const c = content[route.locale];
+    view = <Home c={c} locale={route.locale} currentPath={route.path} />;
+  } else if (route.kind === "page") {
+    view = <PageView page={route.page} currentPath={route.path} />;
+  } else if (route.kind === "legal") {
+    view = <LegalView page={route.page} c={content.fr} locale="fr" currentPath={route.path} />;
+  } else {
+    view = <NotFoundView currentPath={route.path} />;
+  }
 
   return (
     <>
-      {loading && <Loader onComplete={handleLoadComplete} />}
-      <CustomCursor />
-      
-      <div style={{ visibility: ready ? 'visible' : 'hidden' }}>
-        <Navigation ready={ready} />
-        <main>
-          <Hero ready={ready} />
-          <Services />
-          <HowItWorks />
-          <Portfolio />
-          <About />
-          <Pricing />
-          <FAQ />
-          <OrderFlow />
-          <Contact />
-        </main>
-        <MobileCtaBar />
-        <Footer />
-      </div>
+      <a className="skip-link" href="#contenu">
+        {skipLink}
+      </a>
+      {view}
+      <BrandLoader />
     </>
-  );
-}
-
-export default function App() {
-  return (
-    <LanguageProvider>
-      <AppContent />
-    </LanguageProvider>
   );
 }

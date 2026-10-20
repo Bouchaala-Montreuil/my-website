@@ -1,24 +1,27 @@
-import path from "path";
-import { fileURLToPath } from "url";
-import tailwindcss from "@tailwindcss/vite";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
-import { viteSingleFile } from "vite-plugin-singlefile";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-// https://vite.dev/config/
 export default defineConfig({
-  plugins: [react(), tailwindcss(), viteSingleFile()],
-  base: "./",
+  plugins: [react()],
+  base: "/",
   server: {
     host: true,
     allowedHosts: true,
   },
   resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "src"),
-    },
+    alias: { "@": path.resolve(__dirname, "src") },
+  },
+  build: {
+    outDir: "dist",
+    assetsInlineLimit: 0,
+    cssCodeSplit: false,
+    target: "es2020",
+  },
+  ssr: {
+    noExternal: [],
   },
 });

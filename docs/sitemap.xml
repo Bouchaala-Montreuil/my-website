@@ -1,12 +1,105 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://feekza.com/</loc>
+    <lastmod>2026-10-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://feekza.com/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://feekza.com/"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="https://feekza.com/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://feekza.com/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://feekza.com/en/" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://feekza.com/ar/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://feekza.com/" />
+  </url>
+  <url>
+    <loc>https://feekza.com/en/</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://feekza.com/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://feekza.com/en/" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://feekza.com/ar/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://feekza.com/" />
+  </url>
+  <url>
+    <loc>https://feekza.com/ar/</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://feekza.com/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://feekza.com/en/" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://feekza.com/ar/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://feekza.com/" />
+  </url>
+  <url>
+    <loc>https://feekza.com/creation-site-web/</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://feekza.com/referencement-seo/</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://feekza.com/marketing-digital/</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://feekza.com/realisations/</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://feekza.com/a-propos/</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://feekza.com/contact/</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://feekza.com/ressources/</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://feekza.com/ressources/combien-coute-un-site-vitrine/</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://feekza.com/ressources/checklist-avant-lancement/</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://feekza.com/mentions-legales/</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://feekza.com/confidentialite/</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://feekza.com/cgv/</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
   </url>
 </urlset>
