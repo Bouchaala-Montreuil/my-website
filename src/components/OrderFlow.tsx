@@ -10,7 +10,8 @@ const CONTENT: Record<string, any> = {
     back: 'Back',
     next: 'Continue',
     pay: 'Pay €195 — first month',
-    payNote: 'Secure online payment · 6-month commitment · then cancel with 1 month notice',
+    payNote: '6-month commitment · then cancel with 1 month notice',
+    paySecure: 'You will be redirected to Stripe to complete the payment securely.',
     payFallback: 'No online payment yet? Send the order — we email you a secure payment link within 24h.',
     successTitle: 'Order received!',
     successDesc: 'Your first website version arrives within 48–72 hours. You preview it, approve it or ask for changes — the order only finalizes when you are satisfied.',
@@ -41,7 +42,8 @@ const CONTENT: Record<string, any> = {
     back: 'Retour',
     next: 'Continuer',
     pay: 'Payer 195 € — premier mois',
-    payNote: 'Paiement en ligne sécurisé · engagement de 6 mois · puis résiliable avec 1 mois de préavis',
+    payNote: 'Engagement de 6 mois · puis résiliable avec 1 mois de préavis',
+    paySecure: 'Vous serez redirigé vers Stripe pour payer en toute sécurité.',
     payFallback: 'Pas encore de paiement en ligne ? Envoyez la commande — nous vous envoyons un lien de paiement sécurisé sous 24h.',
     successTitle: 'Commande reçue !',
     successDesc: 'Votre première version arrive sous 48–72 heures. Vous la prévisualisez, l’approuvez ou demandez des modifications — la commande n’est finalisée que lorsque vous êtes satisfait.',
@@ -72,7 +74,8 @@ const CONTENT: Record<string, any> = {
     back: 'رجوع',
     next: 'متابعة',
     pay: 'ادفع 195 يورو — الشهر الأول',
-    payNote: 'دفع آمن عبر الإنترنت · التزام 6 أشهر · ثم إلغاء بإشعار شهر واحد',
+    payNote: 'التزام 6 أشهر · ثم إلغاء بإشعار شهر واحد',
+    paySecure: 'سيتم تحويلك إلى Stripe لإتمام الدفع بأمان.',
     payFallback: 'لا يوجد دفع إلكتروني بعد؟ أرسل الطلب — سنرسل لك رابط دفع آمن خلال 24 ساعة.',
     successTitle: 'تم استلام الطلب!',
     successDesc: 'تصلك النسخة الأولى خلال 48–72 ساعة. تعاينها ووافق عليها أو اطلب تعديلات — الطلب لا يُنهى إلا عندما تكون راضيًا.',
@@ -135,7 +138,7 @@ export default function OrderFlow() {
     setStep((s) => Math.min(s + 1, 4));
   };
 
-  const submit = async () => {
+  const pay = async () => {
     setSending(true);
     try {
       await fetch(FORMSPREE_ENDPOINT, {
@@ -146,6 +149,9 @@ export default function OrderFlow() {
     } catch { /* email fallback covers it */ }
     setSending(false);
     setDone(true);
+    if (PAYMENT_LINK) {
+      window.open(PAYMENT_LINK, '_blank', 'noopener,noreferrer');
+    }
   };
 
   const inputCls = 'w-full px-4 py-3 bg-white/5 border-2 border-white/10 rounded-xl text-cream focus:border-coral focus:outline-none transition-colors';
@@ -320,11 +326,13 @@ export default function OrderFlow() {
                   <span className="body-lg text-charcoal/50">/mo</span>
                 </div>
                 <p className="body-md text-charcoal/60 max-w-md mx-auto">{c.payNote}</p>
-                {PAYMENT_LINK ? (
-                  <a href={PAYMENT_LINK} target="_blank" rel="noopener noreferrer" className="btn btn-coral w-full justify-center" data-cursor="Pay">
-                    {c.pay}
-                  </a>
-                ) : (
+                <button onClick={pay} disabled={sending} className="btn btn-coral w-full justify-center" data-cursor="Pay">
+                  {sending ? '…' : PAYMENT_LINK ? c.pay : c.sendNoPay}
+                </button>
+                {PAYMENT_LINK && (
+                  <p className="body-sm text-charcoal/50">{c.paySecure}</p>
+                )}
+                {!PAYMENT_LINK && (
                   <p className="body-md text-charcoal/60">{c.payFallback}</p>
                 )}
               </div>
@@ -349,11 +357,6 @@ export default function OrderFlow() {
                 </div>
               )}
               {step === 3 && <button onClick={next} className="btn btn-dark" data-cursor="Next">{c.review ?? c.next}</button>}
-              {step === 4 && (
-                <button onClick={submit} disabled={sending} className="btn btn-coral" data-cursor="Send">
-                  {sending ? '…' : PAYMENT_LINK ? c.pay : c.sendNoPay}
-                </button>
-              )}
             </div>
           </div>
         )}
