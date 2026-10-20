@@ -251,3 +251,35 @@ Published claims were re-derived from these runs: mobile 99, LCP 2.1 s (worst pa
   owner chooses, a privacy-respecting measurement.
 - The case study covers one project (this site). It is labelled as such rather than padded
   with invented clients.
+
+## 20 Oct 2026 — motion pass against the reference
+
+**What could be inspected.** The sandbox has no outbound route to legencymedia.com, so the
+reference could not be run in this browser: no computed styles, no timeline scrub, no hover
+capture. Evidence used instead: the rendered text of the homepage, `/services/webflow-enterprise/`
+and `/case-studies/` (fetched 20 Oct 2026); the Awwwards profile ("bold typography, interactive
+dithering and fluid motion"; built with GSAP, Barba.js, Astro); the Webflow "made in Webflow"
+entry ("Interactions with GSAP"); and a published screenshot of an earlier iteration.
+
+**Behaviours that are attested, and what was rebuilt.**
+
+| Observed on the reference | Evidence | Implemented here |
+| --- | --- | --- |
+| Character-level heading reveals | Every heading in the fetched DOM contains each letter twice (`W W e e b b…`) | `Split` renders per-glyph spans behind a mask, staggered 14–18 ms, with a real `sr-only` sentence for AT |
+| Grotesque display + serif italic accent | Screenshot; "bold typography" | Instrument Sans 600 with Fraunces italic accents |
+| Infinite keyword marquee | "Webflow, search and conversion -" repeated in the DOM | `Marquee` with two identical sets, 42 s linear, pauses on hover |
+| Full-screen menu | "Legency Menu Close", Site/Services columns | Overlay panel, staggered rows, duplicated label that rolls on hover |
+| Carousel with arrows and `1/1` counter | `←→ 1/1` in the homepage DOM | Not rebuilt: Feekza has one case, a slider would be a prop |
+| Page transitions | Barba.js listed in the Awwwards stack | Cross-document View Transitions (`@view-transition`), reduced-motion aware |
+| Interactive dithering | Awwwards description; dithered blog covers | `DitherImage`: 440 px canvas, 4×4 Bayer matrix, pointer-sized hole revealing the photograph |
+| Scroll-linked movement | GSAP interactions | Geometry-based reveals (transform only), image clip masks, parallax hook |
+| Sticky, quiet chrome | Header pattern | Header gains a hairline and blur after 12 px of scroll |
+
+**Not reproduced, and why.** No WebGL, no pinned horizontal scrollytelling, no cursor takeover:
+none could be observed, and inventing them would be the "meaningless animation" the brief excludes.
+Easing curves and durations are therefore an interpretation, not a measurement.
+
+**Measured after the pass (Lighthouse 12.8.2, Chromium 131, gzip server, mobile preset).**
+`/` 99 / 100 / 100 / 100, LCP 1.8 s, CLS 0; `/realisations/` 100 / 100 / 100 / 100, LCP 1.9 s;
+desktop `/` 100, LCP 0.6 s. axe-core 4.14: 0 violations on 15 routes × 390/1440 px. Reduced motion
+verified: no glyph transforms, no marquee, no reveal offsets.

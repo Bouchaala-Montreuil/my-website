@@ -4,6 +4,8 @@ import { Header } from "./Header";
 import { Footer } from "./Footer";
 import { OrderForm } from "./OrderForm";
 import { ArrowRight, Check } from "./Icons";
+import { Split } from "./Split";
+import { DitherImage } from "./DitherImage";
 
 function Blocks({ blocks }: { blocks: PageBlock[] }) {
   return (
@@ -70,16 +72,25 @@ function Blocks({ blocks }: { blocks: PageBlock[] }) {
               key={index}
             >
               {block.items.map((item) => (
-                <figure key={item.src}>
-                  <img
-                    src={item.src}
-                    alt={item.alt}
-                    width={item.width}
-                    height={item.height}
-                    loading="lazy"
-                    decoding="async"
-                    fetchPriority="low"
-                  />
+                <figure key={item.src} data-mask>
+                  {block.layout === "single" ? (
+                    <DitherImage
+                      src={item.src}
+                      alt={item.alt}
+                      width={item.width}
+                      height={item.height}
+                    />
+                  ) : (
+                    <img
+                      src={item.src}
+                      alt={item.alt}
+                      width={item.width}
+                      height={item.height}
+                      loading="lazy"
+                      decoding="async"
+                      fetchPriority="low"
+                    />
+                  )}
                   {item.caption && <figcaption>{item.caption}</figcaption>}
                 </figure>
               ))}
@@ -132,7 +143,7 @@ export function PageView({
           <div className="wrap doc-hero__grid">
             <div>
               <p className="label doc-hero__eyebrow">{page.eyebrow}</p>
-              <h1 className="doc-hero__title">{page.h1}</h1>
+              <Split as="h1" className="doc-hero__title" text={page.h1} mode="load" step={14} />
               <p className="doc-hero__lead">{page.lead}</p>
               <a className="btn btn--coral" href={page.primaryCta.href}>
                 {page.primaryCta.label}
@@ -160,7 +171,7 @@ export function PageView({
 
         <div className="doc-body">
           {page.sections.map((section) => (
-            <section className="doc-section" key={section.id} aria-labelledby={section.id}>
+            <section className="doc-section" key={section.id} aria-labelledby={section.id} data-reveal>
               <div className="wrap doc-section__grid">
                 <p className="doc-section__label">
                   <b aria-hidden="true">{section.num}</b>

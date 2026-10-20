@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import type { Content, Locale } from "@/content/types";
 import { homePath } from "@/content";
 import { CloseIcon, MenuIcon } from "./Icons";
@@ -146,7 +146,14 @@ export function Header({ c, locale, currentPath, inPageAnchors = false }: Header
       </div>
 
       {open && (
-        <div className="mobile-panel" id="mobile-menu" ref={panelRef} role="dialog" aria-modal="true" aria-label={c.menu.navLabel}>
+        <div
+          className="mobile-panel"
+          id="mobile-menu"
+          ref={panelRef}
+          role="dialog"
+          aria-modal="true"
+          aria-label={c.menu.navLabel}
+        >
           <div className="mobile-panel__top">
             <span className="brand__word" aria-hidden="true">
               Feekza
@@ -154,7 +161,7 @@ export function Header({ c, locale, currentPath, inPageAnchors = false }: Header
             <button
               ref={closeRef}
               type="button"
-              className="menu-toggle"
+              className="menu-toggle menu-toggle--light"
               onClick={() => setOpen(false)}
               aria-label={c.menu.close}
             >
@@ -163,23 +170,33 @@ export function Header({ c, locale, currentPath, inPageAnchors = false }: Header
             </button>
           </div>
 
-          <nav aria-label={c.menu.navLabel}>
+          <nav className="menu-nav" aria-label={c.menu.navLabel}>
             {c.nav.map((item, index) => (
               <a
                 key={item.href}
                 href={anchor(item.href)}
                 aria-current={isCurrent(item.href) ? "page" : undefined}
                 onClick={() => setOpen(false)}
+                style={{ "--i": index } as CSSProperties}
               >
-                <span aria-hidden="true">0{index + 1}</span>
-                {item.label}
+                <span className="menu-nav__num" aria-hidden="true">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                <span className="menu-nav__label roll" aria-hidden="true">
+                  <span>{item.label}</span>
+                  <span>{item.label}</span>
+                </span>
+                <span className="sr-only">{item.label}</span>
+                <span className="menu-nav__arrow" aria-hidden="true">
+                  →
+                </span>
               </a>
             ))}
           </nav>
 
           <div className="mobile-panel__foot">
             <a
-              className="btn btn--coral btn--wide"
+              className="btn btn--coral btn--wide btn--sweep"
               href={anchor("#dossier")}
               onClick={() => setOpen(false)}
             >
@@ -205,6 +222,10 @@ export function Header({ c, locale, currentPath, inPageAnchors = false }: Header
               </div>
             </div>
           </div>
+
+          <span className="menu-ghost" aria-hidden="true">
+            Feekza
+          </span>
         </div>
       )}
     </header>

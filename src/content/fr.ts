@@ -7,11 +7,11 @@ export const fr: Content = {
   localeName: "Français",
   localeShort: "FR",
   meta: {
-    title: "Feekza — Votre site web à 195 € TTC/mois, sans frais",
+    title: "Feekza — Votre site web à 195 € TTC/mois, sans frais",
     description:
-      "Site web sur mesure jusqu’à 5 pages, hébergé et maintenu, modifications comprises. 195 € TTC/mois, 0 € de lancement, première version en 48⁠–⁠72 h.",
+      "Site web sur mesure jusqu’à 5 pages, hébergé et maintenu, modifications comprises. 195 € TTC/mois, 0 € de lancement, première version en 48⁠–⁠72 h.",
     ogAlt:
-      "Feekza — offre unique : un site web sur mesure pour 195 € TTC par mois, sans frais de lancement.",
+      "Feekza — offre unique : un site web sur mesure pour 195 € TTC par mois, sans frais de lancement.",
   },
   skipLink: "Aller au contenu",
   nav: [
@@ -38,15 +38,15 @@ export const fr: Content = {
     titleAccent: "noir sur blanc",
     titleAfter: ".",
     lead:
-      "Jusqu’à 5 pages conçues sur mesure, hébergées et maintenues pour 195 € TTC par mois. Aucun frais de lancement, six mois d’engagement, puis un mois de préavis. Première version sous 48⁠–⁠72 heures.",
+      "Jusqu’à 5 pages conçues sur mesure, hébergées et maintenues pour 195 € TTC par mois. Aucun frais de lancement, six mois d’engagement, puis un mois de préavis. Première version sous 48⁠–⁠72 heures.",
     ctaPrimary: "Ouvrir un dossier",
     ctaSecondary: "Lire l’offre en détail",
     ctaNote: "Deux minutes. Aucune carte bancaire demandée pour envoyer le dossier.",
     specTitle: "Fiche offre",
     specRef: "Mise à jour 20/10/2026",
-    price: "195 €",
+    price: "195 €",
     priceUnit: "TTC / mois",
-    priceNote: "TVA incluse · 0 € de frais de lancement",
+    priceNote: "TVA incluse · 0 € de frais de lancement",
     specRows: [
       { k: "Engagement", v: "6 mois", note: "puis mensuel" },
       { k: "Préavis", v: "1 mois" },
@@ -60,7 +60,7 @@ export const fr: Content = {
   },
   ticker: [
     "Prix fixe, écrit",
-    "0 € de frais de lancement",
+    "0 € de frais de lancement",
     "6 mois d’engagement",
     "FR · EN · AR",
     "Hébergement et email inclus",
@@ -105,7 +105,7 @@ export const fr: Content = {
         title: "Nom de domaine la première année",
         body:
           "Nous l’enregistrons et le configurons pour vous. À partir de la deuxième année, vous le réglez directement au registrar.",
-        note: "Repère public : 4,99 € HT la première année, puis 7,79 € HT par an pour un .fr chez OVHcloud (relevé le 20/10/2026).",
+        note: "Repère public : 4,99 € HT la première année, puis 7,79 € HT par an pour un .fr chez OVHcloud (relevé le 20/10/2026).",
       },
     ],
   },
@@ -157,7 +157,7 @@ export const fr: Content = {
       title: "Ce qui est inclus, ce qui est chiffré à part",
       note: "Mieux vaut le dire avant qu’après.",
     },
-    inTitle: "Inclus dans les 195 € TTC/mois",
+    inTitle: "Inclus dans les 195 € TTC/mois",
     outTitle: "Chiffré séparément",
     inItems: [
       "Site sur mesure jusqu’à 5 pages",
@@ -186,15 +186,15 @@ export const fr: Content = {
     head: {
       num: "05",
       label: "Le prix",
-      title: "195 € TTC par mois, calculés sur douze mois",
+      title: "195 € TTC par mois, calculés sur douze mois",
       note:
         "Le prix affiché est celui qui est débité. Pas de frais de dossier, pas de supplément à la livraison.",
     },
     cardName: "Feekza — offre unique",
     cardTag: "TVA incluse",
-    amount: "195 €",
+    amount: "195 €",
     unit: "TTC / mois",
-    amountNote: "0 € de frais de lancement · premier mois réglé au démarrage du projet",
+    amountNote: "0 € de frais de lancement · premier mois réglé au démarrage du projet",
     features: [
       "Site sur mesure jusqu’à 5 pages",
       "Hébergement et certificat SSL",
@@ -212,12 +212,12 @@ export const fr: Content = {
     sideBody:
       "Beaucoup d’offres par abonnement affichent un prix hors taxes et ajoutent des frais de lancement. Voici le calcul complet pour Feekza, sur les douze premiers mois.",
     math: [
-      { label: "Mois 1 à 6 (engagement)", value: "1 170 €" },
-      { label: "Mois 7 à 12", value: "1 170 €" },
-      { label: "Frais de lancement", value: "0 €" },
+      { label: "Mois 1 à 6 (engagement)", value: "1 170 €" },
+      { label: "Mois 7 à 12", value: "1 170 €" },
+      { label: "Frais de lancement", value: "0 €" },
       { label: "Hébergement, SSL, email, maintenance", value: "inclus" },
     ],
-    mathTotal: { label: "Total des 12 premiers mois", value: "2 340 € TTC", strong: true },
+    mathTotal: { label: "Total des 12 premiers mois", value: "2 340 € TTC", strong: true },
     mathFoot:
       "Après les six premiers mois, l’abonnement devient mensuel avec un mois de préavis.",
     ownership:
@@ -236,20 +236,20 @@ export const fr: Content = {
     rows: [
       {
         label: "Feekza — offre unique",
-        cells: ["195 € TTC / mois", "0 €", "6 mois", "2 340 € TTC"],
+        cells: ["195 € TTC / mois", "0 €", "6 mois", "2 340 € TTC"],
         highlight: true,
       },
       {
         label: "Agence française, projet sur devis (médiane)",
-        cells: ["≈ 5 200 € une fois", "—", "aucun", "≈ 5 200 € + maintenance"],
+        cells: ["≈ 5 200 € une fois", "—", "aucun", "≈ 5 200 € + maintenance"],
       },
       {
         label: "Abonnement type marché (médiane de 8 offres)",
-        cells: ["59 € HT / mois", "250⁠–⁠500 € quand ils existent", "jusqu’à 24 mois", "929 € TTC (médiane)"],
+        cells: ["59 € HT / mois", "250⁠–⁠500 € quand ils existent", "jusqu’à 24 mois", "929 € TTC (médiane)"],
       },
       {
         label: "Outil en autonomie (Wix, Squarespace…)",
-        cells: ["≈ 17⁠–⁠30 € / mois", "0 €", "aucun", "200⁠–⁠360 € + votre temps"],
+        cells: ["≈ 17⁠–⁠30 € / mois", "0 €", "aucun", "200⁠–⁠360 € + votre temps"],
       },
     ],
     sourcesLabel: "Sources",
@@ -351,7 +351,7 @@ export const fr: Content = {
     link: "Écrire à Feekza",
     items: [
       {
-        q: "Que comprend exactement 195 € TTC par mois ?",
+        q: "Que comprend exactement 195 € TTC par mois ?",
         a: [
           "Un site sur mesure de 5 pages maximum, l’hébergement et le certificat SSL, une adresse email professionnelle, le nom de domaine la première année, la maintenance technique et les modifications de contenu illimitées.",
           "La première version est livrée sous 48⁠–⁠72 h après réception de vos éléments, puis les révisions sont traitées sous 24 h.",
@@ -487,13 +487,13 @@ export const fr: Content = {
         {
           value: "euro-link",
           label: "Recevoir un lien de paiement en euros",
-          note: "Recommandé. Vous validez le périmètre d’abord, puis vous payez 195 € TTC par carte.",
+          note: "Recommandé. Vous validez le périmètre d’abord, puis vous payez 195 € TTC par carte.",
         },
         {
           value: "stripe-now",
           label: "Payer maintenant par carte (Stripe)",
           note:
-            "Le paiement est débité en dollars américains : 227,84 $ au 20/10/2026, soit 195 € majorés de 4 % de frais de conversion affichés par Stripe.",
+            "Le paiement est débité en dollars américains : 227,84 $ au 20/10/2026, soit 195 € majorés de 4 % de frais de conversion affichés par Stripe.",
         },
       ],
       stripeNote:

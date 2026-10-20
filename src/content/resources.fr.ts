@@ -24,8 +24,8 @@ export const contactPage: PageDoc = {
   facts: [
     { k: "Réponse", v: "Sous 1 jour ouvré" },
     { k: "Langues", v: "Français, anglais, arabe" },
-    { k: "Prix du site", v: "195 € TTC / mois" },
-    { k: "Frais de lancement", v: "0 €" },
+    { k: "Prix du site", v: "195 € TTC / mois" },
+    { k: "Frais de lancement", v: "0 €" },
     { k: "Engagement", v: "6 mois, puis 1 mois de préavis" },
     { k: "Paiement", v: "Après périmètre validé" },
   ],
@@ -145,7 +145,7 @@ export const contactPage: PageDoc = {
       q: "Faut-il déjà avoir un nom de domaine ?",
       a: [
         "Non. S’il n’existe pas, nous l’enregistrons et il est offert la première année. S’il existe déjà, nous récupérons les accès ou nous vous guidons pour les transférer.",
-        "Le renouvellement annuel est ensuite réglé directement au registrar ; pour un .fr chez OVHcloud, il était de 7,79 € HT par an au 20 octobre 2026.",
+        "Le renouvellement annuel est ensuite réglé directement au registrar ; pour un .fr chez OVHcloud, il était de 7,79 € HT par an au 20 octobre 2026.",
       ],
     },
     {
@@ -322,17 +322,17 @@ export const guidePrice: PageDoc = {
   eyebrow: "Guide — Budget",
   h1: "Combien coûte vraiment un site vitrine en 2026 ?",
   lead:
-    "Les prix affichés vont de 10 € par mois à 18 000 € au forfait. La différence n’est pas seulement le design : c’est ce que vous possédez, ce que vous payez chaque année, et qui peut modifier le site.",
+    "Les prix affichés vont de 10 € par mois à 18 000 € au forfait. La différence n’est pas seulement le design : c’est ce que vous possédez, ce que vous payez chaque année, et qui peut modifier le site.",
   factsTitle: "En bref",
   facts: [
     { k: "Mise à jour", v: "20 octobre 2026" },
     { k: "Lecture", v: "8 minutes" },
-    { k: "Prix observés", v: "10 € à 18 000 €" },
+    { k: "Prix observés", v: "10 € à 18 000 €" },
     { k: "Sources citées", v: "5 pages publiques" },
-    { k: "Offre Feekza", v: "195 € TTC / mois" },
+    { k: "Offre Feekza", v: "195 € TTC / mois" },
   ],
   primaryCta: {
-    label: "Voir ce que couvre 195 €",
+    label: "Voir ce que couvre 195 €",
     href: "/creation-site-web/",
     note: "Périmètre de cinq pages, prix public.",
   },
@@ -384,24 +384,24 @@ export const guidePrice: PageDoc = {
         {
           type: "metrics",
           items: [
-            { value: "30⁠–⁠36 €", label: "HT / mois", note: "Simplebo, offre d’entrée" },
-            { value: "99,90 €", label: "HT / mois", note: "Webgazelle, engagement 24 mois" },
-            { value: "5 200 €", label: "Projet médian", note: "La Fabrique du Net" },
-            { value: "18 000 €", label: "Projet sur mesure", note: "La Fabrique du Net" },
+            { value: "30⁠–⁠36 €", label: "HT / mois", note: "Simplebo, offre d’entrée" },
+            { value: "99,90 €", label: "HT / mois", note: "Webgazelle, engagement 24 mois" },
+            { value: "5 200 €", label: "Projet médian", note: "La Fabrique du Net" },
+            { value: "18 000 €", label: "Projet sur mesure", note: "La Fabrique du Net" },
           ],
         },
         {
           type: "p",
           text:
-            "Ces quatre chiffres suffisent à comprendre le marché : un abonnement d’entrée se situe autour de 30 à 100 € HT par mois, un projet livré par une agence se compte en milliers d’euros. Entre les deux, les offres hybrides — abonnement avec engagement, paiement échelonné — mélangent les deux logiques.",
+            "Ces quatre chiffres suffisent à comprendre le marché : un abonnement d’entrée se situe autour de 30 à 100 € HT par mois, un projet livré par une agence se compte en milliers d’euros. Entre les deux, les offres hybrides — abonnement avec engagement, paiement échelonné — mélangent les deux logiques.",
         },
         {
           type: "ul",
           items: [
-            "Simplebo affiche 30 à 36 € HT par mois, avec des frais de lancement de 200 à 240 €, et revendique plus de 10 000 clients.",
-            "Webgazelle affiche 99,90 € HT par mois avec un engagement de 24 mois.",
-            "L’observatoire de Madra relève un prix médian affiché de 59 € HT par mois, pour un premier coût réel de 929 € TTC la première année.",
-            "La Fabrique du Net situe le projet médian à 5 200 € et le sur-mesure autour de 18 000 €.",
+            "Simplebo affiche 30 à 36 € HT par mois, avec des frais de lancement de 200 à 240 €, et revendique plus de 10 000 clients.",
+            "Webgazelle affiche 99,90 € HT par mois avec un engagement de 24 mois.",
+            "L’observatoire de Madra relève un prix médian affiché de 59 € HT par mois, pour un premier coût réel de 929 € TTC la première année.",
+            "La Fabrique du Net situe le projet médian à 5 200 € et le sur-mesure autour de 18 000 €.",
           ],
         },
         {
@@ -426,21 +426,21 @@ export const guidePrice: PageDoc = {
         {
           type: "ul",
           items: [
-            "Abonnement d’entrée à 36 € HT par mois + 240 € de lancement : environ 1 536 € HT sur trois ans.",
-            "Abonnement à 99,90 € HT par mois sur 24 mois minimum : environ 2 398 € HT sur deux ans, puis le tarif en vigueur.",
-            "Projet au forfait médian à 5 200 € + hébergement et maintenance : le coût dépend fortement de qui met à jour le site ensuite.",
-            "Feekza : 195 € TTC par mois, sans frais de lancement, soit 2 340 € TTC sur douze mois, modifications de contenu comprises.",
+            "Abonnement d’entrée à 36 € HT par mois + 240 € de lancement : environ 1 536 € HT sur trois ans.",
+            "Abonnement à 99,90 € HT par mois sur 24 mois minimum : environ 2 398 € HT sur deux ans, puis le tarif en vigueur.",
+            "Projet au forfait médian à 5 200 € + hébergement et maintenance : le coût dépend fortement de qui met à jour le site ensuite.",
+            "Feekza : 195 € TTC par mois, sans frais de lancement, soit 2 340 € TTC sur douze mois, modifications de contenu comprises.",
           ],
         },
         {
           type: "p",
           text:
-            "Le calcul ne dit pas quelle offre est la meilleure : il dit ce que vous payez réellement. Un site à 30 € par mois dont vous ne pouvez pas sortir sans perdre le nom de domaine n’est pas moins cher qu’un site à 100 € par mois que vous pouvez récupérer.",
+            "Le calcul ne dit pas quelle offre est la meilleure : il dit ce que vous payez réellement. Un site à 30 € par mois dont vous ne pouvez pas sortir sans perdre le nom de domaine n’est pas moins cher qu’un site à 100 € par mois que vous pouvez récupérer.",
         },
         {
           type: "note",
           text:
-            "À partir de la deuxième année, le nom de domaine est renouvelé directement au registrar. Pour un .fr chez OVHcloud, l’ordre de grandeur public était de 7,79 € HT par an au 20 octobre 2026.",
+            "À partir de la deuxième année, le nom de domaine est renouvelé directement au registrar. Pour un .fr chez OVHcloud, l’ordre de grandeur public était de 7,79 € HT par an au 20 octobre 2026.",
         },
       ],
     },
@@ -481,22 +481,22 @@ export const guidePrice: PageDoc = {
             {
               label: "Simplebo — tarifs",
               href: "https://simplebo.fr/tarifs",
-              note: "Abonnements de 30 à 36 € HT par mois, frais de lancement de 200 à 240 €.",
+              note: "Abonnements de 30 à 36 € HT par mois, frais de lancement de 200 à 240 €.",
             },
             {
               label: "Webgazelle",
               href: "https://webgazelle.net/",
-              note: "Offre à 99,90 € HT par mois, engagement de 24 mois.",
+              note: "Offre à 99,90 € HT par mois, engagement de 24 mois.",
             },
             {
               label: "Madra — observatoire des prix",
               href: "https://madra.io/observatoire-prix-site-internet-par-abonnement",
-              note: "Prix médian affiché de 59 € HT par mois, 929 € TTC la première année.",
+              note: "Prix médian affiché de 59 € HT par mois, 929 € TTC la première année.",
             },
             {
               label: "La Fabrique du Net — tarifs des agences",
               href: "https://www.lafabriquedunet.fr/agences/pages/agences-site-internet/tarifs",
-              note: "Projet médian à 5 200 €, sur-mesure autour de 18 000 €.",
+              note: "Projet médian à 5 200 €, sur-mesure autour de 18 000 €.",
             },
             {
               label: "OVHcloud — noms de domaine",
@@ -531,7 +531,7 @@ export const guidePrice: PageDoc = {
   faqTitle: "Questions fréquentes sur le budget",
   faq: [
     {
-      q: "Un site à 30 € par mois peut-il suffire ?",
+      q: "Un site à 30 € par mois peut-il suffire ?",
       a: [
         "Oui, si votre besoin est une présence simple, si vous n’avez pas de contraintes de contenu et si les conditions de sortie vous conviennent. Le prix bas devient un problème quand il faut ajouter des pages, modifier souvent, ou récupérer le site.",
       ],
@@ -562,7 +562,7 @@ export const guidePrice: PageDoc = {
     {
       label: "Création de site",
       href: "/creation-site-web/",
-      note: "Ce que couvre exactement l’offre à 195 € TTC par mois.",
+      note: "Ce que couvre exactement l’offre à 195 € TTC par mois.",
     },
     {
       label: "Référencement",
@@ -668,7 +668,7 @@ export const guideChecklist: PageDoc = {
             {
               title: "La vitesse et l’affichage",
               body:
-                "Mesurez le chargement sur mobile et vérifiez qu’aucun contenu ne déborde horizontalement entre 320 et 1 600 px de large.",
+                "Mesurez le chargement sur mobile et vérifiez qu’aucun contenu ne déborde horizontalement entre 320 et 1 600 px de large.",
             },
             {
               title: "Les sauvegardes",

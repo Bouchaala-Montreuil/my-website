@@ -2,6 +2,7 @@ import type { Content, LegalBlock, LegalPage } from "@/content/types";
 import { Header } from "./Header";
 import { Footer } from "./Footer";
 import { CONTACT_EMAIL } from "@/config";
+import { Split } from "./Split";
 
 /** Renders a string where {{token}} marks a field only the publisher can supply. */
 function WithPlaceholders({ text }: { text: string }) {
@@ -70,7 +71,7 @@ export function LegalView({
             <p className="label" style={{ color: "var(--coral-deep)" }}>
               Feekza — document contractuel
             </p>
-            <h1>{page.title}</h1>
+            <Split as="h1" className="legal__title" text={page.title} mode="load" step={12} />
             <p className="legal__meta">Dernière mise à jour : {page.updated}</p>
           </div>
 

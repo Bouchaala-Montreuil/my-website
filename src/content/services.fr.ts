@@ -10,15 +10,15 @@ export const serviceCreation: PageDoc = {
   slug: "creation-site-web",
   metaTitle: "Création de site web sur mesure — Feekza",
   metaDescription:
-    "Un site de 5 pages conçu, écrit et mis en ligne pour votre activité. 195 € TTC/mois, hébergement et modifications comprises. Première version en 48⁠–⁠72 h.",
+    "Un site de 5 pages conçu, écrit et mis en ligne pour votre activité. 195 € TTC/mois, hébergement et modifications comprises. Première version en 48⁠–⁠72 h.",
   eyebrow: "Service 01 — Création de site",
   h1: "Un site qui dit exactement ce que vous faites.",
   lead:
-    "Jusqu’à cinq pages conçues pour votre activité, hébergées et maintenues, avec les modifications de contenu comprises. 195 € TTC par mois, sans frais de lancement.",
+    "Jusqu’à cinq pages conçues pour votre activité, hébergées et maintenues, avec les modifications de contenu comprises. 195 € TTC par mois, sans frais de lancement.",
   factsTitle: "L’offre en un coup d’œil",
   facts: [
-    { k: "Prix", v: "195 € TTC / mois" },
-    { k: "Frais de lancement", v: "0 €" },
+    { k: "Prix", v: "195 € TTC / mois" },
+    { k: "Frais de lancement", v: "0 €" },
     { k: "Délai", v: "48⁠–⁠72 h" },
     { k: "Pages", v: "5 maximum" },
     { k: "Engagement", v: "6 mois, puis 1 mois de préavis" },
@@ -64,7 +64,7 @@ export const serviceCreation: PageDoc = {
       num: "02",
       label: "Livrables",
       title: "Ce que vous recevez, concrètement",
-      note: "Chaque ligne ci-dessous est comprise dans les 195 € TTC mensuels.",
+      note: "Chaque ligne ci-dessous est comprise dans les 195 € TTC mensuels.",
       blocks: [
         {
           type: "ul",
@@ -150,17 +150,17 @@ export const serviceCreation: PageDoc = {
       id: "prix",
       num: "05",
       label: "Prix",
-      title: "195 € TTC, et la sortie est écrite",
+      title: "195 € TTC, et la sortie est écrite",
       note: "Le prix affiché est celui qui est débité. Pas de frais de dossier, pas de supplément à la livraison.",
       blocks: [
         {
           type: "ul",
           items: [
-            "195 € TTC par mois, TVA incluse, sans frais de lancement.",
+            "195 € TTC par mois, TVA incluse, sans frais de lancement.",
             "Premier mois réglé au démarrage du projet, après validation du périmètre.",
             "Engagement de six mois, puis abonnement mensuel résiliable avec un mois de préavis.",
-            "Total des douze premiers mois : 2 340 € TTC, hébergement, SSL, email et maintenance compris.",
-            "À partir de la deuxième année, le nom de domaine est réglé directement au registrar (repère public : 7,79 € HT par an pour un .fr chez OVHcloud).",
+            "Total des douze premiers mois : 2 340 € TTC, hébergement, SSL, email et maintenance compris.",
+            "À partir de la deuxième année, le nom de domaine est réglé directement au registrar (repère public : 7,79 € HT par an pour un .fr chez OVHcloud).",
           ],
         },
         {
@@ -433,7 +433,7 @@ export const serviceSeo: PageDoc = {
   faqTitle: "Questions sur le référencement",
   faq: [
     {
-      q: "Le référencement est-il inclus dans les 195 € ?",
+      q: "Le référencement est-il inclus dans les 195 € ?",
       a: [
         "Le socle technique, oui : titres, descriptions, structure, plan du site, données structurées, performance, mobile, indexation.",
         "Le travail éditorial (audit de contenu, plan de pages, rédaction, optimisation continue) est chiffré séparément, car son volume varie fortement d’un projet à l’autre.",
@@ -772,7 +772,7 @@ export const workPage: PageDoc = {
             {
               src: "/case-feekza.webp",
               alt:
-                "Comparaison de la page d’accueil de feekza.com sur ordinateur et sur téléphone : le titre, la fiche offre à 195 € TTC par mois et le bouton d’ouverture de dossier.",
+                "Comparaison de la page d’accueil de feekza.com sur ordinateur et sur téléphone : le titre, la fiche offre à 195 € TTC par mois et le bouton d’ouverture de dossier.",
               width: 1600,
               height: 1000,
               caption:
@@ -1163,7 +1163,7 @@ export const homePromo: HomePromo = {
   items: [
     {
       index: "01",
-      tag: "À partir de 195 € TTC / mois",
+      tag: "À partir de 195 € TTC / mois",
       title: "Création de site",
       body:
         "Un site vitrine de cinq pages, conçu pour votre activité, hébergé et maintenu. Première version en 48⁠–⁠72 h, modifications comprises.",

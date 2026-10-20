@@ -7,11 +7,11 @@ export const en: Content = {
   localeName: "English",
   localeShort: "EN",
   meta: {
-    title: "Feekza — A custom website for €195 a month, no setup fee",
+    title: "Feekza — A custom website for €195 a month, no setup fee",
     description:
-      "A custom website up to 5 pages, hosted and maintained, with unlimited content changes. €195 incl. tax per month, €0 setup fee, six-month commitment. First version in 48⁠–⁠72 hours.",
+      "A custom website up to 5 pages, hosted and maintained, with unlimited content changes. €195 incl. tax per month, €0 setup fee, six-month commitment. First version in 48⁠–⁠72 hours.",
     ogAlt:
-      "Feekza — one offer: a custom website for €195 including tax per month, with no setup fee.",
+      "Feekza — one offer: a custom website for €195 including tax per month, with no setup fee.",
   },
   skipLink: "Skip to content",
   nav: [
@@ -36,7 +36,7 @@ export const en: Content = {
     titleAccent: "in writing",
     titleAfter: ".",
     lead:
-      "Up to 5 custom pages, hosted and maintained for €195 incl. tax per month. No setup fee, a six-month term, then one month’s notice. First version within 48⁠–⁠72 hours.",
+      "Up to 5 custom pages, hosted and maintained for €195 incl. tax per month. No setup fee, a six-month term, then one month’s notice. First version within 48⁠–⁠72 hours.",
     ctaPrimary: "Start a brief",
     ctaSecondary: "Read the full offer",
     ctaNote: "Two minutes. No card needed to send the brief.",
@@ -44,7 +44,7 @@ export const en: Content = {
     specRef: "Updated 20/10/2026",
     price: "€ 195",
     priceUnit: "incl. tax / month",
-    priceNote: "VAT included · €0 setup fee",
+    priceNote: "VAT included · €0 setup fee",
     specRows: [
       { k: "Term", v: "6 months", note: "then monthly" },
       { k: "Notice", v: "1 month" },
@@ -102,7 +102,7 @@ export const en: Content = {
         title: "Domain name for the first year",
         body:
           "We register and configure it. From year two you pay the registrar directly.",
-        note: "Public reference: €4.99 excl. tax for the first year, then €7.79 excl. tax per year for a .fr domain at OVHcloud (checked 20/10/2026).",
+        note: "Public reference: €4.99 excl. tax for the first year, then €7.79 excl. tax per year for a .fr domain at OVHcloud (checked 20/10/2026).",
       },
     ],
   },
@@ -153,7 +153,7 @@ export const en: Content = {
       title: "What is included, what is quoted separately",
       note: "Better said before than after.",
     },
-    inTitle: "Included in €195 incl. tax / month",
+    inTitle: "Included in €195 incl. tax / month",
     outTitle: "Quoted separately",
     inItems: [
       "Custom website, up to 5 pages",
@@ -235,7 +235,7 @@ export const en: Content = {
       },
       {
         label: "French agency, quoted project (median)",
-        cells: ["≈ €5,200 once", "—", "none", "≈ €5,200 + maintenance"],
+        cells: ["≈ €5,200 once", "—", "none", "≈ €5,200 + maintenance"],
       },
       {
         label: "Typical subscription (median of 8 offers)",
@@ -243,7 +243,7 @@ export const en: Content = {
       },
       {
         label: "Self-service builder (Wix, Squarespace…)",
-        cells: ["≈ €17⁠–⁠30 / month", "€0", "none", "€200⁠–⁠360 + your time"],
+        cells: ["≈ €17⁠–⁠30 / month", "€0", "none", "€200⁠–⁠360 + your time"],
       },
     ],
     sourcesLabel: "Sources",
@@ -343,7 +343,7 @@ export const en: Content = {
     link: "Write to Feekza",
     items: [
       {
-        q: "What exactly does €195 incl. tax per month include?",
+        q: "What exactly does €195 incl. tax per month include?",
         a: [
           "A custom website of up to 5 pages, hosting and SSL certificate, a professional email address, the domain name for the first year, technical maintenance and unlimited content changes.",
           "The first version is delivered within 48⁠–⁠72 h of receiving your material; revisions are then handled within 24 h.",
@@ -478,13 +478,13 @@ export const en: Content = {
         {
           value: "euro-link",
           label: "Receive a euro payment link",
-          note: "Recommended. You confirm the scope first, then pay €195 incl. tax by card.",
+          note: "Recommended. You confirm the scope first, then pay €195 incl. tax by card.",
         },
         {
           value: "stripe-now",
           label: "Pay now by card (Stripe)",
           note:
-            "Payment is charged in US dollars: $227.84 on 20/10/2026, i.e. €195 plus the 4 % conversion fee shown by Stripe.",
+            "Payment is charged in US dollars: $227.84 on 20/10/2026, i.e. €195 plus the 4 % conversion fee shown by Stripe.",
         },
       ],
       stripeNote:

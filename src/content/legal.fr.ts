@@ -347,12 +347,12 @@ export const cgv: LegalPage = {
         {
           type: "p",
           text:
-            "Le prix de l’offre est de 195 € TTC par mois, TVA incluse, sans frais de lancement. Le premier mois est réglé au démarrage du projet.",
+            "Le prix de l’offre est de 195 € TTC par mois, TVA incluse, sans frais de lancement. Le premier mois est réglé au démarrage du projet.",
         },
         {
           type: "p",
           text:
-            "Le nom de domaine est inclus la première année. À partir de la deuxième année, son renouvellement est réglé directement par le client au registrar, à un tarif indicatif de 10 à 20 € par an selon l’extension.",
+            "Le nom de domaine est inclus la première année. À partir de la deuxième année, son renouvellement est réglé directement par le client au registrar, à un tarif indicatif de 10 à 20 € par an selon l’extension.",
         },
         {
           type: "p",

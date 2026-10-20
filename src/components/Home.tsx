@@ -30,10 +30,17 @@ export function Home({
       <main id="contenu">
         <Hero c={c} />
 
-        <div className="ticker" aria-hidden="true">
-          <div className="wrap ticker__inner">
-            {c.ticker.map((item) => (
-              <span key={item}>{item}</span>
+        <div className="marquee" aria-hidden="true">
+          <div className="marquee__track">
+            {[0, 1].map((copy) => (
+              <ul className="marquee__set" key={copy}>
+                {c.ticker.map((item) => (
+                  <li key={item}>
+                    <span className="marquee__dot" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
             ))}
           </div>
         </div>
