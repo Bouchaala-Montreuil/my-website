@@ -4,6 +4,7 @@ import { Home } from "@/components/Home";
 import { LegalView } from "@/components/LegalView";
 import { PageView } from "@/components/PageView";
 import { NotFoundView } from "@/components/NotFoundView";
+import { BrandLoader } from "@/components/BrandLoader";
 
 export function App({ route }: { route: Route }) {
   const skipLink =
@@ -27,6 +28,7 @@ export function App({ route }: { route: Route }) {
         {skipLink}
       </a>
       {view}
+      <BrandLoader />
     </>
   );
 }

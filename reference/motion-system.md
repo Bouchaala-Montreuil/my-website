@@ -7,7 +7,8 @@ as one hand rather than a set of effects.
 ## 1. Principles
 
 1. **Ink and paper move, colour stays.** Motion is expressed with ink, paper and
-   the single electric blue. No new colours, no glows.
+   the single electric blue. The one exception is the brand mark itself: the
+   supplied logo carries its own blue glow, and the loader shows it as drawn.
 2. **One ease family.** `cubic-bezier(.625,.05,0,1)` for state changes,
    `cubic-bezier(.19,1,.22,1)` for entrances. Nothing else is allowed.
 3. **Short, then still.** Interface motion lives between 120 ms and 520 ms;
@@ -63,14 +64,36 @@ field uses `.76,0,.24,1` for a symmetric fill/empty.
 - Parallax is transform-only, capped at ±8 % of the layer height.
 - No scroll hijacking, no pinned sections, no scroll-linked typography.
 
-## 6. Reduced motion
+## 6. Brand loader
+
+The only full-screen moment on the site, and the only place the logo stands on
+its own ground.
+
+- **When.** First visit of a session only (`sessionStorage["feekza:loader"]`,
+  written by the inline script in `index.html`), never on internal navigation,
+  never under `prefers-reduced-motion: reduce`, and never a gate: any
+  `pointerdown` or `keydown` releases it, and a 5 s failsafe removes the scroll
+  lock even if the bundle never mounts.
+- **What.** The supplied mark (`public/brand/feekza-f.webp`, cropped from the
+  brand artwork with its glow, alpha-cut from its black plate) rises 14 px and
+  un-wipes on a diagonal (`clip-path` polygon, 950 ms). A light sweep crosses the
+  shape itself — a gradient masked by the mark's own alpha, once, 1.05 s. The
+  wordmark staggers letter by letter (45 ms apart from 620 ms), the tagline opens
+  its tracking from .18em to .52em, and a 2 px blue rule fills the bottom edge
+  over 1.55 s.
+- **Exit.** The whole field lifts 100 % on `.76,0,.24,1` at 1.7 s and is
+  `visibility:hidden` at 2.32 s; the class is released at 2.4 s.
+- **Cost.** One 360×381 WebP (25 KB), preloaded only when the loader will run.
+- **Reduced motion.** `display:none` — the page is simply there.
+
+## 7. Reduced motion
 
 `prefers-reduced-motion: reduce` disables the transition field, the cursor,
 magnetism, the clip reveal, the character roll, the accordion animation and all
 scroll transitions, and shows every element in its final state. The site remains
 complete and readable: motion is never the carrier of information.
 
-## 7. Performance
+## 8. Performance
 
 - Only `transform`, `opacity`, `filter` and `clip-path` are animated.
 - One `requestAnimationFrame` loop at a time; each stops when its element leaves
@@ -78,9 +101,10 @@ complete and readable: motion is never the carrier of information.
 - The page transition builds its cells at click time and removes the whole layer
   after the reveal.
 - Measured after this pass (desktop Lighthouse, `/`): **100 / 100 / 100 / 100**,
-  LCP 0.5 s, CLS 0, TBT 0 ms. axe-core: 0 violations at 390 and 1440 px.
+  LCP 0.4 s, CLS 0, TBT 0 ms. axe-core: 0 violations across four routes at
+  390 and 1440 px.
 
-## 8. Verification log
+## 9. Verification log
 
 | Effect | Method | Result |
 |---|---|---|
@@ -93,8 +117,12 @@ complete and readable: motion is never the carrier of information.
 | Accordion | open a `details` | `faq-answer .34s`, sign rotates 45° |
 | Reduced motion | emulate media feature | no cursor, no clip, no overlay, no filter |
 | Touch | `(hover:none)` | cursor layer `display:none` |
+| Brand loader | clear the session, load `/` at 1440, sample the timeline | mark opacity .5 → 1 and wipe polygon 85% → 170%, letters 0 → 1, bar `scaleX(0)` → 1, field `translateY(-900px)` then `visibility:hidden` at 2.32 s |
+| Brand loader, skip | `pointerdown` while it runs | `loader` class removed, page interactive |
+| Brand loader, repeat | reload in the same session | no overlay |
+| Brand loader, reduced motion | emulate `reduce` | `display:none` |
 
-## 9. Limits
+## 10. Limits
 
 - The cursor cannot be screenshotted in the headless shell: it reports
   `(hover:none)`, which correctly hides the layer. Behaviour was verified through

@@ -14,6 +14,19 @@ export function ClientApp() {
     initInteractions();
     initPointer();
 
+    // The loader is pure CSS; this only releases the scroll lock and lets the
+    // visitor skip it. It is a first-visit ritual, never a gate.
+    if (document.documentElement.classList.contains("loader")) {
+      const close = () => document.documentElement.classList.remove("loader");
+      const timer = window.setTimeout(close, 2400);
+      const skip = () => {
+        window.clearTimeout(timer);
+        close();
+      };
+      window.addEventListener("pointerdown", skip, { once: true });
+      window.addEventListener("keydown", skip, { once: true });
+    }
+
     // A slim header once the page has moved — the reference keeps the chrome
     // quiet and lets the type carry the page.
     const header = document.querySelector<HTMLElement>(".header");
