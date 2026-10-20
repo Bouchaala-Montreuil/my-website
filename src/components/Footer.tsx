@@ -66,7 +66,7 @@ export default function Footer() {
         <h2 className="display-lg text-charcoal mb-6 max-w-2xl mx-auto">
           {t('footer.cta')}
         </h2>
-        <MagneticButton href="#contact" className="btn btn-dark" data-cursor="Let's Go">
+        <MagneticButton href="#order" className="btn btn-dark" data-cursor="Let's Go">
           {t('footer.btn')}
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="flip-rtl">
             <path d="M1 13L13 1M13 1H4M13 1V10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -76,7 +76,7 @@ export default function Footer() {
 
       {/* Footer content */}
       <div className="footer-links px-8 md:px-16 lg:px-20 py-14 md:py-20">
-        <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-12 gap-8 md:gap-6">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-12 gap-8 md:gap-6">
           {/* Brand */}
           <div className="footer-col col-span-2 md:col-span-4">
             <img src="wordmark.png" alt="Feekza" className="h-9 w-auto rounded-lg mb-4" />
@@ -102,7 +102,7 @@ export default function Footer() {
             {
               title: t('footer.contact'),
               links: [
-                { label: CONTACT_EMAIL, href: `mailto:${CONTACT_EMAIL}` },
+                { label: CONTACT_EMAIL, href: `mailto:${CONTACT_EMAIL}`, breakAll: true },
                 { label: t('footer.response'), href: `mailto:${CONTACT_EMAIL}` },
               ],
             },
@@ -110,9 +110,9 @@ export default function Footer() {
             <div key={col.title} className="footer-col md:col-span-2">
               <p className="label-sm text-cream/60 mb-4">{col.title}</p>
               <ul className="space-y-2">
-                {col.links.map((l) => (
+                  {col.links.map((l) => (
                   <li key={l.label}>
-                    <a href={l.href} className="body-sm text-cream/60 hover:text-cream transition-colors" data-cursor="Link">
+                    <a href={l.href} className={`body-sm text-cream/60 hover:text-cream transition-colors ${l.breakAll ? 'break-all' : ''}`} data-cursor="Link">
                       {l.label}
                     </a>
                   </li>

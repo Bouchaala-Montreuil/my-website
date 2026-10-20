@@ -130,13 +130,13 @@ export default function Hero({ ready }: { ready: boolean }) {
             </p>
 
             <div className="hero-content flex flex-wrap gap-4">
-              <MagneticButton href="#contact" className="btn btn-light" data-cursor="Start">
+              <MagneticButton href="#order" className="btn btn-light" data-cursor="Start">
                 {t('hero.cta1')}
                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="flip-rtl">
                   <path d="M1 13L13 1M13 1H4M13 1V10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
               </MagneticButton>
-              <MagneticButton href="#work" className="btn btn-outline-light" data-cursor="View">
+              <MagneticButton href="#included" className="btn btn-outline-light" data-cursor="View">
                 {t('hero.cta2')}
               </MagneticButton>
             </div>
