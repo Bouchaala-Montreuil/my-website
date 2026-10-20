@@ -11,6 +11,94 @@
 const reduced = () =>
   window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+
+/* --------------------------------------------------------------------------
+ * Typography magnet — the display line leans towards the pointer. Word level:
+ * a char-level transform would fight the masked reveal and could clip glyphs.
+ * ------------------------------------------------------------------------ */
+function initTypeMagnet(): void {
+  const heading = document.querySelector<HTMLElement>(".v2-h1");
+  if (!heading) return;
+  const words = Array.from(heading.querySelectorAll<HTMLElement>(".split__word"));
+  if (words.length === 0) return;
+
+  let frame = 0;
+  let active = false;
+  let mx = 0;
+  let my = 0;
+
+  const update = () => {
+    frame = 0;
+    words.forEach((word) => {
+      const rect = word.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      const dx = mx - cx;
+      const dy = my - cy;
+      const dist = Math.hypot(dx, dy);
+      const radius = 240;
+      if (!active || dist > radius) {
+        word.style.transform = "";
+        return;
+      }
+      const pull = (1 - dist / radius) ** 2 * 7;
+      const nx = dx / (dist || 1);
+      const ny = dy / (dist || 1);
+      // a touch of horizontal skew sells the "liquid type" without bending it
+      word.style.transform = `translate3d(${(nx * pull).toFixed(2)}px, ${(ny * pull * 0.55).toFixed(2)}px, 0) skewX(${(nx * pull * 0.18).toFixed(2)}deg)`;
+    });
+  };
+  const schedule = () => {
+    if (!frame) frame = requestAnimationFrame(update);
+  };
+
+  window.addEventListener(
+    "pointermove",
+    (event) => {
+      mx = event.clientX;
+      my = event.clientY;
+      active = true;
+      schedule();
+    },
+    { passive: true },
+  );
+  window.addEventListener("pointerleave", () => {
+    active = false;
+    schedule();
+  });
+}
+
+/* --------------------------------------------------------------------------
+ * Depth on the case plate: a restrained tilt, never more than 2.5 degrees.
+ * ------------------------------------------------------------------------ */
+function initTilt(): void {
+  const panels = Array.from(document.querySelectorAll<HTMLElement>(".v2-case__media"));
+  panels.forEach((panel) => {
+    let frame = 0;
+    let tx = 0;
+    let ty = 0;
+
+    const apply = () => {
+      frame = 0;
+      panel.style.transform = `perspective(1100px) rotateX(${tx.toFixed(2)}deg) rotateY(${ty.toFixed(2)}deg)`;
+    };
+    panel.addEventListener("pointermove", (event) => {
+      const rect = panel.getBoundingClientRect();
+      const px = (event.clientX - rect.left) / rect.width - 0.5;
+      const py = (event.clientY - rect.top) / rect.height - 0.5;
+      ty = px * 5;
+      tx = -py * 4;
+      panel.style.transition = "none";
+      if (!frame) frame = requestAnimationFrame(apply);
+    });
+    const reset = () => {
+      panel.style.transition = "transform .6s cubic-bezier(.19,1,.22,1)";
+      panel.style.transform = "";
+    };
+    panel.addEventListener("pointerleave", reset);
+  });
+}
+
 export function initPointer(): void {
   if (typeof window === "undefined") return;
   if (reduced()) return;
@@ -124,6 +212,9 @@ export function initPointer(): void {
     visible = false;
     layer.classList.remove("is-visible");
   });
+
+  initTypeMagnet();
+  initTilt();
 
   /* Magnetic controls: the element leans towards the pointer by at most 7 px. */
   const magnets = Array.from(

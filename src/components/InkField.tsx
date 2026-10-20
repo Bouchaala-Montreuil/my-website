@@ -1,18 +1,15 @@
 import { useEffect, useRef } from "react";
 
 /**
- * "Le champ" — the living field that fills the hero's open right side.
+ * "Le champ" — a mesh of ink filaments that behaves like a surface under tension.
  *
- * A grid of ink cells behaves like a surface of liquid: the pointer bends it,
- * a click drops a ripple through it, and the character of the deformation
- * depends on where the pointer is:
+ * The pointer bends the mesh; where it is changes how:
+ *   left third   — filaments are pushed away and bunch up (compression)
+ *   middle third — they twist around the pointer (vortex)
+ *   right third  — they are pulled into the pointer and steepen (lens)
  *
- *   left third   — the cells are pushed away from the pointer (repulsion)
- *   middle third — they turn around it (vortex)
- *   right third  — they are pulled in and rotate 45° (diamond lens)
- *
- * It is decorative: aria-hidden, pointer-events on the canvas only so the
- * page behind it keeps working, and a single static frame under reduced motion.
+ * A click sends one of three different waves through the mesh, chosen by zone.
+ * The whole thing is one canvas, a few hundred points, no library.
  */
 export function InkField() {
   const hostRef = useRef<HTMLDivElement>(null);
@@ -24,7 +21,7 @@ export function InkField() {
     if (!host || !canvas) return;
 
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const ctx = canvas.getContext("2d", { alpha: true });
+    const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
     const INK = "32, 29, 29";
@@ -34,7 +31,19 @@ export function InkField() {
     let height = 0;
     let cols = 0;
     let rows = 0;
-    let cell = 18;
+    let gap = 22;
+    let time = 0;
+    let frame = 0;
+    let visible = true;
+
+    // displaced mesh, recomputed every frame
+    let px: number[] = [];
+    let py: number[] = [];
+    let blue: number[] = [];
+
+    const pointer = { x: -9999, y: -9999, vx: 0, vy: 0, active: false };
+    const waves: { x: number; y: number; t: number; kind: string }[] = [];
+    let last = { x: 0, y: 0, t: 0 };
 
     const resize = () => {
       const rect = host.getBoundingClientRect();
@@ -47,24 +56,14 @@ export function InkField() {
       canvas.style.width = `${width}px`;
       canvas.style.height = `${height}px`;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      cell = width < 380 ? 18 : 22;
-      cols = Math.max(6, Math.ceil(width / cell));
-      rows = Math.max(6, Math.ceil(height / cell));
+      gap = width < 380 ? 26 : 30;
+      cols = Math.max(4, Math.round(width / gap));
+      rows = Math.max(4, Math.round(height / gap));
+      const n = (cols + 1) * (rows + 1);
+      px = new Array(n).fill(0);
+      py = new Array(n).fill(0);
+      blue = new Array(n).fill(0);
     };
-
-    resize();
-    requestAnimationFrame(() => {
-      resize();
-      // Reduced motion paints exactly one frame: it must be painted after the
-      // element has its final size, or the canvas stays empty.
-      if (reduced) draw();
-    });
-
-    const pointer = { x: -999, y: -999, active: false };
-    const ripples: { x: number; y: number; t: number }[] = [];
-    let t = 0;
-    let frame = 0;
-    let visible = true;
 
     const zoneOf = (x: number) => {
       const ratio = x / Math.max(width, 1);
@@ -73,133 +72,231 @@ export function InkField() {
       return "lens";
     };
 
-    const draw = () => {
-      frame = 0;
-      ctx.clearRect(0, 0, width, height);
-      t += reduced ? 0 : 0.016;
+    const at = (col: number, row: number) => row * (cols + 1) + col;
 
+    const compute = () => {
+      const speed = Math.min(1, Math.hypot(pointer.vx, pointer.vy) / 26);
       const zone = pointer.active ? zoneOf(pointer.x) : "idle";
 
-      for (let row = 0; row < rows; row += 1) {
-        for (let col = 0; col < cols; col += 1) {
-          const cx = col * cell + cell / 2;
-          const cy = row * cell + cell / 2;
+      for (let row = 0; row <= rows; row += 1) {
+        for (let col = 0; col <= cols; col += 1) {
+          const i = at(col, row);
+          const bx = (col / cols) * width;
+          const by = (row / rows) * height;
 
-          // idle surface: two slow crossing waves, kept very small
-          let h =
-            Math.sin(col * 0.33 + t * 1.05) * 0.34 +
-            Math.cos(row * 0.27 - t * 0.82) * 0.3;
+          let x = bx;
+          let y = by;
+          let heat = 0;
 
-          // a single blue band drifts across the field, always one at a time
-          const sweep = ((t * 0.16) % 1.9) - 0.45;
-          const band = Math.abs(col / cols - (sweep + row * 0.004));
+          // the surface breathes: a standing wave on both axes
+          const idle =
+            Math.sin(col * 0.45 + time * 0.9) * 0.5 +
+            Math.cos(row * 0.38 - time * 0.7) * 0.5;
+          x += idle * 1.6;
+          y += Math.cos(col * 0.3 + time * 0.6) * 1.4;
 
-          let ox = 0;
-          let oy = 0;
-          let rot = 0;
-          let blue = band < 0.035 ? 0.55 : 0;
-          if (band < 0.035) h += 0.5;
-
-          // pointer lens
           if (pointer.active) {
-            const dx = cx - pointer.x;
-            const dy = cy - pointer.y;
-            const dist = Math.hypot(dx, dy);
-            const radius = 230;
+            const dx = bx - pointer.x;
+            const dy = by - pointer.y;
+            const dist = Math.hypot(dx, dy) || 1;
+            const radius = 210 + speed * 60;
             if (dist < radius) {
               const fall = 1 - dist / radius;
               const power = fall * fall;
-              h += power * 1.25;
 
               if (zone === "push") {
-                const push = power * 16;
-                ox = (dx / (dist || 1)) * push;
-                oy = (dy / (dist || 1)) * push;
+                const push = power * (26 + speed * 26);
+                x += (dx / dist) * push;
+                y += (dy / dist) * push;
               } else if (zone === "vortex") {
-                const swing = power * 15;
-                ox = (-dy / (dist || 1)) * swing;
-                oy = (dx / (dist || 1)) * swing;
-              } else if (zone === "lens") {
-                const pull = power * 13;
-                ox = (-dx / (dist || 1)) * pull;
-                oy = (-dy / (dist || 1)) * pull;
-                rot = power * (Math.PI / 4);
+                const swing = power * (24 + speed * 26);
+                x += (-dy / dist) * swing;
+                y += (dx / dist) * swing;
+              } else {
+                const pull = power * (18 + speed * 22);
+                x -= (dx / dist) * pull;
+                y -= (dy / dist) * pull;
+                // steepen towards the pointer: vertical compression
+                y = pointer.y + (y - pointer.y) * (1 - power * 0.22);
               }
-
-              blue = Math.max(blue, Math.max(0, 1 - dist / 90));
+              heat = Math.max(heat, Math.max(0, 1 - dist / 120));
             }
           }
 
-          // click ripples
-          for (const ripple of ripples) {
-            const age = (t - ripple.t) * 320;
-            const radius = age;
-            const dx = cx - ripple.x;
-            const dy = cy - ripple.y;
-            const dist = Math.hypot(dx, dy);
-            const band = Math.abs(dist - radius);
-            if (band < 46) {
-              const power = (1 - band / 46) * Math.max(0, 1 - age / (Math.max(width, height) * 0.9));
-              h += power * 1.6;
-              const push = power * 9;
-              ox += (dx / (dist || 1)) * push;
-              oy += (dy / (dist || 1)) * push;
-              blue = Math.max(blue, power * 0.9);
+          for (const wave of waves) {
+            const age = time - wave.t;
+            const dx = bx - wave.x;
+            const dy = by - wave.y;
+            const dist = Math.hypot(dx, dy) || 1;
+            let offset = 0;
+            let strength = 0;
+
+            if (wave.kind === "ring") {
+              const radius = age * 260;
+              const band = Math.abs(dist - radius);
+              if (band < 40) {
+                strength = (1 - band / 40) * Math.max(0, 1 - age / 2.2);
+                offset = strength * 16;
+                x += (dx / dist) * offset;
+                y += (dy / dist) * offset;
+              }
+            } else if (wave.kind === "shear") {
+              // a horizontal crease that travels down the mesh
+              const crease = wave.y + age * 190;
+              const band = Math.abs(by - crease);
+              if (band < 52) {
+                strength = (1 - band / 52) * Math.max(0, 1 - age / 2.4);
+                x += strength * Math.sin((by - crease) * 0.12) * 22;
+                y += strength * 9;
+              }
+            } else {
+              // collapse: the mesh is drawn to the centre, then released.
+              // The heat falls off with distance so the core glows and the
+              // edges stay ink.
+              const pull = Math.max(0, 1 - age / 0.7);
+              const reach = Math.max(0, 1 - dist / (Math.max(width, height) * 0.75));
+              strength = pull * reach;
+              x += (wave.x - x) * pull * 0.3;
+              y += (wave.y - y) * pull * 0.3;
             }
+
+            heat = Math.max(heat, strength);
           }
 
-          const size = cell * (0.18 + Math.min(1.5, Math.abs(h)) * 0.78);
-          const alpha = 0.24 + Math.min(0.7, Math.abs(h) * 0.5);
-          const px = cx + ox;
-          const py = cy + oy;
-
-          ctx.save();
-          ctx.translate(px, py);
-          if (rot) ctx.rotate(rot);
-          ctx.fillStyle = blue > 0.04 ? `rgba(${BLUE}, ${Math.min(0.95, alpha).toFixed(3)})` : `rgba(${INK}, ${alpha.toFixed(3)})`;
-          ctx.fillRect(-size / 2, -size / 2, size, size);
-
-          // a second, smaller square gives the grid a printed double-tone
-          if (size > cell * 0.5) {
-            ctx.fillStyle = `rgba(${INK}, 0.12)`;
-            ctx.fillRect(-size / 4, -size / 4, size / 2, size / 2);
-          }
-          ctx.restore();
+          px[i] = x;
+          py[i] = y;
+          blue[i] = heat;
         }
       }
 
-      while (ripples.length && t - ripples[0].t > 2.6) ripples.shift();
+      while (waves.length && time - waves[0].t > 2.6) waves.shift();
+    };
+
+    const draw = () => {
+      frame = 0;
+      ctx.clearRect(0, 0, width, height);
+      if (!reduced) time += 0.016;
+      compute();
+
+      // horizontal filaments first, then vertical, so crossings read as a weave
+      for (let row = 0; row <= rows; row += 1) {
+        ctx.beginPath();
+        for (let col = 0; col <= cols; col += 1) {
+          const i = at(col, row);
+          const x = px[i];
+          const y = py[i];
+          if (col === 0) ctx.moveTo(x, y);
+          else {
+            const prev = at(col - 1, row);
+            const cx = (px[prev] + x) / 2;
+            ctx.quadraticCurveTo(cx, py[prev], x, y);
+          }
+        }
+        ctx.strokeStyle = `rgba(${INK}, ${(0.16 + (row % 2 ? 0.05 : 0)).toFixed(3)})`;
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      }
+
+      for (let col = 0; col <= cols; col += 1) {
+        ctx.beginPath();
+        for (let row = 0; row <= rows; row += 1) {
+          const i = at(col, row);
+          const x = px[i];
+          const y = py[i];
+          if (row === 0) ctx.moveTo(x, y);
+          else {
+            const prev = at(col, row - 1);
+            const cy = (py[prev] + y) / 2;
+            ctx.quadraticCurveTo(px[i], cy, x, y);
+          }
+        }
+        ctx.strokeStyle = `rgba(${INK}, 0.14)`;
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      }
+
+      // the hot zone is redrawn in blue, with nodes at the crossings
+      for (let row = 0; row <= rows; row += 1) {
+        for (let col = 0; col <= cols; col += 1) {
+          const i = at(col, row);
+          if (blue[i] < 0.06) continue;
+          const a = Math.min(0.88, blue[i]);
+          const r = 1.2 + blue[i] * 2.6;
+          ctx.beginPath();
+          ctx.arc(px[i], py[i], r, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(${BLUE}, ${a.toFixed(3)})`;
+          ctx.fill();
+
+          if (col < cols && row < rows) {
+            const right = at(col + 1, row);
+            if (blue[right] > 0.06) {
+              ctx.beginPath();
+              ctx.moveTo(px[i], py[i]);
+              ctx.lineTo(px[right], py[right]);
+              ctx.strokeStyle = `rgba(${BLUE}, ${(a * 0.7).toFixed(3)})`;
+              ctx.lineWidth = 1;
+              ctx.stroke();
+            }
+          }
+        }
+      }
+
+      // the pointer's own knot
+      if (pointer.active && !reduced) {
+        ctx.beginPath();
+        ctx.arc(pointer.x, pointer.y, 2.2, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${BLUE}, 0.85)`;
+      }
 
       if (!reduced && visible && width > 0) frame = requestAnimationFrame(draw);
     };
 
     const start = () => {
-      if (!frame && visible && !reduced) frame = requestAnimationFrame(draw);
+      if (!frame && visible && !reduced && width > 0) frame = requestAnimationFrame(draw);
     };
 
     const onMove = (event: PointerEvent) => {
       const rect = host.getBoundingClientRect();
-      pointer.x = event.clientX - rect.left;
-      pointer.y = event.clientY - rect.top;
+      const now = performance.now();
+      const nx = event.clientX - rect.left;
+      const ny = event.clientY - rect.top;
+      const dt = Math.max(8, now - last.t);
+      pointer.vx = ((nx - last.x) / dt) * 16;
+      pointer.vy = ((ny - last.y) / dt) * 16;
+      pointer.x = nx;
+      pointer.y = ny;
       pointer.active = true;
-      host.dataset.zone = zoneOf(pointer.x);
+      last = { x: nx, y: ny, t: now };
+      host.dataset.zone = zoneOf(nx);
       start();
     };
+
     const onLeave = () => {
       pointer.active = false;
+      pointer.vx = 0;
+      pointer.vy = 0;
       host.dataset.zone = "idle";
     };
+
     const onDown = (event: PointerEvent) => {
       const rect = host.getBoundingClientRect();
-      ripples.push({
-        x: event.clientX - rect.left,
-        y: event.clientY - rect.top,
-        t,
-      });
+      const nx = event.clientX - rect.left;
+      const ny = event.clientY - rect.top;
+      const zone = zoneOf(nx);
+      // three different waves, one per zone — never the same click twice
+      const kind = zone === "push" ? "ring" : zone === "vortex" ? "shear" : "collapse";
+      waves.push({ x: nx, y: ny, t: time, kind });
+      host.dataset.wave = kind;
       host.classList.add("is-hit");
-      window.setTimeout(() => host.classList.remove("is-hit"), 220);
+      window.setTimeout(() => host.classList.remove("is-hit"), 240);
       start();
     };
+
+    resize();
+    requestAnimationFrame(() => {
+      resize();
+      if (reduced) draw();
+    });
 
     host.addEventListener("pointermove", onMove);
     host.addEventListener("pointerleave", onLeave);

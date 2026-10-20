@@ -7251,3 +7251,14 @@ details[open] .faq__sign {
     transition: none !important;
   }
 }
+
+/* the case plate is a physical object: it tilts under the pointer */
+.v2-case__media {
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.split__word {
+  display: inline-block;
+  will-change: transform;
+}
