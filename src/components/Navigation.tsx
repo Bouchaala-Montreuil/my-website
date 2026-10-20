@@ -3,10 +3,11 @@ import gsap from 'gsap';
 import { useLang } from '../context/LanguageContext';
 import MagneticButton from './MagneticButton';
 
-export default function Navigation() {
+export default function Navigation({ ready }: { ready: boolean }) {
   const { lang, setLang, t } = useLang();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const [langOpen, setLangOpen] = useState(false);
   const navRef = useRef<HTMLElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -43,19 +44,14 @@ export default function Navigation() {
 
   // Entrance animation
   useEffect(() => {
-    if (navRef.current) {
-      gsap.fromTo(navRef.current,
-        { y: -100, opacity: 0 },
-        { y: 0, opacity: 1, duration: 1, delay: 3.5, ease: 'power3.out' }
-      );
-    }
-  }, []);
+    if (!ready || !navRef.current) return;
+    gsap.fromTo(navRef.current,
+      { y: -100, opacity: 0 },
+      { y: 0, opacity: 1, duration: 1, ease: 'power3.out' }
+    );
+  }, [ready]);
 
-  const cycleLang = () => {
-    const langs: Array<'en' | 'fr' | 'ar'> = ['en', 'fr', 'ar'];
-    const idx = langs.indexOf(lang);
-    setLang(langs[(idx + 1) % langs.length]);
-  };
+  const langLabels: Record<string, string> = { en: 'English', fr: 'Français', ar: 'العربية' };
 
   return (
     <>
@@ -91,19 +87,39 @@ export default function Navigation() {
           </nav>
 
           <div className="flex items-center gap-3">
-            {/* Language switcher */}
+          {/* Language switcher */}
+          <div className="relative">
             <button
-              onClick={cycleLang}
+              onClick={() => setLangOpen((v) => !v)}
               className="w-9 h-9 rounded-full border border-cream/20 flex items-center justify-center text-cream/70 hover:text-cream hover:border-cream/40 transition-all text-xs font-bold uppercase"
-              data-cursor="Switch"
+              data-cursor="Lang"
+              aria-label="Language"
             >
               {lang}
             </button>
+            {langOpen && (
+              <>
+                <div className="fixed inset-0 z-40" onClick={() => setLangOpen(false)} />
+                <div className="absolute right-0 top-full mt-2 bg-cream border border-charcoal/10 shadow-xl rounded-lg py-1 z-50 min-w-[6rem]">
+                  {(['en', 'fr', 'ar'] as const).map((l) => (
+                    <button
+                      key={l}
+                      onClick={() => { setLang(l); setLangOpen(false); }}
+                      className={`block w-full text-left px-4 py-2 text-sm transition-colors ${l === lang ? 'text-coral font-semibold' : 'text-charcoal/70 hover:text-coral'}`}
+                      data-cursor="Lang"
+                    >
+                      {langLabels[l]}
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
 
             <MagneticButton
-              href="#contact"
+              href="#order"
               className="btn btn-coral text-sm py-2 px-5 hidden sm:inline-flex"
-              data-cursor="Contact"
+              data-cursor="Order"
             >
               {t('nav.contact')}
             </MagneticButton>
@@ -142,10 +158,10 @@ export default function Navigation() {
             </a>
           ))}
           <MagneticButton
-            href="#contact"
+            href="#order"
             onClick={() => setOpen(false)}
             className="menu-item btn btn-coral mt-4"
-            data-cursor="Contact"
+            data-cursor="Order"
           >
             {t('nav.contact')}
           </MagneticButton>

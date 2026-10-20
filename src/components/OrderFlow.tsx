@@ -1,5 +1,5 @@
 import { useState, ReactNode } from 'react';
-import { FORMSPREE_ENDPOINT, PAYMENT_LINK } from '../config';
+import { FORMSPREE_ENDPOINT, PAYMENT_LINK, CONTACT_EMAIL } from '../config';
 import { useLang } from '../context/LanguageContext';
 
 const CONTENT: Record<string, any> = {
@@ -12,6 +12,10 @@ const CONTENT: Record<string, any> = {
     pay: 'Pay €195 — first month',
     payNote: '6-month commitment · then cancel with 1 month notice',
     paySecure: 'You will be redirected to Stripe to complete the payment securely.',
+    payDirect: 'Open the payment page directly',
+    payComplete: 'Your order is saved. Finish the payment in the Stripe tab to lock in your launch date.',
+    sendFailed: 'The order could not be sent automatically. Your Stripe tab is open — send the order by email instead:',
+    emailFallback: 'Send order by email',
     payFallback: 'No online payment yet? Send the order — we email you a secure payment link within 24h.',
     successTitle: 'Order received!',
     successDesc: 'Your first website version arrives within 48–72 hours. You preview it, approve it or ask for changes — the order only finalizes when you are satisfied.',
@@ -44,6 +48,10 @@ const CONTENT: Record<string, any> = {
     pay: 'Payer 195 € — premier mois',
     payNote: 'Engagement de 6 mois · puis résiliable avec 1 mois de préavis',
     paySecure: 'Vous serez redirigé vers Stripe pour payer en toute sécurité.',
+    payDirect: 'Ouvrir la page de paiement directement',
+    payComplete: 'Votre commande est enregistrée. Finalisez le paiement dans l’onglet Stripe pour bloquer votre date de lancement.',
+    sendFailed: 'La commande n’a pas pu être envoyée automatiquement. L’onglet Stripe est ouvert — envoyez-la par email plutôt :',
+    emailFallback: 'Envoyer la commande par email',
     payFallback: 'Pas encore de paiement en ligne ? Envoyez la commande — nous vous envoyons un lien de paiement sécurisé sous 24h.',
     successTitle: 'Commande reçue !',
     successDesc: 'Votre première version arrive sous 48–72 heures. Vous la prévisualisez, l’approuvez ou demandez des modifications — la commande n’est finalisée que lorsque vous êtes satisfait.',
@@ -76,6 +84,10 @@ const CONTENT: Record<string, any> = {
     pay: 'ادفع 195 يورو — الشهر الأول',
     payNote: 'التزام 6 أشهر · ثم إلغاء بإشعار شهر واحد',
     paySecure: 'سيتم تحويلك إلى Stripe لإتمام الدفع بأمان.',
+    payDirect: 'افتح صفحة الدفع مباشرة',
+    payComplete: 'طلبك محفوظ. أكمل الدفع في صفحة Stripe لحجز موعد إطلاقك.',
+    sendFailed: 'تعذّر إرسال الطلب تلقائيًا. صفحة Stripe مفتوحة — أرسل الطلب بالبريد بدلاً من ذلك:',
+    emailFallback: 'أرسل الطلب بالبريد',
     payFallback: 'لا يوجد دفع إلكتروني بعد؟ أرسل الطلب — سنرسل لك رابط دفع آمن خلال 24 ساعة.',
     successTitle: 'تم استلام الطلب!',
     successDesc: 'تصلك النسخة الأولى خلال 48–72 ساعة. تعاينها ووافق عليها أو اطلب تعديلات — الطلب لا يُنهى إلا عندما تكون راضيًا.',
@@ -101,6 +113,34 @@ const CONTENT: Record<string, any> = {
   },
 };
 
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+// Human-readable order for the email (Formspree sends JSON otherwise)
+const formatOrder = (a: Record<string, any>, lang: string) => {
+  const lines = [
+    'NEW WEBSITE ORDER — feekza.com',
+    '--------------------------------',
+    `Name: ${a.name}`,
+    `Email: ${a.email}`,
+    `Phone: ${a.phone || '—'}`,
+    `Site name: ${a.siteName}`,
+    `Purpose: ${a.purpose}`,
+    `Functions: ${(a.functions || []).join(', ')}`,
+  ];
+  if (a.colors) lines.push(`Colors: ${a.colors}`);
+  if (a.dislikes) lines.push(`Dislikes: ${a.dislikes}`);
+  if (a.vibe) lines.push(`Vibe: ${a.vibe}`);
+  if (a.refs) lines.push(`References: ${a.refs}`);
+  if (a.logo) lines.push(`Logo: ${a.logo}`);
+  if ((a.pages || []).length) lines.push(`Pages: ${a.pages.join(', ')}`);
+  if (a.texts) lines.push(`Texts: ${a.texts}`);
+  if (a.languages) lines.push(`Languages: ${a.languages}`);
+  if (a.deadline) lines.push(`Deadline: ${a.deadline}`);
+  if (a.notes) lines.push(`Notes: ${a.notes}`);
+  lines.push(`Language of order: ${lang}`);
+  return lines.join('\n');
+};
+
 export default function OrderFlow() {
   const { t, lang } = useLang();
   const c = CONTENT[lang] || CONTENT.en;
@@ -108,6 +148,7 @@ export default function OrderFlow() {
   const [error, setError] = useState('');
   const [sending, setSending] = useState(false);
   const [done, setDone] = useState(false);
+  const [sendError, setSendError] = useState(false);
   const [answers, setAnswers] = useState<Record<string, any>>({
     name: '', email: '', phone: '', siteName: '', purpose: '', functions: [],
     colors: '', dislikes: '', vibe: '', refs: '', logo: '',
@@ -123,7 +164,8 @@ export default function OrderFlow() {
     }));
 
   const validateStep0 = () => {
-    if (!answers.name.trim() || !answers.email.trim() || !answers.siteName.trim()) return 'name';
+    if (!answers.name.trim() || !answers.siteName.trim()) return 'name';
+    if (!EMAIL_RE.test(answers.email.trim())) return 'email';
     if (!answers.purpose) return 'purpose';
     if (!(answers.functions || []).length) return 'functions';
     return '';
@@ -138,21 +180,36 @@ export default function OrderFlow() {
     setStep((s) => Math.min(s + 1, 4));
   };
 
-  const pay = async () => {
-    setSending(true);
-    try {
-      await fetch(FORMSPREE_ENDPOINT, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify({ ...answers, type: 'website-order', lang }),
-      });
-    } catch { /* email fallback covers it */ }
-    setSending(false);
-    setDone(true);
+  const pay = () => {
+    // Open Stripe FIRST, synchronously — browsers block window.open
+    // after an await (popup blocker = "nothing happens").
+    // prefilled_email: checkout opens with the client's email already in.
     if (PAYMENT_LINK) {
-      window.open(PAYMENT_LINK, '_blank', 'noopener,noreferrer');
+      const url = PAYMENT_LINK + (PAYMENT_LINK.includes('?') ? '&' : '?') +
+        'prefilled_email=' + encodeURIComponent(answers.email.trim());
+      window.open(url, '_blank', 'noopener,noreferrer');
     }
+    setSending(true);
+    setSendError(false);
+    fetch(FORMSPREE_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify({
+        ...answers,
+        type: 'website-order',
+        lang,
+        message: formatOrder(answers, lang),
+      }),
+    })
+      .then((r) => { if (!r.ok) throw new Error('send failed'); })
+      .then(() => { setSendError(false); setDone(true); })
+      .catch(() => { setSendError(true); })
+      .finally(() => setSending(false));
   };
+
+  const mailtoFallback =
+    `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent('Website order — ' + answers.siteName)}` +
+    `&body=${encodeURIComponent(formatOrder(answers, lang))}`;
 
   const inputCls = 'w-full px-4 py-3 bg-white/5 border-2 border-white/10 rounded-xl text-cream focus:border-coral focus:outline-none transition-colors';
   const labelCls = 'label-sm text-cream/60 mb-2 block';
@@ -209,7 +266,15 @@ export default function OrderFlow() {
           <div className="text-center py-16">
             <div className="text-5xl mb-6">✓</div>
             <h3 className="display-lg text-cream mb-4">{c.successTitle}</h3>
-            <p className="body-lg text-cream/60 max-w-md mx-auto">{c.successDesc}</p>
+            <p className="body-lg text-cream/60 max-w-md mx-auto mb-2">{c.successDesc}</p>
+            {PAYMENT_LINK && (
+              <p className="body-md text-cream/40 max-w-md mx-auto mb-8">{c.payComplete}</p>
+            )}
+            {PAYMENT_LINK && (
+              <a href={PAYMENT_LINK} target="_blank" rel="noopener noreferrer" className="btn btn-outline-light inline-flex" data-cursor="Pay">
+                {c.payDirect}
+              </a>
+            )}
           </div>
         ) : (
           <div className="bg-cream text-charcoal rounded-3xl p-8 md:p-12 shadow-2xl">
@@ -330,10 +395,23 @@ export default function OrderFlow() {
                   {sending ? '…' : PAYMENT_LINK ? c.pay : c.sendNoPay}
                 </button>
                 {PAYMENT_LINK && (
-                  <p className="body-sm text-charcoal/50">{c.paySecure}</p>
+                  <p className="body-sm text-charcoal/50">
+                    {c.paySecure}{' '}
+                    <a href={PAYMENT_LINK} target="_blank" rel="noopener noreferrer" className="text-coral underline underline-offset-2" data-cursor="Pay">
+                      {c.payDirect}
+                    </a>
+                  </p>
                 )}
                 {!PAYMENT_LINK && (
                   <p className="body-md text-charcoal/60">{c.payFallback}</p>
+                )}
+                {sendError && (
+                  <div className="bg-coral/10 border-2 border-coral rounded-xl p-4 mt-2">
+                    <p className="body-md text-charcoal mb-3">{c.sendFailed}</p>
+                    <a href={mailtoFallback} className="btn btn-dark w-full justify-center" data-cursor="Mail">
+                      {c.emailFallback}
+                    </a>
+                  </div>
                 )}
               </div>
             )}
@@ -353,10 +431,12 @@ export default function OrderFlow() {
               {step < 3 && (
                 <div className="flex flex-wrap gap-3">
                   <button onClick={next} className="btn btn-dark" data-cursor="Next">{c.next}</button>
-                  <button onClick={() => setStep((s) => s + 1)} className="btn btn-outline-dark opacity-70" data-cursor="Skip">{c.skip}</button>
+                  {step > 0 && (
+                    <button onClick={() => setStep((s) => s + 1)} className="btn btn-outline-dark opacity-70" data-cursor="Skip">{c.skip}</button>
+                  )}
                 </div>
               )}
-              {step === 3 && <button onClick={next} className="btn btn-dark" data-cursor="Next">{c.review ?? c.next}</button>}
+              {step === 3 && <button onClick={next} className="btn btn-dark" data-cursor="Next">{c.next}</button>}
             </div>
           </div>
         )}

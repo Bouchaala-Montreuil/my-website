@@ -3,6 +3,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useLang } from '../context/LanguageContext';
 import MagneticButton from './MagneticButton';
+import { CONTACT_EMAIL } from '../config';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -85,17 +86,34 @@ export default function Footer() {
           </div>
 
           {[
-            { title: t('footer.services'), items: [t('included.design'), t('included.hosting'), t('included.maintenance'), t('included.mods'), t('included.email'), t('included.domain')] },
-            { title: t('footer.company'), items: [t('nav.about'), t('nav.work'), t('nav.pricing'), t('nav.contact')] },
-            { title: t('footer.legal'), items: [t('footer.privacy'), t('footer.terms'), t('footer.cookies')] },
+            {
+              title: t('footer.services'),
+              links: [t('included.design'), t('included.hosting'), t('included.maintenance'), t('included.mods'), t('included.email'), t('included.domain')].map((label) => ({ label, href: '#included' })),
+            },
+            {
+              title: t('footer.company'),
+              links: [
+                { label: t('nav.discover'), href: '#included' },
+                { label: t('nav.work'), href: '#work' },
+                { label: t('nav.about'), href: '#about' },
+                { label: t('nav.pricing'), href: '#order' },
+              ],
+            },
+            {
+              title: t('footer.contact'),
+              links: [
+                { label: CONTACT_EMAIL, href: `mailto:${CONTACT_EMAIL}` },
+                { label: t('footer.response'), href: `mailto:${CONTACT_EMAIL}` },
+              ],
+            },
           ].map((col) => (
             <div key={col.title} className="footer-col md:col-span-2">
               <p className="label-sm text-cream/60 mb-4">{col.title}</p>
               <ul className="space-y-2">
-                {col.items.map((item) => (
-                  <li key={item}>
-                    <a href="#" className="body-sm text-cream/60 hover:text-cream transition-colors" data-cursor="Link">
-                      {item}
+                {col.links.map((l) => (
+                  <li key={l.label}>
+                    <a href={l.href} className="body-sm text-cream/60 hover:text-cream transition-colors" data-cursor="Link">
+                      {l.label}
                     </a>
                   </li>
                 ))}

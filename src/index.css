@@ -24,7 +24,7 @@
 
 html {
   scroll-behavior: smooth;
-  cursor: none;
+  scroll-padding-top: 5rem;
 }
 
 body {
@@ -32,7 +32,6 @@ body {
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
   background: #1C1C1C;
-  cursor: none;
 }
 
 /* Arabic font support */
@@ -58,12 +57,9 @@ html[dir="rtl"] .flip-rtl {
   color: white;
 }
 
-/* Hide default cursor everywhere */
-*, *::before, *::after {
-  cursor: none !important;
-}
-
-a, button, [role="button"], input, textarea, select {
+/* Custom cursor only active once the cursor component mounted */
+html.cursor-on,
+html.cursor-on * {
   cursor: none !important;
 }
 

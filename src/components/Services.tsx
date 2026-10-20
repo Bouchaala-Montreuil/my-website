@@ -102,11 +102,11 @@ export default function Services() {
 
       {/* Grid on navy */}
       <div className="bg-navy px-8 md:px-16 lg:px-20 py-16 md:py-24 relative noise">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0 relative z-10">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-white/10 relative z-10">
           {included.map((s) => (
             <div
               key={s.title}
-              className="service-card p-8 md:p-10 border-b border-r border-white/10 transition-all duration-300"
+              className="service-card bg-navy p-8 md:p-10 transition-all duration-300"
               data-cursor="Explore"
             >
               <span className="service-icon text-coral text-2xl mb-6 block inline-block">{s.icon}</span>
