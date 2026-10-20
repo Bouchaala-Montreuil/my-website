@@ -6,7 +6,7 @@ import MagneticButton from './MagneticButton';
 
 gsap.registerPlugin(ScrollTrigger);
 
-export default function Hero() {
+export default function Hero({ ready }: { ready: boolean }) {
   const { t, dir } = useLang();
   const sectionRef = useRef<HTMLElement>(null);
   const titleRef = useRef<HTMLDivElement>(null);
@@ -19,11 +19,11 @@ export default function Hero() {
     const image = imageRef.current;
     const stats = statsRef.current;
 
-    if (!section || !title || !image || !stats) return;
+    if (!section || !title || !image || !stats || !ready) return;
 
     const ctx = gsap.context(() => {
       // Timeline for entrance
-      const tl = gsap.timeline({ delay: 3.5 });
+      const tl = gsap.timeline();
 
       // Title lines
       const titleLines = title.querySelectorAll('.title-line');
@@ -103,7 +103,7 @@ export default function Hero() {
     }, section);
 
     return () => ctx.revert();
-  }, [dir]);
+  }, [dir, ready]);
 
   return (
     <section ref={sectionRef} className="min-h-dvh relative overflow-hidden">

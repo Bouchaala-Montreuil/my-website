@@ -17,6 +17,13 @@ export default function CustomCursor() {
     setIsMobile('ontouchstart' in window || navigator.maxTouchPoints > 0);
   }, []);
 
+  // Only hide the system cursor once this component is live
+  useEffect(() => {
+    if (isMobile) return;
+    document.documentElement.classList.add('cursor-on');
+    return () => document.documentElement.classList.remove('cursor-on');
+  }, [isMobile]);
+
   // The core render loop — runs every frame, no GSAP, no React state
   const render = useCallback(() => {
     const dotEl = dotRef.current;

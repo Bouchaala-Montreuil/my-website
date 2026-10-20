@@ -18,6 +18,12 @@ function AppContent() {
   const [loading, setLoading] = useState(true);
   const [ready, setReady] = useState(false);
 
+  // Failsafe: never trap the user behind the loader
+  useEffect(() => {
+    const failsafe = setTimeout(() => setLoading(false), 9000);
+    return () => clearTimeout(failsafe);
+  }, []);
+
   useEffect(() => {
     // Prevent scroll during loading
     if (loading) {
@@ -39,9 +45,9 @@ function AppContent() {
       <CustomCursor />
       
       <div style={{ visibility: ready ? 'visible' : 'hidden' }}>
-        <Navigation />
+        <Navigation ready={ready} />
         <main>
-          <Hero />
+          <Hero ready={ready} />
           <Services />
           <HowItWorks />
           <Portfolio />

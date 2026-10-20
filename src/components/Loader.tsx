@@ -49,11 +49,11 @@ export default function Loader({ onComplete }: LoaderProps) {
     }, '-=0.4');
 
     // Progress animation
-    const progressTl = gsap.timeline({ delay: 0.8 });
+    const progressTl = gsap.timeline({ delay: 0.3 });
 
     progressTl.to({ val: 0 }, {
       val: 100,
-      duration: 2.5,
+      duration: 1.3,
       ease: 'power2.inOut',
       onUpdate: function () {
         const val = Math.round(this.targets()[0].val);
@@ -77,14 +77,14 @@ export default function Loader({ onComplete }: LoaderProps) {
           .to(logo, {
             scale: 12,
             opacity: 0,
-            duration: 0.8,
+            duration: 0.5,
             ease: 'power2.in',
-          }, '-=0.2')
+          }, '-=0.15')
           .to(container, {
             yPercent: -100,
-            duration: 0.8,
+            duration: 0.55,
             ease: 'power3.inOut',
-          }, '-=0.4');
+          }, '-=0.3');
       },
     });
 
