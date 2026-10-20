@@ -183,7 +183,7 @@ export function HomeV2({
 
             <div className="v2-result__body">
               <div className="v2-result__figure">
-                <p className="v2-result__num">99</p>
+                <p className="v2-result__num" data-count="99">99</p>
                 <p className="v2-result__cap">
                   Performance Lighthouse mobile, mesurée sur ce site.
                 </p>

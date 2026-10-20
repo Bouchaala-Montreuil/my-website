@@ -31,7 +31,7 @@ export function initMotion(): void {
 
   const collect = () => {
     document
-      .querySelectorAll<HTMLElement>("[data-split='scroll'], [data-reveal], [data-mask]")
+      .querySelectorAll<HTMLElement>("[data-split='scroll'], [data-reveal], [data-mask], [data-rule]")
       .forEach((element) => items.add(element));
   };
 
@@ -66,7 +66,7 @@ export function initMotion(): void {
   // Broad pass: tag the content blocks that sit below the fold so sections
   // arrive as they are scrolled to, with a small stagger inside a group.
   const auto = document.querySelectorAll<HTMLElement>(
-    ".promo, .step, .work-teaser, .price__card, .market__row, .guarantee, .proof__item, .faq details, .doc-links li, .doc-metrics li",
+    ".promo, .step, .work-teaser, .price__card, .market__row, .guarantee, .proof__item, .faq details, .doc-links li, .doc-metrics li, .v2-wall__grid > li, .v2-offer > .v2-container > *, .v2-result__metrics > *, .v2-process li, .v2-case, .v2-record > div",
   );
   auto.forEach((element, index) => {
     if (element.hasAttribute("data-reveal") || element.classList.contains("is-in")) return;
@@ -74,6 +74,59 @@ export function initMotion(): void {
     element.setAttribute("data-reveal", "");
     element.style.setProperty("--d", `${(index % 4) * 70}ms`);
     items.add(element);
+  });
+
+  // Sections carry their own entrance: a hairline that draws across the top.
+  // They are watched for that rule only — the content inside is never hidden.
+  document.querySelectorAll<HTMLElement>(".v2 section").forEach((section) => {
+    if (section.hasAttribute("data-rule")) return;
+    section.setAttribute("data-rule", "");
+    items.add(section);
+  });
+
+  // Reading progress: one fixed hairline, updated on the same scroll pass.
+  const rail = document.createElement("div");
+  rail.className = "scroll-rail";
+  rail.setAttribute("aria-hidden", "true");
+  document.body.appendChild(rail);
+  const paintRail = () => {
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = max > 0 ? Math.min(1, window.scrollY / max) : 0;
+    rail.style.transform = `scaleX(${progress.toFixed(4)})`;
+  };
+  window.addEventListener("scroll", paintRail, { passive: true });
+  window.addEventListener("resize", paintRail, { passive: true });
+  paintRail();
+
+  // Numbers that stand for real figures count up once, when they arrive.
+  // Tabular numerals keep the width fixed so nothing shifts.
+  const counters = document.querySelectorAll<HTMLElement>("[data-count]");
+  const animateCount = (element: HTMLElement) => {
+    const target = Number(element.dataset.count);
+    if (!Number.isFinite(target)) return;
+    const start = performance.now();
+    const duration = 1100;
+    const step = (now: number) => {
+      const t = Math.min(1, (now - start) / duration);
+      const eased = 1 - (1 - t) ** 3;
+      element.textContent = String(Math.round(target * eased));
+      if (t < 1) requestAnimationFrame(step);
+      else element.textContent = String(target);
+    };
+    requestAnimationFrame(step);
+  };
+  counters.forEach((element) => {
+    const rect = element.getBoundingClientRect();
+    if (rect.top < window.innerHeight * 0.9) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (!entries[0]?.isIntersecting) return;
+        observer.disconnect();
+        animateCount(element);
+      },
+      { rootMargin: "0px 0px -10% 0px" },
+    );
+    observer.observe(element);
   });
 
   // Safety net: if a visitor never scrolls, show everything after a while.
