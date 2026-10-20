@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="theme-color" content="#F1EFEA" />
+    <meta name="theme-color" content="#f2f2f2" />
     <script>
       document.documentElement.classList.add("js");
       window.setTimeout(function () {
@@ -11,6 +11,18 @@
           document.documentElement.classList.add("no-motion");
         }
       }, 8000);
+      // Incoming page for the transitions: hide the first paint until the
+      // overlay is in place, and release it even if hydration never happens.
+      try {
+        if (sessionStorage.getItem("feekza:transition") === "1") {
+          document.documentElement.classList.add("pt-load");
+          window.setTimeout(function () {
+            document.documentElement.classList.remove("pt-load");
+          }, 2500);
+        }
+      } catch (error) {
+        /* storage blocked */
+      }
     </script>
     <!--seo-->
   </head>

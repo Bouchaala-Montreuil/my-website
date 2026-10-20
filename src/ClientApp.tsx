@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { App } from "./App";
 import { resolveRoute } from "./lib/routes";
 import { initMotion } from "./lib/motion";
+import { initInteractions } from "./lib/interactions";
 
 /** Resolves the route from the browser URL, then renders the shared app tree. */
 export function ClientApp() {
@@ -9,6 +10,7 @@ export function ClientApp() {
 
   useEffect(() => {
     initMotion();
+    initInteractions();
 
     // A slim header once the page has moved — the reference keeps the chrome
     // quiet and lets the type carry the page.

@@ -126,7 +126,7 @@ export function Header({ c, locale, currentPath, inPageAnchors = false }: Header
             )}
           </div>
 
-          <a className="btn btn--coral btn--sm btn--cta" href={anchor("#dossier")}>
+          <a className="btn btn--coral btn--sm btn--cta" data-roll="" href={anchor("#dossier")}>
             {c.navCta}
           </a>
 

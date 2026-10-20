@@ -6689,3 +6689,170 @@ body {
     padding: 0.55rem 0.75rem;
   }
 }
+
+/* ==========================================================================
+   Reference interaction layer — values transcribed from the reference
+   stylesheet (global.Btqt_PqA.css), not approximated.
+   ========================================================================== */
+
+/* 1. inline links
+   Already implemented before this pass — `.v2-textlink`, `.link-arrow` and the
+   prose links use `transform: scaleX()` at .735s cubic-bezier(.625,.05,0,1)
+   with the origin flipping from 100% to 0, exactly as [data-underline-link]
+   does on the reference. Nothing to add; see the coverage matrix. */
+
+/* 2. character roll: two identical glyphs, one blurs out while the other
+   sharpens, driven by the inherited --roll-fade property
+   (reference: .roll-letter / .roll-char / [data-roll-twin]) */
+@property --roll-fade {
+  syntax: "*";
+  inherits: true;
+  initial-value: 0;
+}
+
+.roll-word {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.roll-cell {
+  display: inline-block;
+  position: relative;
+}
+
+.roll-word > .roll-char {
+  display: inline-block;
+}
+
+.roll-char {
+  --roll-blur: 0.09em;
+  --roll-amt: var(--roll-fade);
+  filter: blur(calc(var(--roll-amt) * var(--roll-blur)));
+  opacity: calc(1 - var(--roll-amt));
+}
+
+.roll-char[data-roll-twin] {
+  --roll-amt: calc(1 - var(--roll-fade));
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.roll-host {
+  position: relative;
+  display: inline-block;
+}
+
+/* 3. page transition: a blue field of square cells covers the viewport.
+   Reference: .transition (40 columns, 6 ≤ 767 px, 4 ≤ 479 px). */
+.page-transition {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: grid;
+  grid-template-columns: repeat(40, 1fr);
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.page-transition__cell {
+  background: var(--r-blue);
+  width: 100%;
+  aspect-ratio: 1;
+  transform: scale(0);
+  transform-origin: center;
+}
+
+.page-transition.is-covering,
+.page-transition.is-revealing {
+  visibility: visible;
+}
+
+.page-transition.is-covering .page-transition__cell {
+  transform: scale(1);
+  transition: transform 0.42s cubic-bezier(0.76, 0, 0.24, 1);
+  transition-delay: calc(var(--d) * 1ms);
+}
+
+.page-transition.is-revealing .page-transition__cell {
+  transform: scale(0);
+  transition: transform 0.42s cubic-bezier(0.76, 0, 0.24, 1);
+  transition-delay: calc(var(--d) * 1ms);
+}
+
+@media (max-width: 767px) {
+  .page-transition {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 479px) {
+  .page-transition {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* 4. pinned badge, bottom right, from 1100 px up
+   (reference: .badge-pin, 450 ms, translateY(12px) → 0) */
+.badge-pin {
+  position: fixed;
+  right: var(--r-pad);
+  bottom: var(--r-pad);
+  z-index: 60;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.55rem 0.9rem;
+  border-radius: 100px;
+  background: var(--r-white);
+  color: #201d1d;
+  font-size: 0.8125rem;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(12px);
+  transition: opacity 0.45s, transform 0.45s, visibility 0.45s;
+}
+
+.badge-pin.is-shown {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.badge-pin b {
+  font-family: var(--font-display);
+  font-weight: 500;
+}
+
+@media (max-width: 1099px) {
+  .badge-pin {
+    display: none;
+  }
+}
+
+/* 5. motion preferences: every effect above switches off */
+@media (prefers-reduced-motion: reduce) {
+  .page-transition,
+  .badge-pin {
+    display: none !important;
+  }
+
+  .u-link::before,
+  .doc-body a::before,
+  .legal__body a::before,
+  .roll-char {
+    transition: none !important;
+    filter: none !important;
+    opacity: 1 !important;
+  }
+
+  .roll-char[data-roll-twin] {
+    display: none !important;
+  }
+}
+
+/* the incoming page stays hidden until the transition overlay is ready */
+html.pt-load body {
+  visibility: hidden;
+}

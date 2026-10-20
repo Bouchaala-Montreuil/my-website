@@ -176,4 +176,15 @@ if (!fs.existsSync(path.join(docs, "CNAME"))) {
 }
 writeFile(path.join(docs, ".nojekyll"), "");
 
-console.log("copied build to docs/");
+// The interaction documents live in reference/ so a build cannot delete them;
+// they are published next to the site as well.
+const referenceDocs = path.join(root, "reference");
+if (fs.existsSync(referenceDocs)) {
+  for (const file of fs.readdirSync(referenceDocs)) {
+    if (file.endsWith(".md")) {
+      fs.cpSync(path.join(referenceDocs, file), path.join(docs, file), { force: true });
+    }
+  }
+}
+
+console.log("copied build to docs/ (including reference/*.md)");
