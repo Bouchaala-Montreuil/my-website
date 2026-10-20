@@ -148,8 +148,8 @@ const translations: Record<Lang, Record<string, string>> = {
     'contact.email': 'Email',
     'contact.response': 'Response',
     'contact.response.val': 'Within 24 hours',
-    'contact.location': 'Location',
-    'contact.location.val': 'Remote-first, global',
+    'contact.guarantee': 'Guarantee',
+    'contact.guarantee.val': 'Satisfied or refunded',
     'contact.name': 'Name',
     'contact.company': 'Company',
     'contact.budget': 'Budget',
@@ -163,7 +163,7 @@ const translations: Record<Lang, Record<string, string>> = {
     // Footer
     'footer.cta': "Your competitors won't wait. Will you?",
     'footer.btn': 'Start Growing Today',
-    'footer.desc': 'Digital growth agency. Building systems that turn businesses into market leaders.',
+    'footer.desc': 'Custom websites, one flat price, maintained for life.',
     'footer.services': 'Services',
     'footer.company': 'Company',
     'footer.legal': 'Legal',
@@ -317,8 +317,8 @@ const translations: Record<Lang, Record<string, string>> = {
     'contact.email': 'Email',
     'contact.response': 'Réponse',
     'contact.response.val': 'Sous 24 heures',
-    'contact.location': 'Localisation',
-    'contact.location.val': 'Remote-first, mondial',
+    'contact.guarantee': 'Garantie',
+    'contact.guarantee.val': 'Satisfait ou remboursé',
     'contact.name': 'Nom',
     'contact.company': 'Entreprise',
     'contact.budget': 'Budget',
@@ -332,7 +332,7 @@ const translations: Record<Lang, Record<string, string>> = {
     // Footer
     'footer.cta': 'Vos concurrents n\'attendent pas. Et vous ?',
     'footer.btn': 'Commencer à Grandir',
-    'footer.desc': 'Agence de croissance digitale. Nous construisons des systèmes qui transforment les entreprises en leaders.',
+    'footer.desc': 'Sites sur mesure, un prix unique, entretenus pour la vie.',
     'footer.services': 'Services',
     'footer.company': 'Entreprise',
     'footer.legal': 'Légal',
@@ -486,8 +486,8 @@ const translations: Record<Lang, Record<string, string>> = {
     'contact.email': 'البريد',
     'contact.response': 'الرد',
     'contact.response.val': 'خلال 24 ساعة',
-    'contact.location': 'الموقع',
-    'contact.location.val': 'عن بعد، عالمياً',
+    'contact.guarantee': 'ضمان',
+    'contact.guarantee.val': 'غير راضٍ؟ نسترجع المال',
     'contact.name': 'الاسم',
     'contact.company': 'الشركة',
     'contact.budget': 'الميزانية',
@@ -501,7 +501,7 @@ const translations: Record<Lang, Record<string, string>> = {
     // Footer
     'footer.cta': 'منافسوك لن ينتظروا. هل ستنتظر أنت؟',
     'footer.btn': 'ابدأ النمو اليوم',
-    'footer.desc': 'وكالة نمو رقمي. نبني أنظمة تحول الشركات إلى قادة سوق.',
+    'footer.desc': 'مواقع مخصصة بسعر واحد، صيانة مدى الحياة.',
     'footer.services': 'الخدمات',
     'footer.company': 'الشركة',
     'footer.legal': 'قانوني',
@@ -520,11 +520,26 @@ const translations: Record<Lang, Record<string, string>> = {
 
 const LanguageContext = createContext<LanguageContextType | null>(null);
 
+// Geo-default language: France → French, Arabic-speaking countries
+// (UAE, Saudi, Qatar, Egypt…) → Arabic, everywhere else → English.
+// A manual switch is stored and wins over detection.
+const detectLang = (): Lang => {
+  try {
+    const stored = localStorage.getItem('feekza-lang');
+    if (stored === 'en' || stored === 'fr' || stored === 'ar') return stored as Lang;
+  } catch { /* private mode */ }
+  const locale = (navigator.language || 'en').toLowerCase();
+  if (locale.startsWith('ar')) return 'ar';
+  if (locale.startsWith('fr')) return 'fr';
+  return 'en';
+};
+
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [lang, setLangState] = useState<Lang>('en');
+  const [lang, setLangState] = useState<Lang>(detectLang);
 
   const setLang = (newLang: Lang) => {
     setLangState(newLang);
+    try { localStorage.setItem('feekza-lang', newLang); } catch { /* ignore */ }
     document.documentElement.lang = newLang;
     document.documentElement.dir = newLang === 'ar' ? 'rtl' : 'ltr';
   };

@@ -141,6 +141,48 @@ const formatOrder = (a: Record<string, any>, lang: string) => {
   return lines.join('\n');
 };
 
+const inputCls = 'w-full px-4 py-3 bg-white border-2 border-charcoal/15 rounded-xl text-charcoal placeholder:text-charcoal/35 focus:border-coral focus:outline-none focus:ring-2 focus:ring-coral/20 transition-colors';
+const labelCls = 'label-sm text-charcoal/60 mb-2 block';
+
+// Module-level components — defining them INSIDE the component would
+// remount every input on each keystroke and kill focus
+const Chip = ({ active, children, onClick }: { active: boolean; children: ReactNode; onClick: () => void }) => (
+  <button
+    type="button"
+    onClick={onClick}
+    className={`px-4 py-2 rounded-full border-2 text-sm font-medium transition-all ${
+      active ? 'bg-coral border-coral text-white' : 'border-charcoal/20 text-charcoal/70 hover:border-charcoal/40 bg-white'
+    }`}
+    data-cursor="Pick"
+  >
+    {children}
+  </button>
+);
+
+const Field = ({ label, children }: { label: string; children: ReactNode }) => (
+  <div>
+    <label className={labelCls}>{label}</label>
+    {children}
+  </div>
+);
+
+const Select = ({ value, onChange, options }: { value: string; onChange: (v: string) => void; options: string[] }) => (
+  <div className="relative">
+    <select
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      className={`${inputCls} pe-10 appearance-none cursor-pointer`}
+      data-cursor="Select"
+    >
+      <option value="" className="bg-charcoal">—</option>
+      {options.map((o: string) => <option key={o} value={o} className="bg-charcoal">{o}</option>)}
+    </select>
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" className="absolute end-4 top-1/2 -translate-y-1/2 pointer-events-none text-charcoal/50">
+      <path d="M2 4L6 8L10 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  </div>
+);
+
 export default function OrderFlow() {
   const { t, lang } = useLang();
   const c = CONTENT[lang] || CONTENT.en;
@@ -210,46 +252,6 @@ export default function OrderFlow() {
   const mailtoFallback =
     `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent('Website order — ' + answers.siteName)}` +
     `&body=${encodeURIComponent(formatOrder(answers, lang))}`;
-
-  const inputCls = 'w-full px-4 py-3 bg-white border-2 border-charcoal/15 rounded-xl text-charcoal placeholder:text-charcoal/35 focus:border-coral focus:outline-none focus:ring-2 focus:ring-coral/20 transition-colors';
-  const labelCls = 'label-sm text-charcoal/60 mb-2 block';
-
-  const Chip = ({ active, children, onClick }: { active: boolean; children: ReactNode; onClick: () => void }) => (
-    <button
-      type="button"
-      onClick={onClick}
-      className={`px-4 py-2 rounded-full border-2 text-sm font-medium transition-all ${
-        active ? 'bg-coral border-coral text-white' : 'border-charcoal/20 text-charcoal/70 hover:border-charcoal/40 bg-white'
-      }`}
-      data-cursor="Pick"
-    >
-      {children}
-    </button>
-  );
-
-  const Field = ({ label, children }: { label: string; children: ReactNode }) => (
-    <div>
-      <label className={labelCls}>{label}</label>
-      {children}
-    </div>
-  );
-
-  const Select = ({ value, onChange, options }: { value: string; onChange: (v: string) => void; options: string[] }) => (
-    <div className="relative">
-      <select
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className={`${inputCls} pe-10 appearance-none cursor-pointer`}
-        data-cursor="Select"
-      >
-        <option value="" className="bg-charcoal">—</option>
-        {options.map((o: string) => <option key={o} value={o} className="bg-charcoal">{o}</option>)}
-      </select>
-      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" className="absolute end-4 top-1/2 -translate-y-1/2 pointer-events-none text-charcoal/50">
-        <path d="M2 4L6 8L10 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-      </svg>
-    </div>
-  );
 
   return (
     <section id="order" className="bg-charcoal px-8 md:px-16 lg:px-20 py-20 md:py-28 relative noise">

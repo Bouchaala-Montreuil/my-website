@@ -12,6 +12,7 @@ import Pricing from './components/Pricing';
 import FAQ from './components/FAQ';
 import OrderFlow from './components/OrderFlow';
 import Contact from './components/Contact';
+import MobileCtaBar from './components/MobileCtaBar';
 import Footer from './components/Footer';
 
 function AppContent() {
@@ -57,6 +58,7 @@ function AppContent() {
           <OrderFlow />
           <Contact />
         </main>
+        <MobileCtaBar />
         <Footer />
       </div>
     </>

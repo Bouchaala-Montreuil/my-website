@@ -144,9 +144,9 @@ export default function Contact() {
 
             <div className="space-y-6">
               {[
-                { icon: '✉️', label: t('contact.email'), value: 'redabouchaala73@gmail.com' },
+                { icon: '✉️', label: t('contact.email'), value: CONTACT_EMAIL },
                 { icon: '⚡', label: t('contact.response'), value: t('contact.response.val') },
-                { icon: '🌍', label: t('contact.location'), value: t('contact.location.val') },
+                { icon: '🛡️', label: t('contact.guarantee'), value: t('contact.guarantee.val') },
               ].map((c) => (
                 <div key={c.label} className="flex items-center gap-4">
                   <span className="text-2xl">{c.icon}</span>

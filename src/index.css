@@ -77,6 +77,13 @@ a, button, select, input, textarea {
   touch-action: manipulation;
 }
 
+/* Room for the sticky mobile order bar */
+@media (max-width: 767px) {
+  body {
+    padding-bottom: 4.5rem;
+  }
+}
+
 /* Display text system */
 .display-xxl {
   font-family: var(--font-display);
