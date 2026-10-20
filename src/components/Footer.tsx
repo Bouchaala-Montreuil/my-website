@@ -1,133 +1,88 @@
-import { useEffect, useRef } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { useLang } from '../context/LanguageContext';
-import MagneticButton from './MagneticButton';
-import { CONTACT_EMAIL } from '../config';
+import type { Content, Locale } from "@/content/types";
+import { homePath } from "@/content";
+import { CONTACT_EMAIL } from "@/config";
+import { MailIcon } from "./Icons";
 
-gsap.registerPlugin(ScrollTrigger);
-
-export default function Footer() {
-  const { t } = useLang();
-  const year = new Date().getFullYear();
-  const footerRef = useRef<HTMLElement>(null);
-
-  useEffect(() => {
-    const footer = footerRef.current;
-    if (!footer) return;
-
-    const ctx = gsap.context(() => {
-      // CTA section animation
-      const cta = footer.querySelector('.footer-cta');
-      if (cta) {
-        gsap.set(cta.children, { opacity: 0, y: 40 });
-        ScrollTrigger.create({
-          trigger: cta,
-          start: 'top 80%',
-          onEnter: () => {
-            gsap.to(cta.children, {
-              opacity: 1,
-              y: 0,
-              duration: 0.8,
-              stagger: 0.1,
-              ease: 'power3.out',
-            });
-          },
-          once: true,
-        });
-      }
-
-      // Footer links animation
-      const cols = footer.querySelectorAll('.footer-col');
-      gsap.set(cols, { opacity: 0, y: 30 });
-      ScrollTrigger.create({
-        trigger: footer.querySelector('.footer-links'),
-        start: 'top 85%',
-        onEnter: () => {
-          gsap.to(cols, {
-            opacity: 1,
-            y: 0,
-            duration: 0.6,
-            stagger: 0.08,
-            ease: 'power3.out',
-          });
-        },
-        once: true,
-      });
-    }, footer);
-
-    return () => ctx.revert();
-  }, []);
-
+export function Footer({
+  c,
+  locale,
+  linkPrefix = "",
+}: {
+  c: Content;
+  locale: Locale;
+  /** Prefix used on pages without the home sections (legal, 404). */
+  linkPrefix?: string;
+}) {
+  const hrefFor = (href: string) => (href.startsWith("#") ? `${linkPrefix}${href}` : href);
   return (
-    <footer ref={footerRef} className="bg-charcoal">
-      {/* Pre-footer CTA */}
-      <div className="bg-mustard px-8 md:px-16 lg:px-20 py-16 md:py-24 text-center footer-cta">
-        <h2 className="display-lg text-charcoal mb-6 max-w-2xl mx-auto">
-          {t('footer.cta')}
-        </h2>
-        <MagneticButton href="#order" className="btn btn-dark" data-cursor="Let's Go">
-          {t('footer.btn')}
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="flip-rtl">
-            <path d="M1 13L13 1M13 1H4M13 1V10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        </MagneticButton>
-      </div>
-
-      {/* Footer content */}
-      <div className="footer-links px-8 md:px-16 lg:px-20 py-14 md:py-20">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-12 gap-8 md:gap-6">
-          {/* Brand */}
-          <div className="footer-col col-span-2 md:col-span-4">
-            <img src="wordmark.png" alt="Feekza" className="h-9 w-auto rounded-lg mb-4" />
-            <p className="body-sm text-cream/55 max-w-[260px]">
-              {t('footer.desc')}
+    <footer className="footer">
+      <div className="wrap">
+        <div className="footer__grid">
+          <div>
+            <a className="brand" href={homePath(locale)}>
+              <span className="brand__mark" aria-hidden="true">
+                F
+              </span>
+              <span className="brand__word">
+                Feekza
+                <small>{c.locale === "fr" ? "sites sur mesure" : c.locale === "en" ? "custom websites" : "مواقع مخصصة"}</small>
+              </span>
+            </a>
+            <p className="footer__about">{c.footer.about}</p>
+            <p className="label" style={{ color: "rgba(244,236,220,.55)" }}>
+              {c.footer.updated}
             </p>
           </div>
 
-          {[
-            {
-              title: t('footer.services'),
-              links: [t('included.design'), t('included.hosting'), t('included.maintenance'), t('included.mods'), t('included.email'), t('included.domain')].map((label) => ({ label, href: '#included' })),
-            },
-            {
-              title: t('footer.company'),
-              links: [
-                { label: t('nav.discover'), href: '#included' },
-                { label: t('nav.work'), href: '#work' },
-                { label: t('nav.about'), href: '#about' },
-                { label: t('nav.pricing'), href: '#order' },
-              ],
-            },
-            {
-              title: t('footer.contact'),
-              links: [
-                { label: CONTACT_EMAIL, href: `mailto:${CONTACT_EMAIL}`, breakAll: true },
-                { label: t('footer.response'), href: `mailto:${CONTACT_EMAIL}` },
-              ],
-            },
-          ].map((col) => (
-            <div key={col.title} className="footer-col md:col-span-2">
-              <p className="label-sm text-cream/60 mb-4">{col.title}</p>
-              <ul className="space-y-2">
-                  {col.links.map((l) => (
-                  <li key={l.label}>
-                    <a href={l.href} className={`body-sm text-cream/60 hover:text-cream transition-colors ${l.breakAll ? 'break-all' : ''}`} data-cursor="Link">
-                      {l.label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-      </div>
+          <div>
+            <h3>{c.footer.servicesTitle}</h3>
+            <ul>
+              {c.footer.services.map((link) => (
+                <li key={link.href + link.label}>
+                  <a href={hrefFor(link.href)}>{link.label}</a>
+                </li>
+              ))}
+            </ul>
+          </div>
 
-      {/* Bottom bar */}
-      <div className="border-t border-white/10 px-8 md:px-16 lg:px-20 py-5">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
-          <span className="body-sm text-cream/50">{t('footer.rights').replace('{year}', String(year))}</span>
-          <span className="body-sm text-cream/40">{t('footer.built')}</span>
+          <div>
+            <h3>{c.footer.companyTitle}</h3>
+            <ul>
+              {c.footer.company.map((link) => (
+                <li key={link.href + link.label}>
+                  <a href={hrefFor(link.href)}>{link.label}</a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <h3>{c.footer.contactTitle}</h3>
+            <ul>
+              <li>
+                <a href={`mailto:${CONTACT_EMAIL}`} className="footer__mail">
+                  <MailIcon size={14} /> {CONTACT_EMAIL}
+                </a>
+              </li>
+              <li>
+                <a href={hrefFor("#dossier")}>{c.footer.briefLink}</a>
+              </li>
+            </ul>
+
+            <h3 style={{ marginTop: "1.4rem" }}>{c.footer.legalTitle}</h3>
+            <ul>
+              {c.footer.legal.map((link) => (
+                <li key={link.href}>
+                  <a href={hrefFor(link.href)}>{link.label}</a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        <div className="footer__bottom">
+          <p>{c.footer.rights}</p>
+          <p>{c.footer.built}</p>
         </div>
       </div>
     </footer>
