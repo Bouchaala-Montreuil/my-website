@@ -240,7 +240,7 @@ export function HomeV2({
         <section className="v2-work">
           <div className="v2-container">
             <a className="v2-case" href="/realisations/">
-              <div className="v2-case__media">
+              <div className="v2-case__media" data-reveal="image" data-cursor="view" data-cursor-label="Voir le cas">
                 <img
                   className="v2-case__desk"
                   src="/case-feekza.webp"

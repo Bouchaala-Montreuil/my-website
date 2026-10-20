@@ -6856,3 +6856,192 @@ body {
 html.pt-load body {
   visibility: hidden;
 }
+
+/* ==========================================================================
+   Pointer & media layer
+   ========================================================================== */
+
+/* custom cursor: only after the module mounted, and never on text fields */
+html.cursor-ready.has-cursor,
+html.cursor-ready.has-cursor a,
+html.cursor-ready.has-cursor button,
+html.cursor-ready.has-cursor summary {
+  cursor: none;
+}
+
+html.cursor-ready.has-cursor input,
+html.cursor-ready.has-cursor textarea,
+html.cursor-ready.has-cursor select {
+  cursor: auto;
+}
+
+.cursor {
+  position: fixed;
+  inset: 0 auto auto 0;
+  z-index: 300;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.cursor.is-visible {
+  opacity: 1;
+}
+
+.cursor__dot,
+.cursor__ring {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 50%;
+  will-change: transform;
+}
+
+.cursor__dot {
+  width: 7px;
+  height: 7px;
+  margin: -3.5px 0 0 -3.5px;
+  background: var(--r-blue);
+}
+
+.cursor__ring {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  margin: -17px 0 0 -17px;
+  border: 1px solid rgba(32, 29, 29, 0.4);
+  background: transparent;
+  transition:
+    width 0.32s cubic-bezier(0.625, 0.05, 0, 1),
+    height 0.32s cubic-bezier(0.625, 0.05, 0, 1),
+    margin 0.32s cubic-bezier(0.625, 0.05, 0, 1),
+    background-color 0.32s cubic-bezier(0.625, 0.05, 0, 1),
+    border-color 0.32s cubic-bezier(0.625, 0.05, 0, 1);
+}
+
+.cursor.is-link .cursor__ring {
+  width: 54px;
+  height: 54px;
+  margin: -27px 0 0 -27px;
+  border-color: var(--r-blue);
+}
+
+.cursor.is-view .cursor__ring {
+  width: 84px;
+  height: 84px;
+  margin: -42px 0 0 -42px;
+  border-color: var(--r-blue);
+  background: var(--r-blue);
+}
+
+.cursor.is-press .cursor__ring {
+  width: 28px;
+  height: 28px;
+  margin: -14px 0 0 -14px;
+}
+
+.cursor.is-text .cursor__ring {
+  width: 18px;
+  height: 18px;
+  margin: -9px 0 0 -9px;
+  border-color: rgba(32, 29, 29, 0.55);
+}
+
+.cursor__label {
+  font-family: var(--font-body);
+  font-size: 0.625rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #fff;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.cursor.is-view .cursor__label {
+  opacity: 1;
+}
+
+/* magnetic controls */
+.is-magnetic {
+  transform: translate3d(var(--mx, 0), var(--my, 0), 0);
+  transition: transform 0.35s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.is-magnetic:active {
+  transition-duration: 0.12s;
+}
+
+/* image reveal: a clip-path wipe plus a slow settle, only when JS is running */
+.js [data-reveal="image"] .v2-case__desk {
+  clip-path: inset(0 0 100% 0);
+  transform: scale(1.06);
+}
+
+.js [data-reveal="image"].is-in .v2-case__desk {
+  clip-path: inset(0 0 0 0);
+  transform: none;
+  transition:
+    clip-path 1s cubic-bezier(0.19, 1, 0.22, 1),
+    transform 1.3s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+/* hovering the plate pushes the screen a hair closer */
+@media (hover: hover) and (pointer: fine) {
+  .v2-case__media:hover .v2-case__desk {
+    transform: scale(1.012);
+    transition: transform 0.9s cubic-bezier(0.19, 1, 0.22, 1);
+  }
+}
+
+/* accordion answer: a short, masked rise rather than a jump */
+details[open] .faq__answer {
+  animation: faq-answer 0.34s cubic-bezier(0.19, 1, 0.22, 1) both;
+}
+
+@keyframes faq-answer {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.faq summary .faq__sign {
+  transition: transform 0.32s cubic-bezier(0.625, 0.05, 0, 1);
+}
+
+details[open] .faq__sign {
+  transform: rotate(45deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cursor {
+    display: none !important;
+  }
+
+  .is-magnetic {
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .js [data-reveal="image"] .v2-case__desk,
+  .v2-case__media:hover .v2-case__desk {
+    clip-path: none !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  details[open] .faq__answer {
+    animation: none !important;
+  }
+}
+
+@media (hover: none) {
+  .cursor {
+    display: none !important;
+  }
+}
