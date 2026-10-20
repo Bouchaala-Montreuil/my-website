@@ -20,12 +20,10 @@ export function Footer({
         <div className="footer__grid">
           <div>
             <a className="brand" href={homePath(locale)}>
-              <span className="brand__mark" aria-hidden="true">
-                F
-              </span>
+              <img className="brand__mark" src="/brand/feekza-f.webp" alt="" width={360} height={381} />
               <span className="brand__word">
-                Feekza
-                <small>{c.locale === "fr" ? "sites sur mesure" : c.locale === "en" ? "custom websites" : "مواقع مخصصة"}</small>
+                <span className="brand__name">FEEKZA</span>
+                <small>{c.locale === "fr" ? "votre marketing" : c.locale === "en" ? "your marketing" : "تسويقك"}</small>
               </span>
             </a>
             <p className="footer__about">{c.footer.about}</p>

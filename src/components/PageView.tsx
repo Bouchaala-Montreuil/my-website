@@ -2,7 +2,7 @@ import type { Content, PageBlock, PageDoc } from "@/content/types";
 import { content } from "@/content";
 import { Header } from "./Header";
 import { Footer } from "./Footer";
-import { OrderForm } from "./OrderForm";
+import { ContactJourney } from "./ContactJourney";
 import { ArrowRight, Check } from "./Icons";
 import { Split } from "./Split";
 import { DitherImage } from "./DitherImage";
@@ -261,7 +261,7 @@ export function PageView({
 
         {hasForm ? (
           <section className="section on-ink" id="dossier" aria-labelledby="dossier-titre">
-            <div className="wrap dossier">
+            <div className="wrap dossier dossier--journey">
               <div className="dossier__side">
                 <p className="doc-section__label doc-section__label--light">
                   <b aria-hidden="true">→</b>
@@ -286,7 +286,7 @@ export function PageView({
                   </li>
                 </ul>
               </div>
-              <OrderForm c={c} service={page.formService} />
+              <ContactJourney c={c} service={page.formService} />
             </div>
           </section>
         ) : (

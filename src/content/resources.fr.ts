@@ -166,7 +166,7 @@ export const contactPage: PageDoc = {
   schemaType: "WebPage",
   formTitle: "Ouvrir un dossier",
   formLead:
-    "Deux minutes, trois étapes, et une réponse écrite sous un jour ouvré.",
+    "Six questions, deux minutes, et une réponse écrite sous un jour ouvré.",
   relatedTitle: "Avant d’écrire",
   related: [
     {

@@ -551,7 +551,7 @@ export const en: Content = {
     responseValue: "Within one working day",
     rights: "© 2026 Feekza. All rights reserved.",
     built: "Designed and maintained by Feekza.",
-    updated: "Offer last updated 20 October 2026",
+    updated: "Offer last updated 21 October 2026",
   },
   notFound: {
     title: "This page does not exist",

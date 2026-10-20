@@ -760,7 +760,7 @@ export const workPage: PageDoc = {
           items: [
             "Pages pré-rendues : le contenu et les métadonnées existent sans JavaScript, et l’hydratation attend le chargement complet plutôt que de retarder l’affichage.",
             "Trois langues avec attributs lang et dir corrects, dont l’arabe en écriture de droite à gauche.",
-            "Formulaire à trois étapes, validation explicite, message d’échec honnête, solution de repli par email.",
+            "Formulaire en six questions, validation explicite, message d’échec honnête, solution de repli par email.",
             "Pages légales complètes, avec les informations que seul l’éditeur peut fournir signalées comme telles.",
             "Zéro requête tierce : polices auto-hébergées, aucune mesure d’audience, aucune image distante.",
           ],

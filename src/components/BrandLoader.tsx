@@ -20,7 +20,7 @@ export function BrandLoader() {
           <span className="brand-loader__sheen" />
         </div>
 
-        <p className="brand-loader__word">
+        <p className="brand-loader__word" dir="ltr">
           {"FEEKZA".split("").map((letter, index) => (
             <span key={`${letter}-${index}`} style={{ "--i": index } as React.CSSProperties}>
               {letter}

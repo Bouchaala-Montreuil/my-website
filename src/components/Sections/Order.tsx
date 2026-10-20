@@ -1,6 +1,6 @@
 import type { Content } from "@/content/types";
 import { SectionHead } from "../SectionHead";
-import { OrderForm } from "../OrderForm";
+import { ContactJourney } from "../ContactJourney";
 import { Check } from "../Icons";
 import { CONTACT_EMAIL } from "@/config";
 
@@ -10,7 +10,7 @@ export function Order({ c }: { c: Content }) {
       <div className="wrap">
         <SectionHead head={c.order.head} id="dossier-titre" />
 
-        <div className="dossier mt-4">
+        <div className="dossier dossier--journey mt-4">
           <div className="dossier__side">
             <h3
               style={{
@@ -40,7 +40,7 @@ export function Order({ c }: { c: Content }) {
             </p>
           </div>
 
-          <OrderForm c={c} />
+          <ContactJourney c={c} />
         </div>
       </div>
     </section>

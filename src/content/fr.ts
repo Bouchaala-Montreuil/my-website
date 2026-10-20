@@ -562,7 +562,7 @@ export const fr: Content = {
     responseValue: "Sous un jour ouvré",
     rights: "© 2026 Feekza. Tous droits réservés.",
     built: "Site conçu et maintenu par Feekza.",
-    updated: "Offre mise à jour le 20 octobre 2026",
+    updated: "Offre mise à jour le 21 octobre 2026",
   },
   notFound: {
     title: "Cette page n’existe pas",
