@@ -211,15 +211,15 @@ export default function OrderFlow() {
     `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent('Website order — ' + answers.siteName)}` +
     `&body=${encodeURIComponent(formatOrder(answers, lang))}`;
 
-  const inputCls = 'w-full px-4 py-3 bg-white/5 border-2 border-white/10 rounded-xl text-cream focus:border-coral focus:outline-none transition-colors';
-  const labelCls = 'label-sm text-cream/60 mb-2 block';
+  const inputCls = 'w-full px-4 py-3 bg-white border-2 border-charcoal/15 rounded-xl text-charcoal placeholder:text-charcoal/35 focus:border-coral focus:outline-none focus:ring-2 focus:ring-coral/20 transition-colors';
+  const labelCls = 'label-sm text-charcoal/60 mb-2 block';
 
   const Chip = ({ active, children, onClick }: { active: boolean; children: ReactNode; onClick: () => void }) => (
     <button
       type="button"
       onClick={onClick}
       className={`px-4 py-2 rounded-full border-2 text-sm font-medium transition-all ${
-        active ? 'bg-coral border-coral text-white' : 'border-white/20 text-cream/70 hover:border-cream/50'
+        active ? 'bg-coral border-coral text-white' : 'border-charcoal/20 text-charcoal/70 hover:border-charcoal/40 bg-white'
       }`}
       data-cursor="Pick"
     >
@@ -245,7 +245,7 @@ export default function OrderFlow() {
         <option value="" className="bg-charcoal">—</option>
         {options.map((o: string) => <option key={o} value={o} className="bg-charcoal">{o}</option>)}
       </select>
-      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" className="absolute end-4 top-1/2 -translate-y-1/2 pointer-events-none text-cream/60">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" className="absolute end-4 top-1/2 -translate-y-1/2 pointer-events-none text-charcoal/50">
         <path d="M2 4L6 8L10 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
       </svg>
     </div>

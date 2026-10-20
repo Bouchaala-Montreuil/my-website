@@ -174,7 +174,7 @@ export default function Portfolio() {
               {t(p.highlightLabelKey)}
             </p>
             <MagneticButton
-              href="#contact"
+              href="#order"
               className={`btn self-start ${p.textColor === 'text-charcoal' ? 'btn-outline-dark' : 'btn-outline-light'}`}
               data-cursor="View"
             >
