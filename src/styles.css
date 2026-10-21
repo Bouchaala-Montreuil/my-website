@@ -9708,3 +9708,16 @@ html.loader {
 .b-fields {
   max-width: 40rem;
 }
+
+@media (min-width: 1080px) {
+  .page-contact .doc-steps {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: clamp(1.5rem, 3vw, 2.5rem);
+  }
+}
+
+@media (min-width: 900px) {
+  .page-contact .doc-limits {
+    margin-inline-start: calc(8.5rem + clamp(1.5rem, 4vw, 3.5rem));
+  }
+}
