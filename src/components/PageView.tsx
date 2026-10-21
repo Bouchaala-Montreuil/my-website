@@ -138,7 +138,7 @@ export function PageView({
   return (
     <>
       <Header c={c} locale="fr" currentPath={currentPath} inPageAnchors />
-      <main id="contenu">
+      <main id="contenu" className={hasForm ? "page-contact" : undefined}>
         <header className="doc-hero">
           <div className="wrap doc-hero__grid">
             <div>

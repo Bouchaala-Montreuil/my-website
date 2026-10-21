@@ -5,20 +5,17 @@ import { JOURNEY, type JourneyServiceId } from "@/content/journey";
 import { ArrowRight, MailIcon } from "./Icons";
 
 /**
- * The FEEKZA brief — six questions, drawn as a working document.
+ * The FEEKZA brief — six questions, set as a printed form.
  *
- * The art direction is a technical drawing on paper: hairline rules, mono
- * annotations, dimension marks, and one electric blue. The geometry of the
- * mark is the organising device: six strokes construct the F as the six
- * questions are answered, and the step rail is cut on the same 45°.
+ * Art direction: a working document, not an interface. One dark running head,
+ * a narrow numeral margin, answers set as rules rather than cards, and the
+ * brief assembling in the right column. The only colour is ink, paper, and an
+ * electric blue used for three things: the progress hairline, the chosen
+ * marker, and focus. The brand mark appears once — six strokes that complete
+ * as the six questions are answered.
  *
- * Composition changes with the question rather than repeating one card:
- * a ledger for the need, typeset fields and a vocabulary for the business,
- * an index for the goal, a measured scale for the budget, ruled paper for
- * the project, and a signature block for the contact.
- *
- * All behaviour — conditional questions, validation, Formspree submission,
- * duplicate guard, failure fallback — is unchanged.
+ * Behaviour is unchanged: conditional questions, validation, Formspree
+ * submission, duplicate guard, failure fallback, success state.
  */
 
 const TOTAL_STEPS = 6;
@@ -83,8 +80,7 @@ const LEGACY_SERVICE: Record<JourneyServiceId, FormService> = {
   autre: "marketing",
 };
 
-/* ── The mark, constructed in six strokes ──────────────────────────────── */
-
+/* The mark, in the six strokes that make it. Used once, small, as progress. */
 const STROKES = [
   "M18 18 V250",
   "M18 18 H206",
@@ -94,47 +90,18 @@ const STROKES = [
   "M72 140 V196 L18 250",
 ];
 
-function Construction({ step, caption }: { step: number; caption: string }) {
+function Mark({ step }: { step: number }) {
   const done = step + 1;
   return (
-    <figure className={`b-draw${done >= 6 ? " is-complete" : ""}`}>
-      <svg viewBox="-14 -14 248 296" className="b-draw__svg" aria-hidden="true">
-        <polygon
-          className={`b-draw__fill${done >= 6 ? " is-on" : ""}`}
-          points="18,18 206,18 172,54 72,54 72,104 160,104 126,140 72,140 72,196 18,250"
-        />
-        {STROKES.map((d) => (
-          <path key={`g-${d}`} d={d} className="b-draw__ghost" />
-        ))}
-        {STROKES.map((d, index) => (
-          <path
-            key={d}
-            d={d}
-            pathLength={1}
-            className={`b-draw__line${index < done ? " is-on" : ""}${index === step ? " is-last" : ""}`}
-            style={{ "--k": index } as CSSProperties}
-          />
-        ))}
-        <path className="b-draw__dim" d="M18 243 H206" />
-        <path className="b-draw__dim" d="M18 237 V249 M206 237 V249" />
-        {[
-          [18, 18],
-          [206, 18],
-          [126, 140],
-          [18, 250],
-        ].map(([x, y]) => (
-          <g key={`${x}-${y}`} className={`b-draw__cross${done >= 6 ? " is-on" : ""}`}>
-            <path d={`M${x - 7} ${y} H${x + 7}`} />
-            <path d={`M${x} ${y - 7} V${y + 7}`} />
-          </g>
-        ))}
-        <path className={`b-draw__angle${done >= 3 ? " is-on" : ""}`} d="M186 18 A18 18 0 0 0 200 34" />
-      </svg>
-      <figcaption className="b-draw__cap">
-        <span className="b-mono">F / {String(done).padStart(2, "0")}</span>
-        <span className="b-draw__cap-label">{caption}</span>
-      </figcaption>
-    </figure>
+    <svg className="b-mark" viewBox="2 2 220 262" aria-hidden="true" focusable="false">
+      <polygon
+        className={`b-mark__solid${done >= 6 ? " is-on" : ""}`}
+        points="18,18 206,18 172,54 72,54 72,104 160,104 126,140 72,140 72,196 18,250"
+      />
+      {STROKES.map((d, index) => (
+        <path key={d} d={d} className={`b-mark__s${index < done ? " is-on" : ""}`} />
+      ))}
+    </svg>
   );
 }
 
@@ -167,6 +134,7 @@ function FieldLabel({
   );
 }
 
+/** A set of answers as words on rules, the way a form lists options. */
 function Vocab({
   legend,
   options,
@@ -174,6 +142,7 @@ function Vocab({
   onPick,
   optional,
   error,
+  columns = false,
 }: {
   legend: string;
   options: string[];
@@ -181,15 +150,16 @@ function Vocab({
   onPick: (option: string) => void;
   optional?: string;
   error?: string;
+  columns?: boolean;
 }) {
   const isOn = (option: string) => (Array.isArray(value) ? value.includes(option) : value === option);
   return (
     <fieldset className="b-vocab" data-invalid={error ? "true" : undefined}>
-      <legend className="b-legend">
+      <legend className="b-label">
         <span>{legend}</span>
         {optional && <span className="b-label__note">{optional}</span>}
       </legend>
-      <div className="b-vocab__list">
+      <div className={`b-words${columns ? " b-words--cols" : ""}`}>
         {options.map((option) => (
           <button
             key={option}
@@ -198,7 +168,6 @@ function Vocab({
             aria-pressed={isOn(option)}
             onClick={() => onPick(option)}
           >
-            <span className="b-word__tick" aria-hidden="true" />
             {option}
           </button>
         ))}
@@ -460,64 +429,69 @@ export function ContactJourney({ c, service }: { c: Content; service?: FormServi
   ] as const;
 
   const filled = summary.filter((row) => row.value).length;
-  const activeService = j.services.find((s) => s.id === answers.service);
   const current = j.steps[STEP_IDS[step] ?? "service"];
+  const progress = `${((step + 1) / TOTAL_STEPS) * 100}%`;
 
-  /* ── Finished brief ───────────────────────────────────────────────── */
+  const Entries = ({ compact = false }: { compact?: boolean }) => (
+    <dl className={`b-entries${compact ? " b-entries--compact" : ""}`}>
+      {summary.map((row) => (
+        <div key={row.key} className={row.value ? "is-filled" : "is-empty"}>
+          <dt>{j.summaryLabels[row.key]}</dt>
+          <dd>{row.value || j.empty}</dd>
+        </div>
+      ))}
+    </dl>
+  );
+
+  /* ── Sent ─────────────────────────────────────────────────────────── */
 
   if (status === "success") {
     return (
-      <div className="b" dir={c.dir} data-state="done">
-        <div className="b-sheet b-sheet--done">
-          <div className="b-done__head">
-            <p className="b-mono b-done__kicker">{j.kicker}</p>
-            <span className="b-stamp" aria-hidden="true">
-              <span>{j.successTitle}</span>
-              <span className="b-stamp__sub">FEEKZA · 06/06</span>
+      <div className="b b--done" dir={c.dir}>
+        <div className="b-sheet">
+          <div className="b-run b-run--done">
+            <span className="b-run__id">
+              <Mark step={5} />
+              <span className="b-run__word">
+                FEEKZA<i>·</i>Dossier
+              </span>
             </span>
+            <span className="b-run__pos">
+              <b dir="ltr">06 / 06</b>
+              <span className="b-run__step">{j.successTitle}</span>
+            </span>
+            <span className="b-run__bar" style={{ "--p": "100%" } as CSSProperties} />
           </div>
 
-          <div className="b-done__grid">
-            <div className="b-done__text">
-              <h3 className="b-done__title" ref={successRef} tabIndex={-1}>
-                {j.successTitle}
-              </h3>
-              <p className="b-done__body">{j.successBody}</p>
+          <div className="b-done">
+            <h3 className="b-done__title" ref={successRef} tabIndex={-1}>
+              {j.successTitle}
+            </h3>
+            <p className="b-done__lead">{j.successBody}</p>
 
-              <ol className="b-done__steps">
-                {j.successSteps.map((item, index) => (
-                  <li key={item}>
-                    <span className="b-mono" aria-hidden="true">
-                      {String(index + 1).padStart(2, "0")}
-                    </span>
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ol>
+            <ol className="b-done__steps">
+              {j.successSteps.map((item, index) => (
+                <li key={item}>
+                  <span className="b-done__n" aria-hidden="true">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ol>
 
-              <p className="b-done__note">{j.successNote}</p>
+            <Entries compact />
 
-              <div className="b-actions">
-                <button type="button" className="b-btn b-btn--ink" onClick={reset}>
-                  {j.successAgain}
-                  <ArrowRight size={15} />
-                </button>
-                <a className="b-btn b-btn--quiet" href={mailtoHref}>
-                  <MailIcon size={14} /> {j.mailto}
-                </a>
-              </div>
-            </div>
+            <p className="b-done__note">{j.successNote}</p>
 
-            <div className="b-done__figure">
-              <Construction step={5} caption={activeService?.label ?? j.stageNote} />
-              <dl className="b-entries b-entries--done">
-                {summary.map((row) => (
-                  <div key={row.key} className={row.value ? "is-filled" : ""}>
-                    <dt>{j.summaryLabels[row.key]}</dt>
-                    <dd>{row.value || j.empty}</dd>
-                  </div>
-                ))}
-              </dl>
+            <div className="b-actions">
+              <button type="button" className="b-btn b-btn--ink" onClick={reset}>
+                {j.successAgain}
+                <ArrowRight size={14} />
+              </button>
+              <a className="b-link" href={mailtoHref}>
+                <MailIcon size={13} /> {j.mailto}
+              </a>
             </div>
           </div>
         </div>
@@ -525,23 +499,26 @@ export function ContactJourney({ c, service }: { c: Content; service?: FormServi
     );
   }
 
-  /* ── Working brief ────────────────────────────────────────────────── */
+  /* ── Working ──────────────────────────────────────────────────────── */
 
   return (
     <div className="b" dir={c.dir}>
       <div className="b-sheet">
-        <ol className="b-rail" aria-hidden="true">
-          {STEP_IDS.map((id, index) => (
-            <li
-              key={id}
-              className={index < step ? "is-done" : index === step ? "is-now" : "is-next"}
-            >
-              <span className="b-rail__n b-mono">{String(index + 1).padStart(2, "0")}</span>
-              <span className="b-rail__cut" />
-              <span className="b-rail__lab">{j.steps[id].label}</span>
-            </li>
-          ))}
-        </ol>
+        <div className="b-run">
+          <span className="b-run__id">
+            <Mark step={step} />
+            <span className="b-run__word">
+              FEEKZA<i>·</i>Dossier
+            </span>
+          </span>
+          <span className="b-run__pos">
+            <b dir="ltr">
+              {String(step + 1).padStart(2, "0")} / {String(TOTAL_STEPS).padStart(2, "0")}
+            </b>
+            <span className="b-run__step">{current.label}</span>
+          </span>
+          <span className="b-run__bar" style={{ "--p": progress } as CSSProperties} />
+        </div>
 
         <div className="b-cols">
           <div className="b-main">
@@ -552,13 +529,8 @@ export function ContactJourney({ c, service }: { c: Content; service?: FormServi
             <form onSubmit={onSubmit} noValidate>
               <div className="b-step" key={step} data-dir={dir} ref={stepBodyRef}>
                 <header className="b-head">
-                  <p className="b-eyebrow">
-                    <span className="b-mono b-eyebrow__n">{String(step + 1).padStart(2, "0")}</span>
-                    <span className="b-eyebrow__rule" aria-hidden="true" />
-                    <span className="b-mono b-eyebrow__lab">{current.label}</span>
-                    <span className="b-mono b-eyebrow__count" dir="ltr">
-                      {String(step + 1).padStart(2, "0")}/{String(TOTAL_STEPS).padStart(2, "0")}
-                    </span>
+                  <p className="b-head__n" aria-hidden="true">
+                    {String(step + 1).padStart(2, "0")}
                   </p>
                   <h3 className="b-q" ref={headingRef} tabIndex={-1}>
                     {current.question}
@@ -567,30 +539,23 @@ export function ContactJourney({ c, service }: { c: Content; service?: FormServi
                 </header>
 
                 <div className="b-answers">
-                  {/* 1 — the need, as a ledger */}
+                  {/* 1 — the need */}
                   {step === 0 && (
-                    <div className="b-ledger" role="group" aria-labelledby={`${uid}-service-label`}>
+                    <div className="b-list" role="group" aria-labelledby={`${uid}-service-label`}>
                       <span className="sr-only" id={`${uid}-service-label`}>
                         {current.question}
                       </span>
-                      {j.services.map((option, index) => (
+                      {j.services.map((option) => (
                         <button
                           key={option.id}
                           type="button"
-                          className={`b-ledger__row${answers.service === option.id ? " is-on" : ""}`}
+                          className={`b-row${answers.service === option.id ? " is-on" : ""}`}
                           aria-pressed={answers.service === option.id}
                           onClick={() => chooseSingle("service", option.id)}
-                          style={{ "--i": index } as CSSProperties}
                         >
-                          <span className="b-mono b-ledger__i">{String(index + 1).padStart(2, "0")}</span>
-                          <span className="b-ledger__label">{option.label}</span>
-                          <span className="b-ledger__note">{option.note}</span>
-                          <span className="b-ledger__mark" aria-hidden="true">
-                            <svg viewBox="0 0 18 18" width="18" height="18">
-                              <path d="M2 16 L16 2" />
-                              <path d="M9 2 H16 V9" />
-                            </svg>
-                          </span>
+                          <span className="b-row__mark" aria-hidden="true" />
+                          <span className="b-row__label">{option.label}</span>
+                          <span className="b-row__note">{option.note}</span>
                         </button>
                       ))}
                       {errors.service && (
@@ -601,10 +566,10 @@ export function ContactJourney({ c, service }: { c: Content; service?: FormServi
                     </div>
                   )}
 
-                  {/* 2 — the business: typeset fields + a vocabulary */}
+                  {/* 2 — the business */}
                   {step === 1 && (
                     <div className="b-fields">
-                      <div className="b-field b-field--wide">
+                      <div className="b-field">
                         <FieldLabel htmlFor={`${uid}-business`} note="*">
                           {j.business.label}
                         </FieldLabel>
@@ -630,15 +595,13 @@ export function ContactJourney({ c, service }: { c: Content; service?: FormServi
                         options={j.sector.options}
                         value={answers.sector}
                         optional={j.optional}
+                        columns
                         onPick={(option) => set("sector", answers.sector === option ? "" : option)}
                       />
 
                       {(answers.service === "site" || answers.service === "refonte" || answers.service === "seo") && (
-                        <div className="b-field b-field--wide b-reveal">
-                          <FieldLabel
-                            htmlFor={`${uid}-website`}
-                            note={needsWebsite ? j.website.required : j.website.optional}
-                          >
+                        <div className="b-field b-reveal">
+                          <FieldLabel htmlFor={`${uid}-website`} note={needsWebsite ? j.website.required : j.website.optional}>
                             {j.website.label}
                           </FieldLabel>
                           <input
@@ -726,13 +689,13 @@ export function ContactJourney({ c, service }: { c: Content; service?: FormServi
                       )}
 
                       {answers.service === "autre" && (
-                        <div className="b-field b-field--wide b-reveal">
+                        <div className="b-field b-reveal">
                           <FieldLabel htmlFor={`${uid}-other`} note="*">
                             {j.other.label}
                           </FieldLabel>
                           <textarea
                             id={`${uid}-other`}
-                            className="b-area b-area--short"
+                            className="b-area"
                             rows={2}
                             placeholder={j.other.placeholder}
                             value={answers.other}
@@ -743,9 +706,9 @@ export function ContactJourney({ c, service }: { c: Content; service?: FormServi
                     </div>
                   )}
 
-                  {/* 3 — the goal, as an index */}
+                  {/* 3 — the goal */}
                   {step === 2 && (
-                    <div className="b-index" role="group" aria-labelledby={`${uid}-goal-label`}>
+                    <div className="b-goals" role="group" aria-labelledby={`${uid}-goal-label`}>
                       <span className="sr-only" id={`${uid}-goal-label`}>
                         {current.question}
                       </span>
@@ -753,14 +716,15 @@ export function ContactJourney({ c, service }: { c: Content; service?: FormServi
                         <button
                           key={option.id}
                           type="button"
-                          className={`b-index__item${answers.goal === option.id ? " is-on" : ""}`}
+                          className={`b-goal${answers.goal === option.id ? " is-on" : ""}`}
                           aria-pressed={answers.goal === option.id}
                           onClick={() => chooseSingle("goal", option.id)}
-                          style={{ "--i": index } as CSSProperties}
                         >
-                          <span className="b-mono b-index__n">{String(index + 1).padStart(2, "0")}</span>
-                          <span className="b-index__label">{option.label}</span>
-                          <span className="b-index__note">{option.note}</span>
+                          <span className="b-goal__n" aria-hidden="true">
+                            {String(index + 1).padStart(2, "0")}
+                          </span>
+                          <span className="b-goal__label">{option.label}</span>
+                          <span className="b-goal__note">{option.note}</span>
                         </button>
                       ))}
                       {errors.goal && (
@@ -771,62 +735,56 @@ export function ContactJourney({ c, service }: { c: Content; service?: FormServi
                     </div>
                   )}
 
-                  {/* 4 — the budget, as a measured scale */}
+                  {/* 4 — the budget */}
                   {step === 3 && (
-                    <div className="b-scale" role="group" aria-labelledby={`${uid}-budget-label`}>
+                    <div className="b-prices" role="group" aria-labelledby={`${uid}-budget-label`}>
                       <span className="sr-only" id={`${uid}-budget-label`}>
                         {current.question}
                       </span>
-                      <div className="b-scale__track">
-                        {j.budgets.map((option, index) => (
-                          <button
-                            key={option}
-                            type="button"
-                            className={`b-scale__stop${answers.budget === option ? " is-on" : ""}`}
-                            aria-pressed={answers.budget === option}
-                            onClick={() => chooseSingle("budget", option)}
-                            style={{ "--i": index } as CSSProperties}
-                          >
-                            <span className="b-mono b-scale__n">{String(index + 1).padStart(2, "0")}</span>
-                            <span
-                              className="b-scale__tick"
-                              aria-hidden="true"
-                              style={{ "--w": `calc(${((index + 1) / j.budgets.length) * 100}% - ${(index + 1) * 2}px)` } as CSSProperties}
-                            />
-                            <span className="b-scale__amount">{option}</span>
-                          </button>
-                        ))}
-                      </div>
-                      <p className="b-scale__foot">
-                        <span className="b-mono">EUR · TTC · / MOIS</span>
+                      {j.budgets.map((option, index) => (
                         <button
+                          key={option}
                           type="button"
-                          className="b-skip"
-                          onClick={() => goTo(4, 1)}
-                          disabled={status === "sending"}
+                          className={`b-price${answers.budget === option ? " is-on" : ""}`}
+                          aria-pressed={answers.budget === option}
+                          onClick={() => chooseSingle("budget", option)}
                         >
+                          <span className="b-price__n" aria-hidden="true">
+                            {String(index + 1).padStart(2, "0")}
+                          </span>
+                          <span className="b-price__amount">{option}</span>
+                          <span
+                            className="b-price__rule"
+                            aria-hidden="true"
+                            style={{ "--len": `${28 + index * 22}%` } as CSSProperties}
+                          />
+                        </button>
+                      ))}
+                      <p className="b-prices__foot">
+                        <span>EUR · TTC · par mois</span>
+                        <button type="button" className="b-link" onClick={() => goTo(4, 1)} disabled={status === "sending"}>
                           {j.skip}
                         </button>
                       </p>
                     </div>
                   )}
 
-                  {/* 5 — the project, written on ruled paper */}
+                  {/* 5 — the project */}
                   {step === 4 && (
                     <div className="b-fields">
-                      <div className="b-field b-field--wide">
+                      <div className="b-field">
                         <FieldLabel htmlFor={`${uid}-notes`} quiet>
                           {current.question} — {j.optional}
                         </FieldLabel>
                         <textarea
                           id={`${uid}-notes`}
-                          className="b-area b-area--ruled"
+                          className="b-area b-area--write"
                           rows={5}
                           placeholder={j.projectPlaceholder}
                           value={answers.notes}
                           onChange={(event) => set("notes", event.target.value)}
                         />
-                        <p className="b-aside">{j.projectExample}</p>
+                        <p className="b-help">{j.projectExample}</p>
                       </div>
 
                       <Vocab
@@ -839,10 +797,10 @@ export function ContactJourney({ c, service }: { c: Content; service?: FormServi
                     </div>
                   )}
 
-                  {/* 6 — the contact, as a signature block */}
+                  {/* 6 — the contact */}
                   {step === 5 && (
-                    <div className="b-fields b-sign">
-                      <div className="b-row">
+                    <div className="b-fields">
+                      <div className="b-pair">
                         <div className="b-field">
                           <FieldLabel htmlFor={`${uid}-name`} note="*">
                             {j.fields.name}
@@ -932,7 +890,7 @@ export function ContactJourney({ c, service }: { c: Content; service?: FormServi
                           {errors.consent}
                         </p>
                       )}
-                      <p className="b-aside">{j.requiredNote}</p>
+                      <p className="b-help">{j.requiredNote}</p>
                     </div>
                   )}
                 </div>
@@ -945,31 +903,24 @@ export function ContactJourney({ c, service }: { c: Content; service?: FormServi
 
                 {status === "error" && (
                   <div className="b-alert" role="alert">
-                    <p className="b-mono b-alert__kicker">
-                      <span aria-hidden="true">!</span> {j.failureTitle}
-                    </p>
+                    <p className="b-alert__title">{j.failureTitle}</p>
                     <p className="b-alert__body">{j.failureBody}</p>
                     <div className="b-actions">
                       <button type="button" className="b-btn b-btn--ink" onClick={() => setStatus("idle")}>
                         {j.retry}
                       </button>
-                      <a className="b-btn b-btn--quiet" href={mailtoHref}>
-                        <MailIcon size={14} /> {j.mailto}
+                      <a className="b-link" href={mailtoHref}>
+                        <MailIcon size={13} /> {j.mailto}
                       </a>
                     </div>
                   </div>
                 )}
 
-                <div className="b-actions b-actions--nav">
+                <div className="b-nav">
                   {step > 0 ? (
-                    <button
-                      type="button"
-                      className="b-back"
-                      onClick={() => goTo(step - 1, -1)}
-                      disabled={status === "sending"}
-                    >
+                    <button type="button" className="b-back" onClick={() => goTo(step - 1, -1)} disabled={status === "sending"}>
                       <span aria-hidden="true" className="b-back__arrow">
-                        <ArrowRight size={13} />
+                        <ArrowRight size={12} />
                       </span>
                       {j.back}
                     </button>
@@ -980,12 +931,12 @@ export function ContactJourney({ c, service }: { c: Content; service?: FormServi
                   {step < TOTAL_STEPS - 1 ? (
                     <button type="button" className="b-btn b-btn--ink" onClick={advance} disabled={status === "sending"}>
                       {j.next}
-                      <span className="b-btn__wedge" aria-hidden="true" />
+                      <ArrowRight size={14} />
                     </button>
                   ) : (
                     <button type="submit" className="b-btn b-btn--ink" disabled={status === "sending"}>
                       {status === "sending" ? j.sending : j.submit}
-                      <span className="b-btn__wedge" aria-hidden="true" />
+                      {status !== "sending" && <ArrowRight size={14} />}
                     </button>
                   )}
                 </div>
@@ -999,24 +950,14 @@ export function ContactJourney({ c, service }: { c: Content; service?: FormServi
             </form>
           </div>
 
-          <aside className="b-margin">
-            <Construction step={step} caption={activeService?.label ?? j.stageNote} />
-            <div className="b-brief">
-              <p className="b-mono b-brief__cap">
-                <span>{j.recap}</span>
-                <span dir="ltr">
-                  {filled}/{summary.length}
-                </span>
-              </p>
-              <dl className="b-entries">
-                {summary.map((row) => (
-                  <div key={row.key} className={row.value ? "is-filled" : "is-empty"}>
-                    <dt>{j.summaryLabels[row.key]}</dt>
-                    <dd>{row.value || j.empty}</dd>
-                  </div>
-                ))}
-              </dl>
-            </div>
+          <aside className="b-side">
+            <p className="b-side__cap">
+              <span>{j.recap}</span>
+              <span dir="ltr">
+                {filled}/{summary.length}
+              </span>
+            </p>
+            <Entries />
           </aside>
         </div>
       </div>
