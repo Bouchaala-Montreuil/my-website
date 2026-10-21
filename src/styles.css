@@ -8370,11 +8370,11 @@ html.loader {
 .b-goal {
   position: relative;
   display: grid;
-  grid-template-columns: 1.7rem minmax(0, 1fr);
+  grid-template-columns: var(--hang) minmax(0, 1fr);
   grid-template-areas:
     "n label"
     ". note";
-  gap: 0.15rem 0.55rem;
+  gap: 0.15rem 0;
   align-items: baseline;
   padding: 0.85rem 1.4rem 0.85rem 0;
   border: 0;
@@ -8445,7 +8445,7 @@ html.loader {
   display: grid;
   grid-template-columns: var(--hang) minmax(0, 1fr) minmax(5rem, 34%);
   align-items: center;
-  gap: 0.4rem;
+  gap: 0;
   width: 100%;
   margin: 0;
   padding: 0.72rem 0;
@@ -9687,4 +9687,24 @@ html.loader {
 .v2-btn:focus-visible {
   background: var(--b-blue, #0004f6);
   color: #fff;
+}
+
+/* every answer starts in the same column as its question */
+.b-fields,
+.b-prices__foot,
+.b-alert,
+.b-error--form {
+  margin-inline-start: var(--hang);
+}
+
+.b-fields .b-vocab,
+.b-fields .b-help,
+.b-fields .b-error,
+.b-consent .b-error {
+  margin-inline-start: 0;
+}
+
+/* a writing measure for the fields, not the width of the page */
+.b-fields {
+  max-width: 40rem;
 }
