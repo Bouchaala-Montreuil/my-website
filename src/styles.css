@@ -8819,8 +8819,8 @@ html.loader {
 }
 
 .b-entries .is-empty dd {
-  font-family: var(--font-serif);
-  font-style: italic;
+  font-size: 0.78rem;
+  font-style: normal;
   color: var(--b-muted);
 }
 
