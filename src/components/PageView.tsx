@@ -6,6 +6,7 @@ import { ContactJourney } from "./ContactJourney";
 import { ArrowRight, Check } from "./Icons";
 import { Split } from "./Split";
 import { DitherImage } from "./DitherImage";
+import { Amount } from "./Amount";
 
 function Blocks({ blocks }: { blocks: PageBlock[] }) {
   return (
@@ -302,6 +303,22 @@ export function PageView({
             </ul>
           </div>
         </section>
+        )}
+
+        {/* The phone keeps one way to the brief in reach. It points at the
+            brief on this page when there is one, at the home brief otherwise. */}
+        {page.slug !== "contact" && (
+          <div className="mobile-bar">
+            <div className="mobile-bar__price">
+              <strong>
+                <Amount value={c.hero.price} />
+              </strong>
+              <span>{c.hero.priceUnit}</span>
+            </div>
+            <a className="btn btn--coral btn--sm" href={hasForm ? "#dossier" : "/#dossier"}>
+              {c.navCta}
+            </a>
+          </div>
         )}
       </main>
       <Footer c={c} locale="fr" linkPrefix="/" />

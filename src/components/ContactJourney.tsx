@@ -195,17 +195,12 @@ export function ContactJourney({
   const headingRef = useRef<HTMLHeadingElement | null>(null);
   const successRef = useRef<HTMLHeadingElement | null>(null);
   const stepBodyRef = useRef<HTMLDivElement | null>(null);
-  const advanceTimer = useRef<number | null>(null);
   const submittedRef = useRef(false);
   const honeypotRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     const now = new Date();
     setDocRef(`FZ-${pad(now.getDate())}${pad(now.getMonth() + 1)}${String(now.getFullYear()).slice(2)}`);
-  }, []);
-
-  useEffect(() => () => {
-    if (advanceTimer.current) window.clearTimeout(advanceTimer.current);
   }, []);
 
   const prompt = answers.service ? j.steps.project[answers.service] : null;
@@ -290,7 +285,6 @@ export function ContactJourney({
   }, [focusTick]);
 
   const goTo = (target: number, direction: 1 | -1) => {
-    if (advanceTimer.current) window.clearTimeout(advanceTimer.current);
     const next = Math.min(Math.max(target, 0), TOTAL_STEPS - 1);
     setDir(direction);
     setStep(next);
@@ -307,12 +301,6 @@ export function ContactJourney({
     }
     setErrors({});
     goTo(step + 1, 1);
-  };
-
-  const autoAdvance = () => {
-    if (advanceTimer.current) window.clearTimeout(advanceTimer.current);
-    const delay = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 380;
-    advanceTimer.current = window.setTimeout(() => goTo(step + 1, 1), delay);
   };
 
   const pickService = (id: JourneyServiceId) => {
@@ -345,7 +333,6 @@ export function ContactJourney({
       delete next.goal;
       return next;
     });
-    autoAdvance();
   };
 
   const set = <K extends keyof Answers>(key: K, value: Answers[K]) => {
@@ -388,7 +375,6 @@ export function ContactJourney({
       return;
     }
     set(projectKey, option as never);
-    if (answers.service === "strategie") autoAdvance();
   };
 
   /* ── submission ─────────────────────────────────────────────────────── */
@@ -889,10 +875,7 @@ export function ContactJourney({
                       className="br-price"
                       style={{ "--w": `${((index + 1) / (j.steps.budget.options.length + 1)) * 100}%` } as CSSProperties}
                       aria-pressed={answers.budget === option}
-                      onClick={() => {
-                        set("budget", answers.budget === option ? "" : option);
-                        autoAdvance();
-                      }}
+                      onClick={() => set("budget", answers.budget === option ? "" : option)}
                     >
                       <span className="br-price__n" aria-hidden="true">
                         {pad(index + 1)}

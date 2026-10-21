@@ -18,7 +18,7 @@ export function ClientApp() {
     // visitor skip it. It is a first-visit ritual, never a gate.
     if (document.documentElement.classList.contains("loader")) {
       const close = () => document.documentElement.classList.remove("loader");
-      const timer = window.setTimeout(close, 2400);
+      const timer = window.setTimeout(close, 1300);
       const skip = () => {
         window.clearTimeout(timer);
         close();
@@ -35,6 +35,9 @@ export function ClientApp() {
     const update = () => {
       frame = 0;
       header.classList.toggle("header--scrolled", window.scrollY > 12);
+      // the phone bar arrives once the hero's own call to action has left the
+      // screen, so it never covers the first read
+      document.documentElement.classList.toggle("past-hero", window.scrollY > 560);
     };
     const onScroll = () => {
       if (frame) return;
