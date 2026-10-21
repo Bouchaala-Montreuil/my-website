@@ -1,47 +1,39 @@
 import type { Content } from "@/content/types";
-import { SectionHead } from "../SectionHead";
 import { ContactJourney } from "../ContactJourney";
-import { Check } from "../Icons";
-import { CONTACT_EMAIL } from "@/config";
 
+/**
+ * The home page's dossier: same document masthead as the contact page, so the
+ * brief reads as one artefact wherever it appears.
+ */
 export function Order({ c }: { c: Content }) {
   return (
-    <section className="section on-ink" id="dossier" aria-labelledby="dossier-titre">
-      <div className="wrap">
-        <SectionHead head={c.order.head} id="dossier-titre" />
-
-        <div className="dossier dossier--journey mt-4">
-          <div className="dossier__side">
-            <h3
-              style={{
-                fontFamily: "var(--font-display)",
-                fontSize: "1.35rem",
-                margin: "0 0 .7rem",
-                lineHeight: 1.2,
-              }}
-            >
-              {c.order.sideTitle}
-            </h3>
-            <p>{c.order.sideBody}</p>
-
+    <section className="section brief-sheet" id="dossier" aria-labelledby="dossier-titre">
+      <div className="wrap dossier dossier--journey">
+        <div className="dossier__side">
+          <p className="doc-section__label">
+            <b aria-hidden="true">{c.order.head.num}</b>
+            <span>{c.order.head.label}</span>
+          </p>
+          <h2 id="dossier-titre" className="dossier__title">
+            {c.order.head.title}
+          </h2>
+          <div className="dossier__brief">
+            <p>{c.order.head.note ?? c.order.sideBody}</p>
+            <p className="b-side-note">
+              <span className="b-mono">{c.order.sideTitle}</span>
+              <span>{c.order.sideBody}</span>
+            </p>
             <ul className="dossier__list">
               {c.order.bullets.map((bullet) => (
                 <li key={bullet}>
-                  <Check size={15} />
                   <span>{bullet}</span>
                 </li>
               ))}
             </ul>
-
-            <p style={{ marginTop: "1.25rem" }}>
-              <a className="link-arrow" href={`mailto:${CONTACT_EMAIL}`}>
-                {CONTACT_EMAIL}
-              </a>
-            </p>
           </div>
-
-          <ContactJourney c={c} />
         </div>
+
+        <ContactJourney c={c} />
       </div>
     </section>
   );

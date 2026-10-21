@@ -42,7 +42,7 @@ export interface JourneyCopy {
   services: JourneyOption[];
   business: { label: string; placeholder: string };
   sector: { label: string; options: string[] };
-  website: { label: string; placeholder: string; optional: string };
+  website: { label: string; placeholder: string; optional: string; required: string };
   problem: { label: string; options: string[] };
   zone: { label: string; options: string[] };
   platforms: { label: string; options: string[] };
@@ -149,7 +149,7 @@ const fr: JourneyCopy = {
     label: "Votre secteur",
     options: ["Commerce local", "Restauration", "Santé & bien-être", "Immobilier", "Services B2B", "E-commerce", "Autre"],
   },
-  website: { label: "Votre site actuel", placeholder: "https://…", optional: "Si vous en avez un" },
+  website: { label: "Votre site actuel", placeholder: "https://…", optional: "Si vous en avez un", required: "Obligatoire pour ce projet" },
   problem: {
     label: "Qu’est-ce qui ne fonctionne plus ?",
     options: ["Le design a vieilli", "Le site est lent", "Il n’est pas lisible sur mobile", "Il ne génère pas de demandes"],
@@ -242,7 +242,7 @@ const en: JourneyCopy = {
     label: "Your sector",
     options: ["Local retail", "Food & drink", "Health & wellbeing", "Property", "B2B services", "E-commerce", "Other"],
   },
-  website: { label: "Your current website", placeholder: "https://…", optional: "If you have one" },
+  website: { label: "Your current website", placeholder: "https://…", optional: "If you have one", required: "Required for this project" },
   problem: {
     label: "What no longer works?",
     options: ["It looks dated", "It’s slow", "It’s hard to read on mobile", "It brings no enquiries"],
@@ -332,7 +332,7 @@ const ar: JourneyCopy = {
   ],
   business: { label: "اسم الشركة", placeholder: "مثال: دار الياسمين" },
   sector: { label: "قطاع نشاطك", options: ["تجارة محلية", "مطاعم", "صحة وعافية", "عقارات", "خدمات للشركات", "تجارة إلكترونية", "آخر"] },
-  website: { label: "موقعك الحالي", placeholder: "https://…", optional: "إن وُجد" },
+  website: { label: "موقعك الحالي", placeholder: "https://…", optional: "إن وُجد", required: "ضروري لهذا المشروع" },
   problem: { label: "ما الذي لم يعد يعمل؟", options: ["التصميم قديم", "الموقع بطيء", "غير مقروء على الهاتف", "لا يجلب طلبات"] },
   zone: { label: "أين تريد الظهور؟", options: ["حول منطقتي", "في كل البلد", "دوليًا"] },
   platforms: { label: "أي شبكات تهمّك؟", options: ["Instagram", "LinkedIn", "TikTok", "Facebook", "YouTube"] },

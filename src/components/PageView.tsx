@@ -260,16 +260,17 @@ export function PageView({
         )}
 
         {hasForm ? (
-          <section className="section on-ink" id="dossier" aria-labelledby="dossier-titre">
+          <section className="section brief-sheet" id="dossier" aria-labelledby="dossier-titre">
             <div className="wrap dossier dossier--journey">
               <div className="dossier__side">
-                <p className="doc-section__label doc-section__label--light">
+                <p className="doc-section__label">
                   <b aria-hidden="true">→</b>
                   <span>Dossier</span>
                 </p>
                 <h2 id="dossier-titre" className="dossier__title">
                   {page.formTitle}
                 </h2>
+                <div className="dossier__brief">
                 <p>{page.formLead}</p>
                 <ul className="dossier__list">
                   <li>
@@ -285,12 +286,13 @@ export function PageView({
                     <span>Vos réponses restent modifiables jusqu’à l’envoi.</span>
                   </li>
                 </ul>
+                </div>
               </div>
               <ContactJourney c={c} service={page.formService} />
             </div>
           </section>
         ) : (
-          <section className="section on-ink" id="dossier" aria-labelledby="dossier-titre">
+          <section className="section brief-sheet" id="dossier" aria-labelledby="dossier-titre">
             <div className="wrap doc-cta">
               <div>
                 <h2 id="dossier-titre">{page.formTitle ?? "Un projet en tête ?"}</h2>
