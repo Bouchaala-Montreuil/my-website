@@ -140,10 +140,20 @@ function Construction({ step, caption }: { step: number; caption: string }) {
 
 /* ── Small building blocks ─────────────────────────────────────────────── */
 
-function FieldLabel({ htmlFor, children, note }: { htmlFor: string; children: ReactNode; note?: ReactNode }) {
+function FieldLabel({
+  htmlFor,
+  children,
+  note,
+  quiet,
+}: {
+  htmlFor: string;
+  children: ReactNode;
+  note?: ReactNode;
+  quiet?: boolean;
+}) {
   const required = note === "*";
   return (
-    <label className="b-label" htmlFor={htmlFor}>
+    <label className={`b-label${quiet ? " sr-only" : ""}`} htmlFor={htmlFor}>
       <span>
         {children}
         {required && (
@@ -805,8 +815,8 @@ export function ContactJourney({ c, service }: { c: Content; service?: FormServi
                   {step === 4 && (
                     <div className="b-fields">
                       <div className="b-field b-field--wide">
-                        <FieldLabel htmlFor={`${uid}-notes`} note={j.optional}>
-                          {current.question}
+                        <FieldLabel htmlFor={`${uid}-notes`} quiet>
+                          {current.question} — {j.optional}
                         </FieldLabel>
                         <textarea
                           id={`${uid}-notes`}
