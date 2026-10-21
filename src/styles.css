@@ -11257,3 +11257,17 @@ fieldset.br-vocab {
     transition: none;
   }
 }
+
+/* the cover's index: what is done, where you are, what is left ------------ */
+
+.br-chapter[data-state="todo"] .br-chapter__n {
+  color: rgba(241, 239, 234, 0.42);
+}
+
+.br-chapter[data-state="todo"] .br-chapter__label {
+  color: rgba(241, 239, 234, 0.55);
+}
+
+.br-chapter[data-state="todo"] .br-chapter__value {
+  color: rgba(241, 239, 234, 0.3);
+}

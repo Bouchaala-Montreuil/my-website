@@ -207,7 +207,7 @@ export function ContactJourney({
 
   /* Which chapter the project takes depends on the service. */
   const chapters = useMemo(() => {
-    const project = answers.service ? j.chapters.project[answers.service] : j.chapters.goal;
+    const project = answers.service ? j.chapters.project[answers.service] : j.chapters.project.autre;
     return [
       j.chapters.service,
       j.chapters.context,
@@ -541,7 +541,11 @@ export function ContactJourney({
           </div>
           <nav className="br-index" aria-label={j.brand.summary}>
             {chapters.map((chapter, index) => (
-              <div key={chapter} className="br-chapter" data-state="done">
+              <div
+                key={chapter}
+                className="br-chapter"
+                data-state={index < step ? "done" : index === step ? "current" : "todo"}
+              >
                 <span className="br-chapter__n">{pad(index + 1)}</span>
                 <span className="br-chapter__body">
                   <span className="br-chapter__label">{chapter}</span>
