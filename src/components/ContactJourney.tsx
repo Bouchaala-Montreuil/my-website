@@ -2,10 +2,24 @@ import { useEffect, useId, useMemo, useRef, useState, type CSSProperties, type R
 import type { Content, FormService, Locale } from "@/content/types";
 import { CONTACT_EMAIL, FORMSPREE_ENDPOINT } from "@/config";
 import { JOURNEY, type JourneyServiceId } from "@/content/journey";
-import { ArrowRight, Check, MailIcon } from "./Icons";
+import { ArrowRight, MailIcon } from "./Icons";
+
+/**
+ * THE FEEKZA BRIEF
+ *
+ * A commission, not a questionnaire. The screen is a spread: the cover is
+ * printed on ink and carries the document's identity, its sommaire and the
+ * offer; the desk is paper and carries one question at a time. As the visitor
+ * answers, their business becomes the title of the document and the sommaire
+ * writes itself, line by line, including which chapter the project takes.
+ *
+ * The question adapts to the chosen service. Nothing is mandatory except what
+ * is needed to reply. Submission, validation, spam guard and fallbacks are the
+ * ones the site already shipped.
+ */
 
 const TOTAL_STEPS = 6;
-const STEP_IDS = ["service", "context", "goal", "budget", "project", "contact"] as const;
+const STEP_IDS = ["service", "context", "goal", "project", "budget", "contact"] as const;
 
 type Errors = Partial<Record<"service" | "business" | "website" | "goal" | "name" | "email" | "consent", string>>;
 
@@ -14,18 +28,18 @@ interface Answers {
   business: string;
   sector: string;
   website: string;
+  goal: string;
+  siteType: string;
   problem: string;
   zone: string;
   platforms: string[];
-  publishers: string;
-  channels: string[];
-  history: string;
-  scope: string[];
-  other: string;
-  goal: string;
-  budget: string;
-  notes: string;
+  publisher: string;
+  adOutcome: string;
+  adDestination: string;
   timeline: string;
+  other: string;
+  notes: string;
+  budget: string;
   name: string;
   email: string;
   phone: string;
@@ -37,18 +51,18 @@ const EMPTY: Answers = {
   business: "",
   sector: "",
   website: "",
+  goal: "",
+  siteType: "",
   problem: "",
   zone: "",
   platforms: [],
-  publishers: "",
-  channels: [],
-  history: "",
-  scope: [],
-  other: "",
-  goal: "",
-  budget: "",
-  notes: "",
+  publisher: "",
+  adOutcome: "",
+  adDestination: "",
   timeline: "",
+  other: "",
+  notes: "",
+  budget: "",
   name: "",
   email: "",
   phone: "",
@@ -66,182 +80,88 @@ const LEGACY_SERVICE: Record<JourneyServiceId, FormService> = {
   autre: "marketing",
 };
 
-/* ── Icons ─────────────────────────────────────────────────────────────── */
+const pad = (n: number) => String(n).padStart(2, "0");
 
-function NeedIcon({ id, size = 24 }: { id: JourneyServiceId | ""; size?: number }) {
-  const common = {
-    width: size,
-    height: size,
-    viewBox: "0 0 24 24",
-    fill: "none",
-    stroke: "currentColor",
-    strokeWidth: 1.5,
-    strokeLinecap: "round" as const,
-    strokeLinejoin: "round" as const,
-    "aria-hidden": true,
-  };
-  switch (id) {
-    case "site":
-      return (
-        <svg {...common}>
-          <rect x="3" y="4.5" width="18" height="15" rx="1.5" />
-          <path d="M3 9h18M6.5 6.8h.01M9.2 6.8h.01M11.9 6.8h.01M7 13h6M7 16h4" />
-        </svg>
-      );
-    case "refonte":
-      return (
-        <svg {...common}>
-          <rect x="3" y="7" width="13" height="12" rx="1.5" />
-          <path d="M7 7V5.5A1.5 1.5 0 0 1 8.5 4H19a1.5 1.5 0 0 1 1.5 1.5V15a1.5 1.5 0 0 1-1.5 1.5h-3" />
-          <path d="m10.5 13 2.2-2.2M12.7 10.8l-2.2 4.4 4.4-2.2" />
-        </svg>
-      );
-    case "seo":
-      return (
-        <svg {...common}>
-          <circle cx="10.5" cy="10.5" r="6" />
-          <path d="m15 15 5 5M8 10.5h5M10.5 8v5" />
-        </svg>
-      );
-    case "social":
-      return (
-        <svg {...common}>
-          <path d="M4 5.5h11a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H9l-4 3v-3H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2Z" />
-          <path d="M20 9h1.2a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H20v2.5L17 18h-3" />
-        </svg>
-      );
-    case "ads":
-      return (
-        <svg {...common}>
-          <path d="M4 10v4a1 1 0 0 0 1 1h2l6 4V5L7 9H5a1 1 0 0 0-1 1Z" />
-          <path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" />
-        </svg>
-      );
-    case "strategie":
-      return (
-        <svg {...common}>
-          <circle cx="12" cy="12" r="8.5" />
-          <path d="m15.5 8.5-2 5-5 2 2-5 5-2Z" />
-        </svg>
-      );
-    case "autre":
-      return (
-        <svg {...common}>
-          <path d="M12 3.5 13.6 9l5.4 1.6-5.4 1.6L12 17.5 10.4 12 5 10.6 10.4 9 12 3.5Z" />
-          <path d="M18.5 16.5l.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8.8-2.2Z" />
-        </svg>
-      );
-    default:
-      return (
-        <svg {...common}>
-          <path d="M12 4v16M4 12h16" />
-        </svg>
-      );
-  }
+/* The mark, in the six strokes that make it. Used once, small, as progress. */
+const STROKES = [
+  "M18 18 V250",
+  "M18 18 H206",
+  "M206 18 L172 54",
+  "M172 54 H72 V104",
+  "M72 104 H160 L126 140 H72",
+  "M72 140 V196 L18 250",
+];
+
+function Mark({ step }: { step: number }) {
+  const done = step + 1;
+  return (
+    <svg className="br-mark" viewBox="2 2 220 262" aria-hidden="true" focusable="false">
+      <polygon
+        className={`br-mark__solid${done >= 6 ? " is-on" : ""}`}
+        points="18,18 206,18 172,54 72,54 72,104 160,104 126,140 72,140 72,196 18,250"
+      />
+      {STROKES.map((d, index) => (
+        <path key={d} d={d} className={`br-mark__s${index < done ? " is-on" : ""}`} />
+      ))}
+    </svg>
+  );
 }
 
-/* ── Small pieces ──────────────────────────────────────────────────────── */
-
-function ChoiceCard({
-  label,
+function FieldLabel({
+  htmlFor,
+  children,
   note,
-  icon,
-  selected,
-  onClick,
-  index,
-  multi,
 }: {
-  label: string;
-  note?: string;
-  icon?: ReactNode;
-  selected: boolean;
-  onClick: () => void;
-  index: number;
-  multi?: boolean;
+  htmlFor: string;
+  children: ReactNode;
+  note?: ReactNode;
 }) {
+  const required = note === "*";
   return (
-    <button
-      type="button"
-      className="j-choice"
-      aria-pressed={selected}
-      onClick={onClick}
-      style={{ "--i": index } as CSSProperties}
-    >
-      {icon && <span className="j-choice__icon">{icon}</span>}
-      <span className="j-choice__text">
-        <span className="j-choice__label">{label}</span>
-        {note && <span className="j-choice__note">{note}</span>}
+    <label className="br-label" htmlFor={htmlFor}>
+      <span>
+        {children}
+        {required && (
+          <span className="br-label__req" aria-hidden="true">
+            *
+          </span>
+        )}
       </span>
-      <span className={`j-choice__tick${multi ? " j-choice__tick--multi" : ""}`} aria-hidden="true">
-        <Check size={13} />
-      </span>
-    </button>
+      {note && !required && <span className="br-label__note">{note}</span>}
+    </label>
   );
 }
 
-function ChipGroup({
+/** A set of answers set as words on rules. */
+function Vocab({
   legend,
   options,
   value,
-  onToggle,
+  onPick,
   optional,
-}: {
-  legend: string;
-  options: string[];
-  value: string[];
-  onToggle: (option: string) => void;
-  optional?: string;
-}) {
-  return (
-    <fieldset className="j-fieldset">
-      <legend className="j-legend">
-        {legend}
-        {optional && <span className="j-optional"> — {optional}</span>}
-      </legend>
-      <div className="j-chips">
-        {options.map((option) => (
-          <button
-            key={option}
-            type="button"
-            className="j-chip"
-            aria-pressed={value.includes(option)}
-            onClick={() => onToggle(option)}
-          >
-            {option}
-          </button>
-        ))}
-      </div>
-    </fieldset>
-  );
-}
-
-function SingleChips({
-  legend,
-  options,
-  value,
-  onChange,
-  optional,
+  columns = false,
 }: {
   legend: string;
   options: string[];
   value: string;
-  onChange: (option: string) => void;
+  onPick: (option: string) => void;
   optional?: string;
+  columns?: boolean;
 }) {
   return (
-    <fieldset className="j-fieldset">
-      <legend className="j-legend">
-        {legend}
-        {optional && <span className="j-optional"> — {optional}</span>}
+    <fieldset className="br-vocab">
+      <legend className="br-label">
+        <span>{legend}</span>
+        {optional && <span className="br-label__note">{optional}</span>}
       </legend>
-      <div className="j-chips">
+      <div className={`br-words${columns ? " br-words--cols" : ""}`}>
         {options.map((option) => (
           <button
             key={option}
             type="button"
-            className="j-chip"
+            className="br-word"
             aria-pressed={value === option}
-            onClick={() => onChange(value === option ? "" : option)}
+            onClick={() => onPick(option)}
           >
             {option}
           </button>
@@ -251,25 +171,169 @@ function SingleChips({
   );
 }
 
-/* ── Main ──────────────────────────────────────────────────────────────── */
-
-export function ContactJourney({ c, service }: { c: Content; service?: FormService }) {
+export function ContactJourney({
+  c,
+  service,
+  headingId,
+}: {
+  c: Content;
+  service?: FormService;
+  headingId?: string;
+}) {
   const j = JOURNEY[c.locale as Locale];
-  const uid = useId().replace(/[^a-zA-Z0-9]/g, "");
+  const uid = useId();
   const [step, setStep] = useState(0);
+  const [reached, setReached] = useState(0);
   const [dir, setDir] = useState<1 | -1>(1);
   const [answers, setAnswers] = useState<Answers>(EMPTY);
   const [errors, setErrors] = useState<Errors>({});
-  const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
+  const [status, setStatus] = useState<"idle" | "sending" | "error" | "success">("idle");
   const [touched, setTouched] = useState(false);
+  const [focusTick, setFocusTick] = useState(0);
+  const [docRef, setDocRef] = useState("");
 
-  const headingRef = useRef<HTMLHeadingElement>(null);
-  const successRef = useRef<HTMLHeadingElement>(null);
-  const stepBodyRef = useRef<HTMLDivElement>(null);
-  const honeypotRef = useRef<HTMLInputElement>(null);
-  const advanceTimer = useRef<number | null>(null);
+  const headingRef = useRef<HTMLHeadingElement | null>(null);
+  const successRef = useRef<HTMLHeadingElement | null>(null);
+  const stepBodyRef = useRef<HTMLDivElement | null>(null);
   const submittedRef = useRef(false);
-  const firstRender = useRef(true);
+  const honeypotRef = useRef<HTMLInputElement | null>(null);
+
+  useEffect(() => {
+    const now = new Date();
+    setDocRef(`FZ-${pad(now.getDate())}${pad(now.getMonth() + 1)}${String(now.getFullYear()).slice(2)}`);
+  }, []);
+
+  const prompt = answers.service ? j.steps.project[answers.service] : null;
+
+  /* Which chapter the project takes depends on the service. */
+  const chapters = useMemo(() => {
+    const project = answers.service ? j.chapters.project[answers.service] : j.chapters.project.autre;
+    return [
+      j.chapters.service,
+      j.chapters.context,
+      j.chapters.goal,
+      project,
+      j.chapters.budget,
+      j.chapters.contact,
+    ];
+  }, [answers.service, j]);
+
+  const goalLabel = j.goals.find((g) => g.id === answers.goal)?.label ?? "";
+  const serviceLabel = j.services.find((s) => s.id === answers.service)?.label.replace(/\.$/, "") ?? "";
+
+  const projectValue = (() => {
+    switch (answers.service) {
+      case "site":
+        return answers.siteType;
+      case "refonte":
+        return answers.problem;
+      case "seo":
+        return answers.zone;
+      case "social":
+        return [answers.platforms.join(", "), answers.publisher].filter(Boolean).join(" · ");
+      case "ads":
+        return [answers.adOutcome, answers.adDestination].filter(Boolean).join(" · ");
+      case "strategie":
+        return answers.timeline;
+      case "autre":
+        return answers.other;
+      default:
+        return "";
+    }
+  })();
+
+  const values = [
+    serviceLabel,
+    [answers.business, answers.sector].filter(Boolean).join(" · "),
+    goalLabel,
+    projectValue,
+    answers.budget,
+    answers.name,
+  ];
+
+  const filled = values.filter(Boolean).length;
+
+  /* ── navigation ─────────────────────────────────────────────────────── */
+
+  const needsSite = Boolean(prompt?.website);
+
+  const validateStep = (target: number): Errors => {
+    const next: Errors = {};
+    if (target === 0 && !answers.service) next.service = j.errors.service;
+    if (target === 1) {
+      if (!answers.business.trim()) next.business = j.errors.business;
+    }
+    if (target === 2 && !answers.goal) next.goal = j.errors.goal;
+    if (target === 3 && needsSite && prompt?.website === "required" && !answers.website.trim()) {
+      next.website = j.errors.website;
+    }
+    if (target === 5) {
+      if (!answers.name.trim()) next.name = j.errors.name;
+      if (!EMAIL_RE.test(answers.email.trim())) next.email = j.errors.email;
+      if (!answers.consent) next.consent = j.errors.consent;
+    }
+    return next;
+  };
+
+  /* After a failed check, put the cursor on the field that needs it.
+     Runs after the commit, so aria-invalid is already on the element. */
+  useEffect(() => {
+    if (!focusTick) return;
+    const root = stepBodyRef.current;
+    const invalid = root?.querySelector<HTMLElement>("[aria-invalid='true']");
+    (invalid ?? headingRef.current)?.focus({ preventScroll: false });
+  }, [focusTick]);
+
+  const goTo = (target: number, direction: 1 | -1) => {
+    const next = Math.min(Math.max(target, 0), TOTAL_STEPS - 1);
+    setDir(direction);
+    setStep(next);
+    setReached((prev) => Math.max(prev, next));
+  };
+
+  const advance = () => {
+    const next = validateStep(step);
+    if (Object.keys(next).length > 0) {
+      setErrors(next);
+      setTouched(true);
+      setFocusTick((tick) => tick + 1);
+      return;
+    }
+    setErrors({});
+    goTo(step + 1, 1);
+  };
+
+  const pickService = (id: JourneyServiceId) => {
+    setAnswers((prev) => ({
+      ...prev,
+      service: id,
+      siteType: "",
+      problem: "",
+      zone: "",
+      platforms: [],
+      publisher: "",
+      adOutcome: "",
+      adDestination: "",
+      timeline: "",
+      other: "",
+      website: id === "site" ? "" : prev.website,
+    }));
+    setErrors((prev) => {
+      const next = { ...prev };
+      delete next.service;
+      delete next.website;
+      return next;
+    });
+  };
+
+  const pickGoal = (id: string) => {
+    setAnswers((prev) => ({ ...prev, goal: id }));
+    setErrors((prev) => {
+      const next = { ...prev };
+      delete next.goal;
+      return next;
+    });
+  };
 
   const set = <K extends keyof Answers>(key: K, value: Answers[K]) => {
     setAnswers((prev) => ({ ...prev, [key]: value }));
@@ -281,95 +345,39 @@ export function ContactJourney({ c, service }: { c: Content; service?: FormServi
     });
   };
 
-  const toggleIn = (key: "platforms" | "channels" | "scope", option: string) => {
-    setAnswers((prev) => {
-      const list = prev[key];
-      return { ...prev, [key]: list.includes(option) ? list.filter((item) => item !== option) : [...list, option] };
-    });
+  const projectKey: keyof Answers | null =
+    answers.service === "social"
+      ? "platforms"
+      : answers.service === "site"
+        ? "siteType"
+        : answers.service === "refonte"
+          ? "problem"
+          : answers.service === "seo"
+            ? "zone"
+            : answers.service === "ads"
+              ? "adOutcome"
+              : answers.service === "strategie"
+                ? "timeline"
+                : null;
+
+  const isOn = (option: string) => {
+    if (!projectKey) return false;
+    const value = answers[projectKey];
+    return Array.isArray(value) ? value.includes(option) : value === option;
   };
 
-  useEffect(() => {
-    return () => {
-      if (advanceTimer.current) window.clearTimeout(advanceTimer.current);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (firstRender.current) {
-      firstRender.current = false;
+  const pickProject = (option: string) => {
+    if (!projectKey) return;
+    const multi = projectKey === "platforms";
+    if (multi) {
+      const list = answers.platforms;
+      set("platforms", list.includes(option) ? list.filter((p) => p !== option) : [...list, option]);
       return;
     }
-    if (status === "success") {
-      successRef.current?.focus({ preventScroll: true });
-      return;
-    }
-    headingRef.current?.focus({ preventScroll: true });
-  }, [step, status]);
-
-  const needsWebsite = answers.service === "refonte" || answers.service === "seo";
-
-  const validateStep = (target: number): Errors => {
-    const next: Errors = {};
-    if (target === 0 && !answers.service) next.service = j.errors.service;
-    if (target === 1) {
-      if (!answers.business.trim()) next.business = j.errors.business;
-      if (needsWebsite && !answers.website.trim()) next.website = j.errors.website;
-    }
-    if (target === 2 && !answers.goal) next.goal = j.errors.goal;
-    if (target === 5) {
-      if (!answers.name.trim()) next.name = j.errors.name;
-      if (!EMAIL_RE.test(answers.email.trim())) next.email = j.errors.email;
-      if (!answers.consent) next.consent = j.errors.consent;
-    }
-    return next;
+    set(projectKey, option as never);
   };
 
-  const focusFirstProblem = () => {
-    requestAnimationFrame(() => {
-      const root = stepBodyRef.current;
-      const invalid = root?.querySelector<HTMLElement>("[aria-invalid='true'], [data-invalid='true']");
-      if (invalid) {
-        invalid.focus({ preventScroll: false });
-        return;
-      }
-      headingRef.current?.focus({ preventScroll: true });
-    });
-  };
-
-  const goTo = (target: number, direction: 1 | -1) => {
-    if (advanceTimer.current) window.clearTimeout(advanceTimer.current);
-    setDir(direction);
-    setStep(target);
-  };
-
-  const advance = () => {
-    const next = validateStep(step);
-    if (Object.keys(next).length > 0) {
-      setErrors(next);
-      setTouched(true);
-      focusFirstProblem();
-      return;
-    }
-    setErrors({});
-    goTo(Math.min(step + 1, TOTAL_STEPS - 1), 1);
-  };
-
-  const chooseSingle = (key: "service" | "goal" | "budget", value: string) => {
-    setAnswers((prev) => ({ ...prev, [key]: value }));
-    setErrors((prev) => {
-      if (!(key in prev)) return prev;
-      const next = { ...prev };
-      delete next[key as keyof Errors];
-      return next;
-    });
-    if (advanceTimer.current) window.clearTimeout(advanceTimer.current);
-    const delay = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 340;
-    advanceTimer.current = window.setTimeout(() => {
-      if (key === "service" && !value) return;
-      if (key === "goal" && !value) return;
-      goTo(Math.min(step + 1, TOTAL_STEPS - 1), 1);
-    }, delay);
-  };
+  /* ── submission ─────────────────────────────────────────────────────── */
 
   const onSubmit = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
@@ -382,7 +390,7 @@ export function ContactJourney({ c, service }: { c: Content; service?: FormServi
     if (Object.keys(next).length > 0) {
       setErrors(next);
       setTouched(true);
-      focusFirstProblem();
+      setFocusTick((tick) => tick + 1);
       return;
     }
     setErrors({});
@@ -391,31 +399,18 @@ export function ContactJourney({ c, service }: { c: Content; service?: FormServi
     const controller = new AbortController();
     const timeout = window.setTimeout(() => controller.abort(), 15000);
     const need = answers.service as JourneyServiceId;
-    const serviceLabel = j.services.find((s) => s.id === need)?.label ?? need;
-    const budget = answers.budget || "—";
-    const extras = [
-      answers.platforms.length ? `Réseaux: ${answers.platforms.join(", ")}` : "",
-      answers.channels.length ? `Canaux: ${answers.channels.join(", ")}` : "",
-      answers.scope.length ? `Périmètre: ${answers.scope.join(", ")}` : "",
-      answers.zone ? `Zone: ${answers.zone}` : "",
-      answers.problem ? `Problème: ${answers.problem}` : "",
-      answers.publishers ? `Publication: ${answers.publishers}` : "",
-      answers.history ? `Historique pub: ${answers.history}` : "",
-      answers.other ? `Autre: ${answers.other}` : "",
-    ].filter(Boolean);
 
     const message = [
-      `Nouveau dossier — feekza.com (${j.localeName})`,
+      `Nouveau brief — feekza.com (${j.localeName})${docRef ? ` — ${j.brand.ref} ${docRef}` : ""}`,
       "--------------------------------",
-      `Besoin: ${serviceLabel}`,
+      `Demande: ${serviceLabel}`,
       `Entreprise: ${answers.business}`,
       `Secteur: ${answers.sector || "—"}`,
+      `Objectif: ${goalLabel || "—"}`,
+      `Projet: ${projectValue || "—"}`,
       `Site: ${answers.website || "—"}`,
-      ...extras,
-      `Objectif: ${j.goals.find((g) => g.id === answers.goal)?.label ?? "—"}`,
-      `Budget: ${budget}`,
-      `Échéance: ${answers.timeline || "—"}`,
-      `Projet: ${answers.notes || "—"}`,
+      `Budget: ${answers.budget || "—"}`,
+      `Contexte: ${answers.notes || "—"}`,
       `Nom: ${answers.name}`,
       `Email: ${answers.email}`,
       `Téléphone: ${answers.phone || "—"}`,
@@ -429,25 +424,27 @@ export function ContactJourney({ c, service }: { c: Content; service?: FormServi
         body: JSON.stringify({
           _subject: `${j.subject} — ${answers.business || answers.name}`,
           _replyto: answers.email,
-          type: "contact-journey",
+          type: "contact-brief",
           locale: c.locale,
+          ref: docRef,
           service: LEGACY_SERVICE[need] ?? service ?? "site-web",
           need,
           needLabel: serviceLabel,
           business: answers.business,
           sector: answers.sector,
           website: answers.website,
-          platforms: answers.platforms,
-          channels: answers.channels,
-          scope: answers.scope,
-          zone: answers.zone,
+          siteType: answers.siteType,
           problem: answers.problem,
-          publishers: answers.publishers,
-          adHistory: answers.history,
-          other: answers.other,
-          goal: j.goals.find((g) => g.id === answers.goal)?.label ?? answers.goal,
-          budget,
+          zone: answers.zone,
+          platforms: answers.platforms,
+          publisher: answers.publisher,
+          adOutcome: answers.adOutcome,
+          adDestination: answers.adDestination,
           timeline: answers.timeline,
+          other: answers.other,
+          goal: goalLabel || answers.goal,
+          projectValue,
+          budget: answers.budget || "—",
           notes: answers.notes,
           name: answers.name,
           email: answers.email,
@@ -469,20 +466,20 @@ export function ContactJourney({ c, service }: { c: Content; service?: FormServi
   };
 
   const mailtoHref = useMemo(() => {
-    const serviceLabel = j.services.find((s) => s.id === answers.service)?.label ?? "";
-    const subject = `${j.subject} — ${answers.business || serviceLabel}`;
+    const subject = `${j.subject} — ${answers.business || serviceLabel || "feekza.com"}`;
     const body = [
-      `Besoin: ${serviceLabel}`,
-      `Entreprise: ${answers.business}`,
-      `Objectif: ${j.goals.find((g) => g.id === answers.goal)?.label ?? "—"}`,
+      `Demande: ${serviceLabel || "—"}`,
+      `Entreprise: ${answers.business || "—"}`,
+      `Objectif: ${goalLabel || "—"}`,
+      `Projet: ${projectValue || "—"}`,
       `Budget: ${answers.budget || "—"}`,
-      `Projet: ${answers.notes || "—"}`,
+      `Contexte: ${answers.notes || "—"}`,
       `Nom: ${answers.name}`,
       `Email: ${answers.email}`,
       `Téléphone: ${answers.phone || "—"}`,
     ].join("\n");
     return `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-  }, [answers, j]);
+  }, [answers, docRef, goalLabel, j.subject, projectValue, serviceLabel]);
 
   const reset = () => {
     submittedRef.current = false;
@@ -490,69 +487,107 @@ export function ContactJourney({ c, service }: { c: Content; service?: FormServi
     setErrors({});
     setStatus("idle");
     setStep(0);
+    setReached(0);
     setDir(1);
     setTouched(false);
+    setFocusTick(0);
   };
 
-  const summary = [
-    { key: "service", value: j.services.find((s) => s.id === answers.service)?.label ?? "" },
-    { key: "business", value: answers.business },
-    { key: "goal", value: j.goals.find((g) => g.id === answers.goal)?.label ?? "" },
-    { key: "budget", value: answers.budget },
-  ] as const;
+  /* Focus follows the question, the way a cursor follows a page. */
+  useEffect(() => {
+    if (status === "success") {
+      successRef.current?.focus({ preventScroll: true });
+      return;
+    }
+    if (status === "sending") return;
+    headingRef.current?.focus({ preventScroll: true });
+  }, [step, status]);
 
-  const activeService = j.services.find((s) => s.id === answers.service);
+  const current = STEP_IDS[step];
+  const stepCopy: { question: string; hint: string } =
+    current === "service"
+      ? j.steps.service
+      : current === "context"
+        ? j.steps.context
+        : current === "goal"
+          ? j.steps.goal
+          : current === "project"
+            ? (prompt ?? j.steps.service)
+            : current === "budget"
+              ? j.steps.budget
+              : j.steps.contact;
+
+  /* ── success ────────────────────────────────────────────────────────── */
 
   if (status === "success") {
     return (
-      <div className="journey journey--done">
-        <div className="journey__stage" aria-hidden="true">
-          <div className="j-stage__top">
-            <span className="j-lockup">
-              <img src="/brand/feekza-f.webp" alt="" width={360} height={381} />
-              <span>FEEKZA</span>
+      <div className="br" dir={c.dir}>
+        <aside className="br-cover">
+          <div className="br-cover__top">
+            <span className="br-brand">
+              <Mark step={5} />
+              <span className="br-brand__word">
+                FEEKZA<i>·</i>
+                {j.brand.tag}
+              </span>
             </span>
-            <span className="j-stage__count" dir="ltr">✓</span>
-          </div>
-          <div className="j-stage__ring">
-            <svg viewBox="0 0 320 320">
-              <circle className="j-ring j-ring--soft" cx="160" cy="160" r="132" />
-              <circle className="j-ring j-ring--done" cx="160" cy="160" r="132" />
-            </svg>
-            <span className="j-stage__glyph j-stage__glyph--done">
-              <Check size={46} />
+            <span className="br-ref">
+              {j.brand.ref} {docRef}
             </span>
           </div>
-          <div className="j-stage__meta">
-            <p className="j-stage__eyebrow">{j.successTitle}</p>
-            <p className="j-stage__service">{activeService?.label ?? j.stageNote}</p>
+          <div className="br-title">
+            <h2 className="br-title__doc">{j.brand.title}</h2>
+            <p className="br-title__name">{answers.business || j.brand.untitled}</p>
           </div>
-        </div>
+          <nav className="br-index" aria-label={j.brand.summary}>
+            {chapters.map((chapter, index) => (
+              <div
+                key={chapter}
+                className="br-chapter"
+                data-state={index < step ? "done" : index === step ? "current" : "todo"}
+              >
+                <span className="br-chapter__n">{pad(index + 1)}</span>
+                <span className="br-chapter__body">
+                  <span className="br-chapter__label">{chapter}</span>
+                  <span className="br-chapter__value">{values[index] || j.empty}</span>
+                </span>
+              </div>
+            ))}
+          </nav>
+          <p className="br-offer">
+            {j.brand.offer.map((line) => (
+              <span key={line}>{line}</span>
+            ))}
+          </p>
+        </aside>
 
-        <div className="journey__panel">
-          <div className="success j-success">
-            <div className="success__mark" aria-hidden="true">
-              <Check size={26} />
-            </div>
-            <h3 ref={successRef} tabIndex={-1}>
+        <div className="br-desk">
+          <div className="br-done">
+            <p className="br-kicker">
+              {filled} / {TOTAL_STEPS}
+            </p>
+            <h3 className="br-done__title" ref={successRef} tabIndex={-1}>
               {j.successTitle}
             </h3>
-            <p>{j.successBody}</p>
-            <ol className="success__steps">
-              {j.successSteps.map((item, index) => (
-                <li key={item}>
-                  <span aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
-                  <span>{item}</span>
+            <p className="br-done__lead">{j.successBody}</p>
+            <ol className="br-done__steps">
+              {j.successSteps.map((line, index) => (
+                <li key={line}>
+                  <span className="br-done__n" aria-hidden="true">
+                    {pad(index + 1)}
+                  </span>
+                  <span>{line}</span>
                 </li>
               ))}
             </ol>
-            <p className="j-success__note">{j.successNote}</p>
-            <div className="j-actions">
-              <button type="button" className="j-btn j-btn--ghost" onClick={reset}>
+            <p className="br-note">{j.successNote}</p>
+            <div className="br-actions">
+              <button type="button" className="br-next" onClick={reset}>
                 {j.successAgain}
+                <ArrowRight size={14} />
               </button>
-              <a className="j-btn j-btn--line" href={mailtoHref}>
-                <MailIcon size={15} /> {j.mailto}
+              <a className="br-mailto" href={mailtoHref}>
+                <MailIcon size={14} /> {j.mailto}
               </a>
             </div>
           </div>
@@ -561,473 +596,465 @@ export function ContactJourney({ c, service }: { c: Content; service?: FormServi
     );
   }
 
+  /* ── the brief ──────────────────────────────────────────────────────── */
+
+  const total = TOTAL_STEPS;
+
   return (
-    <div className="journey" dir={c.dir}>
-      {/* Stage — decorative on desktop, compact bar on mobile */}
-      <aside className="journey__stage" aria-hidden="true">
-        <div className="j-stage__top">
-          <span className="j-lockup">
-            <img src="/brand/feekza-f.webp" alt="" width={360} height={381} />
-            <span>FEEKZA</span>
+    <div className="br" dir={c.dir}>
+      <aside className="br-cover">
+        <div className="br-cover__top">
+          <span className="br-brand">
+            <Mark step={step} />
+            <span className="br-brand__word">
+              FEEKZA<i>·</i>
+              {j.brand.tag}
+            </span>
           </span>
-          <span className="j-stage__count" dir="ltr">
-            {String(step + 1).padStart(2, "0")} <i>/</i> {String(TOTAL_STEPS).padStart(2, "0")}
-          </span>
-        </div>
-
-        <div className="j-stage__ring">
-          <svg viewBox="0 0 320 320">
-            <circle className="j-ring j-ring--soft" cx="160" cy="160" r="150" />
-            <circle className="j-ring j-ring--ticks" cx="160" cy="160" r="126" />
-            <circle
-              className="j-ring j-ring--progress"
-              cx="160"
-              cy="160"
-              r="150"
-              strokeDasharray={2 * Math.PI * 150}
-              strokeDashoffset={2 * Math.PI * 150 * (1 - (step + 1) / TOTAL_STEPS)}
-            />
-          </svg>
-          <span className="j-stage__glyph">
-            {answers.service ? (
-              <NeedIcon id={answers.service} size={44} />
-            ) : (
-              <img src="/brand/feekza-f.webp" alt="" width={360} height={381} />
-            )}
+          <span className="br-ref">
+            {j.brand.ref} {docRef}
           </span>
         </div>
 
-        <div className="j-stage__meta">
-          <p className="j-stage__eyebrow">{activeService ? activeService.label : j.stageNote}</p>
-          <p className="j-stage__service">{j.steps[STEP_IDS[step] ?? "service"].label}</p>
-        </div>
-
-        <dl className="j-recap">
-          {summary.map((row) => (
-            <div key={row.key} className={row.value ? "is-filled" : ""}>
-              <dt>{j.summaryLabels[row.key]}</dt>
-              <dd>{row.value || j.empty}</dd>
-            </div>
-          ))}
-        </dl>
-      </aside>
-
-      <div className="journey__panel">
-        <div className="j-progress">
-          <div className="j-progress__bar">
-            <span style={{ width: `${((step + 1) / TOTAL_STEPS) * 100}%` }} />
-          </div>
-          <p className="j-progress__count">
-            {j.stepOf(step + 1, TOTAL_STEPS)} <span aria-hidden="true">·</span> {j.steps[STEP_IDS[step] ?? 'service'].label}
+        <div className="br-title">
+          <h2 id={headingId} className="br-title__doc">
+            {j.brand.title}
+          </h2>
+          <p className="br-title__name" data-empty={!answers.business}>
+            {answers.business || j.brand.untitled}
           </p>
         </div>
 
-        <p className="sr-only" aria-live="polite">
-          {j.stepOf(step + 1, TOTAL_STEPS)} — {j.steps[STEP_IDS[step] ?? 'service'].question}
+        <p
+          className="br-mobile-step"
+          style={{ "--p": `${((step + 1) / total) * 100}%` } as CSSProperties}
+        >
+          <span className="br-mobile-step__n">
+            <b>{pad(step + 1)}</b> / {pad(total)}
+          </span>
+          <span>{chapters[step]}</span>
         </p>
 
-        <form onSubmit={onSubmit} noValidate>
-          <div className="j-step" key={step} data-dir={dir} ref={stepBodyRef}>
-            <header className="j-step__head">
-              <h3 className="j-step__title" ref={headingRef} tabIndex={-1}>
-                {j.steps[STEP_IDS[step] ?? 'service'].question}
-              </h3>
-              <p className="j-step__hint">
-                {j.steps[STEP_IDS[step] ?? 'service'].hint}
-              </p>
-            </header>
-
-            {step === 0 && (
-              <div className="j-choices j-choices--service" role="group" aria-labelledby={`${uid}-service-label`} data-invalid={errors.service ? "true" : undefined}>
-                <span className="sr-only" id={`${uid}-service-label`}>
-                  {j.steps.service.question}
+        <nav className="br-index" aria-label={j.brand.summary}>
+          {chapters.map((chapter, index) => {
+            const state = index === step ? "current" : values[index] ? "done" : index < step ? "open" : "todo";
+            const canGo = index <= reached && index !== step;
+            return (
+              <button
+                key={`${chapter}-${index}`}
+                type="button"
+                className="br-chapter"
+                data-state={state}
+                data-open={canGo || index === step ? "true" : undefined}
+                aria-current={index === step ? "step" : undefined}
+                disabled={!canGo}
+                onClick={() => canGo && goTo(index, -1)}
+              >
+                <span className="br-chapter__n">{pad(index + 1)}</span>
+                <span className="br-chapter__body">
+                  <span className="br-chapter__label">{chapter}</span>
+                  <span className="br-chapter__value">{values[index] || j.empty}</span>
                 </span>
-                {j.services.map((option, index) => (
-                  <ChoiceCard
-                    key={option.id}
-                    label={option.label}
-                    note={option.note}
-                    icon={<NeedIcon id={option.id as JourneyServiceId} />}
-                    selected={answers.service === option.id}
-                    index={index}
-                    onClick={() => chooseSingle("service", option.id)}
-                  />
-                ))}
-                {errors.service && (
-                  <p className="j-error" role="alert">
-                    {errors.service}
-                  </p>
-                )}
-              </div>
-            )}
+              </button>
+            );
+          })}
+        </nav>
 
-            {step === 1 && (
-              <div className="j-fields">
-                <div className="j-field">
-                  <label className="j-label" htmlFor={`${uid}-business`}>
-                    {j.business.label} <span className="j-req">*</span>
-                  </label>
-                  <input
-                    id={`${uid}-business`}
-                    className="j-input"
-                    autoComplete="organization"
-                    placeholder={j.business.placeholder}
-                    value={answers.business}
-                    aria-invalid={errors.business ? "true" : undefined}
-                    aria-describedby={errors.business ? `${uid}-business-err` : undefined}
-                    onChange={(event) => set("business", event.target.value)}
-                  />
-                  {errors.business && (
-                    <p className="j-error" id={`${uid}-business-err`}>
-                      {errors.business}
+        <p className="br-offer">
+          {j.brand.offer.map((line) => (
+            <span key={line}>{line}</span>
+          ))}
+        </p>
+      </aside>
+
+      <div className="br-desk">
+        <form className="br-form" onSubmit={onSubmit} noValidate aria-busy={status === "sending"}>
+          <div className="br-step" key={step} data-dir={dir} ref={stepBodyRef}>
+            <div className="br-head">
+              <p className="br-kicker" aria-hidden="true">
+                {pad(step + 1)} / {pad(total)}
+              </p>
+              <h3 className="br-q" ref={headingRef} tabIndex={-1}>
+                {stepCopy.question}
+              </h3>
+              <p className="br-hint">{stepCopy.hint}</p>
+            </div>
+
+            <div className="br-answers">
+              {/* 01 — the request, as the visitor would say it */}
+              {step === 0 && (
+                <div className="br-menu" role="group" aria-label={j.steps.service.question}>
+                  {j.services.map((option, index) => (
+                    <button
+                      key={option.id}
+                      type="button"
+                      className="br-line"
+                      aria-pressed={answers.service === option.id}
+                      onClick={() => pickService(option.id as JourneyServiceId)}
+                    >
+                      <span className="br-line__n" aria-hidden="true">
+                        {pad(index + 1)}
+                      </span>
+                      <span className="br-line__label">{option.label}</span>
+                      <span className="br-line__note">{option.note}</span>
+                    </button>
+                  ))}
+                  {errors.service && (
+                    <p className="br-error" role="alert">
+                      {errors.service}
                     </p>
                   )}
                 </div>
+              )}
 
-                <SingleChips
-                  legend={j.sector.label}
-                  options={j.sector.options}
-                  value={answers.sector}
-                  onChange={(value) => set("sector", value)}
-                  optional={j.optional}
-                />
-
-                {(answers.service === "site" || answers.service === "refonte" || answers.service === "seo") && (
-                  <div className="j-field">
-                    <label className="j-label" htmlFor={`${uid}-website`}>
-                      {j.website.label}{" "}
-                      {needsWebsite ? <span className="j-req">*</span> : <span className="j-optional">— {j.website.optional}</span>}
-                    </label>
+              {/* 02 — the business */}
+              {step === 1 && (
+                <div className="br-fields">
+                  <div className="br-field">
+                    <FieldLabel htmlFor={`${uid}-business`} note="*">
+                      {j.business.label}
+                    </FieldLabel>
                     <input
-                      id={`${uid}-website`}
-                      className="j-input"
-                      type="url"
-                      inputMode="url"
-                      autoComplete="url"
-                      placeholder={j.website.placeholder}
-                      value={answers.website}
-                      aria-invalid={errors.website ? "true" : undefined}
-                      aria-describedby={errors.website ? `${uid}-website-err` : undefined}
-                      onChange={(event) => set("website", event.target.value)}
+                      id={`${uid}-business`}
+                      className="br-input br-input--xl"
+                      autoComplete="organization"
+                      placeholder={j.business.placeholder}
+                      value={answers.business}
+                      aria-invalid={errors.business ? "true" : undefined}
+                      onChange={(event) => set("business", event.target.value)}
                     />
-                    {errors.website && (
-                      <p className="j-error" id={`${uid}-website-err`}>
-                        {errors.website}
-                      </p>
-                    )}
+                    {errors.business && <p className="br-error">{errors.business}</p>}
                   </div>
-                )}
 
-                {answers.service === "refonte" && (
-                  <SingleChips
-                    legend={j.problem.label}
-                    options={j.problem.options}
-                    value={answers.problem}
-                    onChange={(value) => set("problem", value)}
-                    optional={j.optional}
+                  <Vocab
+                    legend={j.sector.label}
+                    options={j.sector.options}
+                    value={answers.sector}
+                    optional={j.sector.optional}
+                    columns
+                    onPick={(option) => set("sector", answers.sector === option ? "" : option)}
                   />
-                )}
+                </div>
+              )}
 
-                {answers.service === "seo" && (
-                  <SingleChips
-                    legend={j.zone.label}
-                    options={j.zone.options}
-                    value={answers.zone}
-                    onChange={(value) => set("zone", value)}
-                  />
-                )}
-
-                {answers.service === "social" && (
-                  <>
-                    <ChipGroup
-                      legend={j.platforms.label}
-                      options={j.platforms.options}
-                      value={answers.platforms}
-                      onToggle={(option) => toggleIn("platforms", option)}
-                    />
-                    <SingleChips
-                      legend={j.publishers.label}
-                      options={j.publishers.options}
-                      value={answers.publishers}
-                      onChange={(value) => set("publishers", value)}
-                      optional={j.optional}
-                    />
-                  </>
-                )}
-
-                {answers.service === "ads" && (
-                  <>
-                    <ChipGroup
-                      legend={j.channels.label}
-                      options={j.channels.options}
-                      value={answers.channels}
-                      onToggle={(option) => toggleIn("channels", option)}
-                    />
-                    <SingleChips
-                      legend={j.history.label}
-                      options={j.history.options}
-                      value={answers.history}
-                      onChange={(value) => set("history", value)}
-                      optional={j.optional}
-                    />
-                  </>
-                )}
-
-                {answers.service === "strategie" && (
-                  <ChipGroup
-                    legend={j.scope.label}
-                    options={j.scope.options}
-                    value={answers.scope}
-                    onToggle={(option) => toggleIn("scope", option)}
-                  />
-                )}
-
-                {answers.service === "autre" && (
-                  <div className="j-field">
-                    <label className="j-label" htmlFor={`${uid}-other`}>
-                      {j.other.label} <span className="j-req">*</span>
-                    </label>
-                    <textarea
-                      id={`${uid}-other`}
-                      className="j-textarea"
-                      rows={3}
-                      placeholder={j.other.placeholder}
-                      value={answers.other}
-                      onChange={(event) => set("other", event.target.value)}
-                    />
-                  </div>
-                )}
-              </div>
-            )}
-
-            {step === 2 && (
-              <div className="j-choices j-choices--goal" role="group" aria-labelledby={`${uid}-goal-label`} data-invalid={errors.goal ? "true" : undefined}>
-                <span className="sr-only" id={`${uid}-goal-label`}>
-                  {j.steps.goal.question}
-                </span>
-                {j.goals.map((option, index) => (
-                  <ChoiceCard
-                    key={option.id}
-                    label={option.label}
-                    note={option.note}
-                    selected={answers.goal === option.id}
-                    index={index}
-                    onClick={() => chooseSingle("goal", option.id)}
-                  />
-                ))}
-                {errors.goal && (
-                  <p className="j-error" role="alert">
-                    {errors.goal}
+              {/* 03 — the goal, as the end of a sentence */}
+              {step === 2 && (
+                <div className="br-want">
+                  <p className="br-want__lead" aria-hidden="true">
+                    {j.steps.goal.lead}
                   </p>
-                )}
-              </div>
-            )}
-
-            {step === 3 && (
-              <div className="j-choices j-choices--budget" role="group" aria-labelledby={`${uid}-budget-label`}>
-                <span className="sr-only" id={`${uid}-budget-label`}>
-                  {j.steps.budget.question}
-                </span>
-                {j.budgets.map((option, index) => (
-                  <ChoiceCard
-                    key={option}
-                    label={option}
-                    selected={answers.budget === option}
-                    index={index}
-                    onClick={() => chooseSingle("budget", option)}
-                  />
-                ))}
-              </div>
-            )}
-
-            {step === 4 && (
-              <div className="j-fields">
-                <div className="j-field">
-                  <label className="j-label" htmlFor={`${uid}-notes`}>
-                    {j.steps.project.question} <span className="j-optional">— {j.optional}</span>
-                  </label>
-                  <textarea
-                    id={`${uid}-notes`}
-                    className="j-textarea j-textarea--tall"
-                    rows={5}
-                    placeholder={j.projectPlaceholder}
-                    value={answers.notes}
-                    onChange={(event) => set("notes", event.target.value)}
-                  />
-                  <p className="j-help">{j.projectExample}</p>
-                </div>
-                <SingleChips
-                  legend={j.timeline.label}
-                  options={j.timeline.options}
-                  value={answers.timeline}
-                  onChange={(value) => set("timeline", value)}
-                  optional={j.optional}
-                />
-              </div>
-            )}
-
-            {step === 5 && (
-              <div className="j-fields">
-                <div className="j-row">
-                  <div className="j-field">
-                    <label className="j-label" htmlFor={`${uid}-name`}>
-                      {j.fields.name} <span className="j-req">*</span>
-                    </label>
-                    <input
-                      id={`${uid}-name`}
-                      className="j-input"
-                      autoComplete="name"
-                      placeholder={j.namePlaceholder}
-                      value={answers.name}
-                      aria-invalid={errors.name ? "true" : undefined}
-                      aria-describedby={errors.name ? `${uid}-name-err` : undefined}
-                      onChange={(event) => set("name", event.target.value)}
-                    />
-                    {errors.name && (
-                      <p className="j-error" id={`${uid}-name-err`}>
-                        {errors.name}
-                      </p>
-                    )}
-                  </div>
-                  <div className="j-field">
-                    <label className="j-label" htmlFor={`${uid}-email`}>
-                      {j.fields.email} <span className="j-req">*</span>
-                    </label>
-                    <input
-                      id={`${uid}-email`}
-                      className="j-input"
-                      type="email"
-                      inputMode="email"
-                      autoComplete="email"
-                      placeholder={j.emailPlaceholder}
-                      value={answers.email}
-                      aria-invalid={errors.email ? "true" : undefined}
-                      aria-describedby={errors.email ? `${uid}-email-err` : undefined}
-                      onChange={(event) => set("email", event.target.value)}
-                      onBlur={() => {
-                        if (answers.email && !EMAIL_RE.test(answers.email)) {
-                          setErrors((prev) => ({ ...prev, email: j.errors.email }));
-                        }
-                      }}
-                    />
-                    {errors.email && (
-                      <p className="j-error" id={`${uid}-email-err`}>
-                        {errors.email}
+                  <div className="br-want__list" role="group" aria-label={j.steps.goal.question}>
+                    {j.goals.map((goal) => (
+                      <button
+                        key={goal.id}
+                        type="button"
+                        className="br-want__item"
+                        aria-pressed={answers.goal === goal.id}
+                        onClick={() => pickGoal(goal.id)}
+                      >
+                        <span className="br-want__label">{goal.label}</span>
+                        <span className="br-want__note">{goal.note}</span>
+                      </button>
+                    ))}
+                    {errors.goal && (
+                      <p className="br-error" role="alert">
+                        {errors.goal}
                       </p>
                     )}
                   </div>
                 </div>
+              )}
 
-                <div className="j-field j-field--half">
-                  <label className="j-label" htmlFor={`${uid}-phone`}>
-                    {j.fields.phone} <span className="j-optional">— {j.fields.phoneOptional}</span>
-                  </label>
-                  <input
-                    id={`${uid}-phone`}
-                    className="j-input"
-                    type="tel"
-                    inputMode="tel"
-                    autoComplete="tel"
-                    placeholder={j.phonePlaceholder}
-                    value={answers.phone}
-                    onChange={(event) => set("phone", event.target.value)}
-                  />
+              {/* 04 — the project, asked in the language of the chosen service */}
+              {step === 3 && prompt && (
+                <div className="br-project">
+                  {prompt.mode === "text" ? (
+                    <div className="br-field">
+                      <label className="br-label" htmlFor={`${uid}-other`}>
+                        {j.other.label}
+                      </label>
+                      <textarea
+                        id={`${uid}-other`}
+                        className="br-area"
+                        rows={3}
+                        placeholder={prompt.placeholder ?? j.other.placeholder}
+                        value={answers.other}
+                        onChange={(event) => set("other", event.target.value)}
+                      />
+                    </div>
+                  ) : (
+                    <div
+                      className="br-options"
+                      data-mode={prompt.mode}
+                      role="group"
+                      aria-label={prompt.question}
+                    >
+                      {prompt.options?.map((option) => (
+                        <button
+                          key={option.id}
+                          type="button"
+                          className="br-option"
+                          aria-pressed={isOn(option.label)}
+                          onClick={() => pickProject(option.label)}
+                        >
+                          <span className="br-option__label">{option.label}</span>
+                          {option.note && <span className="br-option__note">{option.note}</span>}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+
+                  {prompt.extra && (
+                    <div className="br-extra" role="group" aria-label={prompt.extra.label}>
+                      <p className="br-label">{prompt.extra.label}</p>
+                      <div className="br-extra__list">
+                        {prompt.extra.options.map((option) => {
+                          const key = answers.service === "social" ? "publisher" : "adDestination";
+                          const on = answers[key] === option;
+                          return (
+                            <button
+                              key={option}
+                              type="button"
+                              className="br-chip"
+                              aria-pressed={on}
+                              onClick={() => set(key, on ? "" : option)}
+                            >
+                              {option}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+
+                  {prompt.website && (
+                    <div className="br-field br-field--site">
+                      <FieldLabel
+                        htmlFor={`${uid}-website`}
+                        note={prompt.website === "required" ? "*" : j.website.optional}
+                      >
+                        {j.website.label}
+                      </FieldLabel>
+                      <input
+                        id={`${uid}-website`}
+                        className="br-input"
+                        type="url"
+                        inputMode="url"
+                        autoComplete="url"
+                        placeholder={j.website.placeholder}
+                        value={answers.website}
+                        aria-invalid={errors.website ? "true" : undefined}
+                        onChange={(event) => set("website", event.target.value)}
+                      />
+                      {errors.website && <p className="br-error">{errors.website}</p>}
+                    </div>
+                  )}
+
+                  {prompt.mode !== "text" && (
+                    <div className="br-field br-field--notes">
+                      <FieldLabel htmlFor={`${uid}-notes`} note={j.website.optional}>
+                        {j.notes.label}
+                      </FieldLabel>
+                      <textarea
+                        id={`${uid}-notes`}
+                        className="br-area br-area--notes"
+                        rows={2}
+                        placeholder={j.notes.placeholder}
+                        value={answers.notes}
+                        onChange={(event) => set("notes", event.target.value)}
+                      />
+                      <p className="br-note">{j.notes.hint}</p>
+                    </div>
+                  )}
                 </div>
+              )}
 
-                <div className={`j-consent${errors.consent ? " is-error" : ""}`}>
-                  <input
-                    id={`${uid}-consent`}
-                    type="checkbox"
-                    checked={answers.consent}
-                    aria-invalid={errors.consent ? "true" : undefined}
-                    aria-describedby={errors.consent ? `${uid}-consent-err` : undefined}
-                    onChange={(event) => set("consent", event.target.checked)}
-                    required
-                  />
-                  <label htmlFor={`${uid}-consent`}>
-                    {j.consentBefore}{" "}
-                    <a href="/confidentialite/" target="_blank" rel="noreferrer">
-                      {j.consentLink}
-                    </a>
-                    {j.consentAfter}
-                  </label>
+              {/* 05 — the budget, drawn as a ladder */}
+              {step === 4 && (
+                <div className="br-ladder" role="group" aria-label={j.steps.budget.question}>
+                  {j.steps.budget.options.map((option, index) => (
+                    <button
+                      key={option}
+                      type="button"
+                      className="br-price"
+                      style={{ "--w": `${((index + 1) / (j.steps.budget.options.length + 1)) * 100}%` } as CSSProperties}
+                      aria-pressed={answers.budget === option}
+                      onClick={() => set("budget", answers.budget === option ? "" : option)}
+                    >
+                      <span className="br-price__n" aria-hidden="true">
+                        {pad(index + 1)}
+                      </span>
+                      <span className="br-price__label">{option}</span>
+                      <span className="br-price__rule" aria-hidden="true" />
+                    </button>
+                  ))}
+                  <p className="br-note">{j.steps.budget.note}</p>
                 </div>
-                {errors.consent && (
-                  <p className="j-error" id={`${uid}-consent-err`}>
-                    {errors.consent}
-                  </p>
-                )}
+              )}
 
-                <p className="j-note">{j.requiredNote}</p>
-              </div>
-            )}
+              {/* 06 — where to reply, with the brief in sight */}
+              {step === 5 && (
+                <div className="br-contact">
+                  <div className="br-review">
+                    <p className="br-review__title">{j.review}</p>
+                    <dl>
+                      {chapters.map((chapter, index) => (
+                        <div key={chapter}>
+                          <dt>{chapter}</dt>
+                          <dd>{values[index] || j.empty}</dd>
+                        </div>
+                      ))}
+                    </dl>
+                  </div>
+
+                  <div className="br-fields">
+                  <div className="br-pair">
+                    <div className="br-field">
+                      <FieldLabel htmlFor={`${uid}-name`} note="*">
+                        {j.fields.name}
+                      </FieldLabel>
+                      <input
+                        id={`${uid}-name`}
+                        className="br-input"
+                        autoComplete="name"
+                        placeholder={j.placeholders.name}
+                        value={answers.name}
+                        aria-invalid={errors.name ? "true" : undefined}
+                        onChange={(event) => set("name", event.target.value)}
+                      />
+                      {errors.name && <p className="br-error">{errors.name}</p>}
+                    </div>
+
+                    <div className="br-field">
+                      <FieldLabel htmlFor={`${uid}-email`} note="*">
+                        {j.fields.email}
+                      </FieldLabel>
+                      <input
+                        id={`${uid}-email`}
+                        className="br-input"
+                        type="email"
+                        inputMode="email"
+                        autoComplete="email"
+                        placeholder={j.placeholders.email}
+                        value={answers.email}
+                        aria-invalid={errors.email ? "true" : undefined}
+                        onChange={(event) => set("email", event.target.value)}
+                      />
+                      {errors.email && <p className="br-error">{errors.email}</p>}
+                    </div>
+                  </div>
+
+                  <div className="br-field br-field--half">
+                    <FieldLabel htmlFor={`${uid}-phone`} note={j.fields.optional}>
+                      {j.fields.phone}
+                    </FieldLabel>
+                    <input
+                      id={`${uid}-phone`}
+                      className="br-input"
+                      type="tel"
+                      inputMode="tel"
+                      autoComplete="tel"
+                      placeholder={j.placeholders.phone}
+                      value={answers.phone}
+                      onChange={(event) => set("phone", event.target.value)}
+                    />
+                  </div>
+
+                  <label className={`br-consent${errors.consent ? " is-error" : ""}`}>
+                    <input
+                      type="checkbox"
+                      checked={answers.consent}
+                      aria-invalid={errors.consent ? "true" : undefined}
+                      onChange={(event) => set("consent", event.target.checked)}
+                    />
+                    <span className="br-consent__box" aria-hidden="true" />
+                    <span className="br-consent__text">
+                      {j.consentBefore}{" "}
+                      <a href="/confidentialite/">
+                        {j.consentLink}
+                      </a>
+                    </span>
+                  </label>
+
+                  <p className="br-note">{j.requiredNote}</p>
+                  {errors.consent && (
+                    <p className="br-error" role="alert">
+                      {errors.consent}
+                    </p>
+                  )}
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
 
-          {/* honeypot — unchanged from the previous form */}
-          <div className="hp" aria-hidden="true">
+          <div className="br-hp" aria-hidden="true">
             <label htmlFor={`${uid}-company-url`}>Company URL</label>
             <input ref={honeypotRef} id={`${uid}-company-url`} name="company_url" tabIndex={-1} autoComplete="off" />
           </div>
 
           {status === "error" && (
-            <div className="j-alert" role="alert">
-              <strong>{j.failureTitle}</strong>
-              <p>{j.failureBody}</p>
-              <div className="j-actions">
-                <button type="button" className="j-btn j-btn--ghost" onClick={() => setStatus("idle")}>
+            <div className="br-alert" role="alert">
+              <p className="br-alert__title">{j.failureTitle}</p>
+              <p className="br-alert__body">{j.failureBody}</p>
+              <div className="br-actions">
+                <button type="button" className="br-next" onClick={() => setStatus("idle")}>
                   {j.retry}
                 </button>
-                <a className="j-btn j-btn--line" href={mailtoHref}>
-                  <MailIcon size={15} /> {j.mailto}
+                <a className="br-mailto" href={mailtoHref}>
+                  <MailIcon size={14} /> {j.mailto}
                 </a>
               </div>
             </div>
           )}
 
-          <div className="j-footer">
+          {touched && Object.keys(errors).length > 0 && (
+            <p className="br-error br-error--form" role="status">
+              {j.errorHint}
+            </p>
+          )}
+
+          <div className="br-nav">
             {step > 0 ? (
               <button
                 type="button"
-                className="j-btn j-btn--ghost"
-                onClick={() => goTo(step - 1, -1)}
+                className="br-back"
                 disabled={status === "sending"}
+                onClick={() => goTo(step - 1, -1)}
               >
+                <span className="br-back__arrow" aria-hidden="true">
+                  <ArrowRight size={12} />
+                </span>
                 {j.back}
               </button>
             ) : (
               <span />
             )}
 
-            <div className="j-footer__right">
-              {step === 3 && (
-                <button type="button" className="j-skip" onClick={() => goTo(4, 1)} disabled={status === "sending"}>
-                  {j.skip}
-                </button>
-              )}
-              {step === 4 && (
-                <button type="button" className="j-skip" onClick={() => goTo(5, 1)} disabled={status === "sending"}>
-                  {j.skip}
+            <div className="br-nav__right">
+              {(step === 4 || (step === 3 && prompt?.mode !== "text")) && (
+                <button
+                  type="button"
+                  className="br-pass"
+                  disabled={status === "sending"}
+                  onClick={() => goTo(step + 1, 1)}
+                >
+                  {j.pass}
                 </button>
               )}
               {step < TOTAL_STEPS - 1 ? (
-                <button type="button" className="j-btn j-btn--primary" onClick={advance} disabled={status === "sending"}>
+                <button type="button" className="br-next" onClick={advance} disabled={status === "sending"}>
                   {j.next}
-                  <ArrowRight size={16} />
+                  <ArrowRight size={14} />
                 </button>
               ) : (
-                <button type="submit" className="j-btn j-btn--primary" disabled={status === "sending"}>
+                <button type="submit" className="br-next" disabled={status === "sending"}>
                   {status === "sending" ? j.sending : j.submit}
-                  {status !== "sending" && <ArrowRight size={16} />}
+                  {status !== "sending" && <ArrowRight size={14} />}
                 </button>
               )}
             </div>
           </div>
-
-          {touched && Object.keys(errors).length > 0 && (
-            <p className="j-note j-note--error" role="status">
-              {j.errorHint}
-            </p>
-          )}
         </form>
       </div>
     </div>

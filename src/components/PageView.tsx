@@ -6,6 +6,7 @@ import { ContactJourney } from "./ContactJourney";
 import { ArrowRight, Check } from "./Icons";
 import { Split } from "./Split";
 import { DitherImage } from "./DitherImage";
+import { Amount } from "./Amount";
 
 function Blocks({ blocks }: { blocks: PageBlock[] }) {
   return (
@@ -138,7 +139,7 @@ export function PageView({
   return (
     <>
       <Header c={c} locale="fr" currentPath={currentPath} inPageAnchors />
-      <main id="contenu">
+      <main id="contenu" className={hasForm ? "page-contact" : undefined}>
         <header className="doc-hero">
           <div className="wrap doc-hero__grid">
             <div>
@@ -260,37 +261,13 @@ export function PageView({
         )}
 
         {hasForm ? (
-          <section className="section on-ink" id="dossier" aria-labelledby="dossier-titre">
-            <div className="wrap dossier dossier--journey">
-              <div className="dossier__side">
-                <p className="doc-section__label doc-section__label--light">
-                  <b aria-hidden="true">→</b>
-                  <span>Dossier</span>
-                </p>
-                <h2 id="dossier-titre" className="dossier__title">
-                  {page.formTitle}
-                </h2>
-                <p>{page.formLead}</p>
-                <ul className="dossier__list">
-                  <li>
-                    <Check size={15} />
-                    <span>Aucun paiement n’est demandé pour envoyer le dossier.</span>
-                  </li>
-                  <li>
-                    <Check size={15} />
-                    <span>Vous recevez un périmètre écrit avant de décider.</span>
-                  </li>
-                  <li>
-                    <Check size={15} />
-                    <span>Vos réponses restent modifiables jusqu’à l’envoi.</span>
-                  </li>
-                </ul>
-              </div>
-              <ContactJourney c={c} service={page.formService} />
+          <section className="section br-section" id="dossier" aria-labelledby="dossier-titre">
+            <div className="wrap">
+              <ContactJourney c={c} service={page.formService} headingId="dossier-titre" />
             </div>
           </section>
         ) : (
-          <section className="section on-ink" id="dossier" aria-labelledby="dossier-titre">
+          <section className="section br-section" id="dossier" aria-labelledby="dossier-titre">
             <div className="wrap doc-cta">
               <div>
                 <h2 id="dossier-titre">{page.formTitle ?? "Un projet en tête ?"}</h2>
@@ -326,6 +303,22 @@ export function PageView({
             </ul>
           </div>
         </section>
+        )}
+
+        {/* The phone keeps one way to the brief in reach. It points at the
+            brief on this page when there is one, at the home brief otherwise. */}
+        {page.slug !== "contact" && (
+          <div className="mobile-bar">
+            <div className="mobile-bar__price">
+              <strong>
+                <Amount value={c.hero.price} />
+              </strong>
+              <span>{c.hero.priceUnit}</span>
+            </div>
+            <a className="btn btn--coral btn--sm" href={hasForm ? "#dossier" : "/#dossier"}>
+              {c.navCta}
+            </a>
+          </div>
         )}
       </main>
       <Footer c={c} locale="fr" linkPrefix="/" />

@@ -20,7 +20,12 @@ export function InkField() {
     const canvas = canvasRef.current;
     if (!host || !canvas) return;
 
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    // touch devices never drive this surface: the pointer is a finger, and a
+    // per-frame mesh is the most expensive thing on the page. They get the
+    // static frame — the same drawing, held still.
+    const reduced =
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
+      window.matchMedia("(hover: none), (pointer: coarse)").matches;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 

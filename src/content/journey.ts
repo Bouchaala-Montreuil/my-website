@@ -1,9 +1,9 @@
 /**
- * Copy for the contact journey — one place, three languages.
+ * Copy for the FEEKZA brief — one place, three languages.
  *
- * The journey asks six short questions and only shows the ones that make sense
- * for the chosen service. Labels are deliberately written as answers a visitor
- * would give, not as database fields.
+ * The brief is written as a document: a cover with a sommaire that fills in,
+ * and one question at a time on the desk. Service lines are written in the
+ * first person, so the visitor picks their own sentence.
  */
 import type { Locale } from "./types";
 
@@ -15,56 +15,81 @@ export interface JourneyOption {
   note?: string;
 }
 
+/** One adaptive question of the project chapter. */
+export interface JourneyPrompt {
+  question: string;
+  hint: string;
+  mode: "single" | "multi" | "text";
+  options?: JourneyOption[];
+  /** A second, quieter question asked in the same chapter. */
+  extra?: { label: string; options: string[] };
+  website?: "required" | "optional";
+  placeholder?: string;
+}
+
 export interface JourneyCopy {
-  kicker: string;
-  title: string;
-  stageNote: string;
-  stepOf: (done: number, total: number) => string;
-  back: string;
-  next: string;
-  skip: string;
-  review: string;
-  submit: string;
-  sending: string;
-  optional: string;
-  requiredNote: string;
-  recap: string;
-  empty: string;
-  edit: string;
+  localeName: string;
+  subject: string;
+  brand: {
+    tag: string;
+    ref: string;
+    title: string;
+    untitled: string;
+    summary: string;
+    offer: string[];
+  };
+  chapters: {
+    service: string;
+    context: string;
+    goal: string;
+    project: Record<JourneyServiceId, string>;
+    budget: string;
+    contact: string;
+  };
   steps: {
-    service: { label: string; question: string; hint: string };
-    context: { label: string; question: string; hint: string };
-    goal: { label: string; question: string; hint: string };
-    budget: { label: string; question: string; hint: string };
-    project: { label: string; question: string; hint: string };
-    contact: { label: string; question: string; hint: string };
+    service: { question: string; hint: string };
+    context: { question: string; hint: string };
+    goal: { question: string; hint: string; lead: string };
+    project: Record<JourneyServiceId, JourneyPrompt>;
+    budget: { question: string; hint: string; note: string; options: string[] };
+    contact: { question: string; hint: string };
   };
   services: JourneyOption[];
   business: { label: string; placeholder: string };
-  sector: { label: string; options: string[] };
-  website: { label: string; placeholder: string; optional: string };
-  problem: { label: string; options: string[] };
-  zone: { label: string; options: string[] };
-  platforms: { label: string; options: string[] };
-  publishers: { label: string; options: string[] };
-  channels: { label: string; options: string[] };
-  history: { label: string; options: string[] };
-  scope: { label: string; options: string[] };
+  sector: { label: string; optional: string; options: string[] };
+  website: { label: string; placeholder: string; optional: string; required: string };
+  problems: JourneyOption[];
+  siteTypes: JourneyOption[];
+  zones: JourneyOption[];
+  platforms: JourneyOption[];
+  publishers: string[];
+  adOutcomes: JourneyOption[];
+  adDestinations: string[];
+  timeline: JourneyOption[];
   other: { label: string; placeholder: string };
+  notes: { label: string; hint: string; placeholder: string };
   goals: JourneyOption[];
-  budgets: string[];
-  projectPlaceholder: string;
-  projectExample: string;
-  timeline: { label: string; options: string[] };
-  fields: { name: string; email: string; phone: string; phoneOptional: string };
-  namePlaceholder: string;
-  emailPlaceholder: string;
-  phonePlaceholder: string;
+  fields: { name: string; email: string; phone: string; optional: string };
+  placeholders: { name: string; email: string; phone: string };
   consentBefore: string;
   consentLink: string;
-  consentAfter: string;
-  errors: { service: string; business: string; website: string; goal: string; name: string; email: string; consent: string };
-  errorTitle: string;
+  requiredNote: string;
+  back: string;
+  next: string;
+  pass: string;
+  submit: string;
+  sending: string;
+  review: string;
+  empty: string;
+  errors: {
+    service: string;
+    business: string;
+    website: string;
+    goal: string;
+    name: string;
+    email: string;
+    consent: string;
+  };
   errorHint: string;
   failureTitle: string;
   failureBody: string;
@@ -75,313 +100,629 @@ export interface JourneyCopy {
   successSteps: string[];
   successNote: string;
   successAgain: string;
-  summaryLabels: {
-    service: string;
-    business: string;
-    goal: string;
-    budget: string;
-    project: string;
-    contact: string;
-  };
-  subject: string;
-  localeName: string;
 }
 
+/* ── Français ─────────────────────────────────────────────────────────── */
+
 const fr: JourneyCopy = {
-  kicker: "Un dossier, pas un formulaire",
-  title: "Racontez-nous votre projet",
-  stageNote: "Six questions. Pas de piège, pas de jargon.",
-  stepOf: (done, total) => `Étape ${done} sur ${total}`,
-  back: "Retour",
-  next: "Continuer",
-  skip: "Passer",
-  review: "Vérifier",
-  submit: "Envoyer le dossier",
-  sending: "Envoi en cours…",
-  optional: "facultatif",
-  requiredNote: "Les champs marqués * sont nécessaires pour vous répondre.",
-  recap: "Votre récapitulatif",
-  empty: "Pas encore répondu",
-  edit: "Modifier",
+  localeName: "Français",
+  subject: "Brief",
+  brand: {
+    tag: "Brief",
+    ref: "Réf.",
+    title: "Votre brief",
+    untitled: "Votre activité",
+    summary: "Sommaire du brief",
+    offer: ["195 € TTC / mois", "Sans frais de lancement", "Réponse écrite sous 1 jour ouvré"],
+  },
+  chapters: {
+    service: "La demande",
+    context: "Votre activité",
+    goal: "L’objectif",
+    project: {
+      site: "Votre site",
+      refonte: "Votre site",
+      seo: "Votre visibilité",
+      social: "Vos réseaux",
+      ads: "Votre campagne",
+      strategie: "Votre priorité",
+      autre: "Votre projet",
+    },
+    budget: "Le budget",
+    contact: "Vos coordonnées",
+  },
   steps: {
     service: {
-      label: "Le besoin",
-      question: "De quoi avez-vous besoin ?",
-      hint: "Choisissez ce qui s’en approche le plus. Vous préciserez ensuite.",
+      question: "Qu’est-ce qu’on pourrait construire pour votre activité ?",
+      hint: "Choisissez la phrase qui vous ressemble. La suite s’adapte.",
     },
     context: {
-      label: "L’activité",
-      question: "Parlez-nous de votre entreprise",
-      hint: "Deux réponses suffisent pour situer le contexte.",
+      question: "Quelle activité faites-vous vivre ?",
+      hint: "Le nom suffit pour commencer. Le reste se précisera à la lecture.",
     },
     goal: {
-      label: "L’objectif",
       question: "Qu’est-ce que ça doit changer ?",
       hint: "Un seul cap. C’est lui qui décidera du reste.",
-    },
-    budget: {
-      label: "Le budget",
-      question: "Quel budget avez-vous en tête ?",
-      hint: "Une fourchette suffit. Le devis reste gratuit.",
+      lead: "Je veux",
     },
     project: {
-      label: "Le projet",
-      question: "Qu’avez-vous en tête ?",
-      hint: "Deux phrases suffisent. Les détails se règlent en visio.",
+      site: {
+        question: "Quel genre de site vous faut-il ?",
+        hint: "On part de là. Le format exact se décide à la lecture du brief.",
+        mode: "single",
+        options: [
+          { id: "vitrine", label: "Une vitrine", note: "Cinq pages claires, qui présentent et rassurent." },
+          { id: "boutique", label: "Une boutique en ligne", note: "Vendre, encaisser, livrer." },
+          { id: "page", label: "Une page pour une campagne", note: "Une seule page, pensée pour convertir." },
+          { id: "avis", label: "Je ne sais pas encore", note: "On propose le format dans la réponse." },
+        ],
+      },
+      refonte: {
+        question: "Qu’est-ce qui ne va plus, aujourd’hui ?",
+        hint: "Un seul point suffit pour commencer.",
+        mode: "single",
+        options: [
+          { id: "design", label: "Le design a vieilli", note: "Il ne ressemble plus à l’entreprise." },
+          { id: "lent", label: "Le site est lent", note: "Les visiteurs partent avant la fin du chargement." },
+          { id: "mobile", label: "Il est illisible sur téléphone", note: "La majorité du trafic est pourtant là." },
+          { id: "demandes", label: "Il ne génère pas de demandes", note: "Il est visité, mais personne n’écrit." },
+        ],
+        website: "required",
+      },
+      seo: {
+        question: "Où voulez-vous être trouvé ?",
+        hint: "La zone décide de la stratégie, pas l’inverse.",
+        mode: "single",
+        options: [
+          { id: "local", label: "Autour de chez moi", note: "Un rayon de quelques kilomètres." },
+          { id: "france", label: "Partout en France", note: "Des recherches nationales." },
+          { id: "monde", label: "À l’international", note: "D’autres langues, d’autres marchés." },
+        ],
+        website: "required",
+      },
+      social: {
+        question: "Quels réseaux comptent pour vous ?",
+        hint: "Plusieurs choix possibles. On ne travaille que ceux qui servent.",
+        mode: "multi",
+        options: [
+          { id: "instagram", label: "Instagram", note: "Image, coulisses, produits." },
+          { id: "linkedin", label: "LinkedIn", note: "Crédibilité et prospection." },
+          { id: "tiktok", label: "TikTok", note: "Portée organique, formats courts." },
+          { id: "facebook", label: "Facebook", note: "Communauté locale et événements." },
+          { id: "youtube", label: "YouTube", note: "Formats longs, recherche." },
+        ],
+        extra: { label: "Qui publie aujourd’hui ?", options: ["Moi-même", "Personne", "Une équipe"] },
+      },
+      ads: {
+        question: "Qu’attendez-vous de la publicité ?",
+        hint: "L’objectif décide du canal, du budget et du message.",
+        mode: "single",
+        options: [
+          { id: "demandes", label: "Des demandes entrantes", note: "Des gens qui écrivent ou appellent." },
+          { id: "ventes", label: "Des ventes directes", note: "Un panier qui se remplit." },
+          { id: "appels", label: "Des appels", note: "Pour un commerce ou un service local." },
+          { id: "notoriete", label: "De la notoriété", note: "Être vu par la bonne audience." },
+        ],
+        extra: { label: "Sur quoi la campagne pointe ?", options: ["Mon site actuel", "Une page dédiée", "Pas encore décidé"] },
+        website: "optional",
+      },
+      strategie: {
+        question: "Quelle est la priorité des trois prochains mois ?",
+        hint: "Le plan se construit autour de cette date.",
+        mode: "single",
+        options: [
+          { id: "asap", label: "Dès que possible", note: "On met tout sur la première version." },
+          { id: "mois", label: "Sous un mois", note: "Un lancement cadencé, sans bâclage." },
+          { id: "trimestre", label: "Sous trois mois", note: "Le temps de faire les choses dans l’ordre." },
+          { id: "rien", label: "Pas d’urgence", note: "On commence par ce qui rapporte le plus." },
+        ],
+      },
+      autre: {
+        question: "Dites-le en deux mots.",
+        hint: "On répond avec un point de départ concret, pas une plaquette.",
+        mode: "text",
+        placeholder: "Ex. lancer une boutique de céramique en ligne…",
+      },
+    },
+    budget: {
+      question: "Un budget de départ ?",
+      hint: "Facultatif. Dites juste ce qui vous paraît raisonnable.",
+      note: "Le devis reste gratuit, et aucune carte n’est demandée.",
+      options: ["195 € / mois", "200 – 500 € / mois", "500 – 1 000 € / mois", "Plus de 1 000 € / mois", "À définir ensemble"],
     },
     contact: {
-      label: "Le contact",
       question: "Où peut-on vous répondre ?",
-      hint: "Réponse sous 1 jour ouvré, par une vraie personne.",
+      hint: "Réponse écrite sous 1 jour ouvré, par une vraie personne.",
     },
   },
   services: [
-    { id: "site", label: "Créer un site", note: "Vitrine, claire, livrée en 48–72 h." },
-    { id: "refonte", label: "Refondre un site", note: "Reprendre un site daté, sans repartir de zéro." },
-    { id: "seo", label: "Référencement & Google", note: "Être trouvé par les bonnes recherches." },
-    { id: "social", label: "Réseaux sociaux", note: "Publier régulièrement, sans y passer vos soirées." },
-    { id: "ads", label: "Publicité en ligne", note: "Des campagnes qui ramènent des demandes." },
-    { id: "strategie", label: "Stratégie marketing", note: "Un plan clair, du site aux réseaux." },
-    { id: "autre", label: "Autre chose", note: "Dites-le en deux mots, on avisera." },
+    { id: "site", label: "Construire mon site.", note: "Vitrine claire, livrée en 48–72 h." },
+    { id: "refonte", label: "Refondre mon site actuel.", note: "Reprendre un site daté, sans repartir de zéro." },
+    { id: "seo", label: "Me rendre visible sur Google.", note: "Être trouvé par les bonnes recherches." },
+    { id: "social", label: "Animer mes réseaux sociaux.", note: "Publier régulièrement, sans y passer mes soirées." },
+    { id: "ads", label: "Lancer de la publicité en ligne.", note: "Des campagnes qui ramènent des demandes." },
+    { id: "strategie", label: "Construire une stratégie marketing.", note: "Un plan clair, du site aux réseaux." },
+    { id: "autre", label: "Autre chose.", note: "Dites-le en deux mots, on avisera." },
   ],
-  business: { label: "Nom de l’entreprise", placeholder: "Ex. Maison Lafleur" },
+  business: { label: "Le nom de votre entreprise", placeholder: "Ex. Maison Lafleur" },
   sector: {
     label: "Votre secteur",
+    optional: "facultatif",
     options: ["Commerce local", "Restauration", "Santé & bien-être", "Immobilier", "Services B2B", "E-commerce", "Autre"],
   },
-  website: { label: "Votre site actuel", placeholder: "https://…", optional: "Si vous en avez un" },
-  problem: {
-    label: "Qu’est-ce qui ne fonctionne plus ?",
-    options: ["Le design a vieilli", "Le site est lent", "Il n’est pas lisible sur mobile", "Il ne génère pas de demandes"],
-  },
-  zone: { label: "Où voulez-vous être visible ?", options: ["Autour de chez moi", "Partout en France", "À l’international"] },
-  platforms: { label: "Quels réseaux comptent pour vous ?", options: ["Instagram", "LinkedIn", "TikTok", "Facebook", "YouTube"] },
-  publishers: { label: "Qui publie aujourd’hui ?", options: ["Moi-même", "Personne", "Une équipe"] },
-  channels: { label: "Quels canaux vous intéressent ?", options: ["Google Ads", "Meta", "TikTok", "LinkedIn"] },
-  history: { label: "Avez-vous déjà fait de la publicité ?", options: ["Jamais", "Oui, avec des résultats", "Oui, sans résultats"] },
-  scope: { label: "Quel périmètre ?", options: ["Site web", "SEO", "Réseaux sociaux", "Publicité", "Contenu", "E-mail"] },
+  website: { label: "Votre site actuel", placeholder: "https://…", optional: "facultatif", required: "obligatoire" },
+  problems: [],
+  siteTypes: [],
+  zones: [],
+  platforms: [],
+  publishers: [],
+  adOutcomes: [],
+  adDestinations: [],
+  timeline: [],
   other: { label: "En deux mots", placeholder: "Ex. lancer une boutique de céramique en ligne…" },
+  notes: {
+    label: "Le contexte, en deux phrases",
+    hint: "Facultatif. Les détails se règlent à la lecture.",
+    placeholder: "Ex. nous ouvrons un second lieu en juin, le site doit suivre…",
+  },
   goals: [
     { id: "clients", label: "Attirer plus de clients", note: "Des demandes qui arrivent d’elles-mêmes." },
     { id: "leads", label: "Générer des demandes qualifiées", note: "Moins de contacts, mais les bons." },
-    { id: "ventes", label: "Augmenter les ventes", note: "Vendre en ligne, sans friction." },
-    { id: "visibilite", label: "Gagner en visibilité", note: "Être là où l’on vous cherche." },
+    { id: "ventes", label: "Augmenter mes ventes", note: "Vendre en ligne, sans friction." },
+    { id: "visibilite", label: "Gagner en visibilité", note: "Être là où l’on me cherche." },
     { id: "confiance", label: "Inspirer confiance", note: "Un site qui fait bonne impression." },
   ],
-  budgets: ["195 € / mois", "200 – 500 € / mois", "500 – 1 000 € / mois", "Plus de 1 000 € / mois", "À définir ensemble"],
-  projectPlaceholder: "Ex. nous ouvrons un second lieu en juin, le site doit suivre…",
-  projectExample: "Deux phrases suffisent : ce que vous vendez, et ce qui bloque aujourd’hui.",
-  timeline: { label: "Pour quand ?", options: ["Dès que possible", "Sous 1 mois", "Sous 3 mois", "Pas d’urgence"] },
-  fields: { name: "Votre nom", email: "Votre e-mail", phone: "Téléphone", phoneOptional: "facultatif" },
-  namePlaceholder: "Prénom et nom",
-  emailPlaceholder: "vous@exemple.fr",
-  phonePlaceholder: "06 00 00 00 00",
+  fields: { name: "Votre nom", email: "Votre e-mail", phone: "Téléphone", optional: "facultatif" },
+  placeholders: { name: "Prénom et nom", email: "vous@exemple.fr", phone: "06 00 00 00 00" },
   consentBefore: "J’accepte que mes réponses soient utilisées pour me répondre.",
   consentLink: "Politique de confidentialité",
-  consentAfter: "",
+  requiredNote: "Les champs marqués * sont nécessaires pour vous répondre.",
+  back: "Retour",
+  next: "Continuer",
+  pass: "Passer",
+  submit: "Envoyer mon brief",
+  sending: "Envoi en cours…",
+  review: "Ce que nous avons compris",
+  empty: "—",
   errors: {
-    service: "Choisissez ce qui s’en approche le plus.",
+    service: "Choisissez la phrase qui vous ressemble.",
     business: "Indiquez le nom de votre entreprise.",
     website: "Indiquez l’adresse de votre site.",
     goal: "Choisissez l’objectif principal.",
     name: "Indiquez votre nom.",
     email: "Indiquez une adresse e-mail valide.",
-    consent: "Cochez cette case pour envoyer le dossier.",
+    consent: "Cochez cette case pour envoyer le brief.",
   },
-  errorTitle: "Une réponse nous manque",
   errorHint: "Tout est conservé. Corrigez le champ indiqué et reprenez.",
   failureTitle: "L’envoi n’a pas abouti",
   failureBody: "Vos réponses sont toujours là. Réessayez, ou écrivez-nous directement.",
   retry: "Réessayer",
   mailto: "Envoyer par e-mail",
   successTitle: "C’est parti.",
-  successBody: "Votre dossier nous est arrivé. Vous recevez une réponse écrite sous 1 jour ouvré, avec un périmètre clair et aucun engagement.",
-  successSteps: ["Nous lisons votre dossier aujourd’hui.", "Vous recevez un périmètre écrit sous 1 jour ouvré.", "Si ça vous convient, on lance la première version."],
-  successNote: "Aucun paiement n’est demandé pour envoyer un dossier.",
-  successAgain: "Envoyer un autre dossier",
-  summaryLabels: { service: "Besoin", business: "Entreprise", goal: "Objectif", budget: "Budget", project: "Projet", contact: "Contact" },
-  subject: "Dossier",
-  localeName: "Français",
+  successBody:
+    "Votre brief nous est arrivé. Vous recevez une réponse écrite sous 1 jour ouvré, avec un périmètre clair et aucun engagement.",
+  successSteps: [
+    "Nous lisons votre brief aujourd’hui.",
+    "Vous recevez un périmètre écrit sous 1 jour ouvré.",
+    "Si ça vous convient, on lance la première version.",
+  ],
+  successNote: "Aucun paiement n’est demandé pour envoyer un brief.",
+  successAgain: "Écrire un autre brief",
 };
+
+/* ── English ──────────────────────────────────────────────────────────── */
 
 const en: JourneyCopy = {
-  kicker: "A brief, not a form",
-  title: "Tell us about your project",
-  stageNote: "Six questions. No traps, no jargon.",
-  stepOf: (done, total) => `Step ${done} of ${total}`,
-  back: "Back",
-  next: "Continue",
-  skip: "Skip",
-  review: "Review",
-  submit: "Send the brief",
-  sending: "Sending…",
-  optional: "optional",
-  requiredNote: "Fields marked * are needed to reply to you.",
-  recap: "Your brief so far",
-  empty: "Not answered yet",
-  edit: "Edit",
+  localeName: "English",
+  subject: "Brief",
+  brand: {
+    tag: "Brief",
+    ref: "Ref.",
+    title: "Your brief",
+    untitled: "Your business",
+    summary: "Brief contents",
+    offer: ["€195 incl. tax / month", "No setup fee", "Written reply within one working day"],
+  },
+  chapters: {
+    service: "The request",
+    context: "Your business",
+    goal: "The goal",
+    project: {
+      site: "Your site",
+      refonte: "Your site",
+      seo: "Your visibility",
+      social: "Your channels",
+      ads: "Your campaign",
+      strategie: "Your priority",
+      autre: "Your project",
+    },
+    budget: "The budget",
+    contact: "Your details",
+  },
   steps: {
-    service: { label: "The need", question: "What do you need?", hint: "Pick the closest one. You can refine it next." },
-    context: { label: "The business", question: "Tell us about your business", hint: "Two answers are enough to set the scene." },
-    goal: { label: "The goal", question: "What should this change?", hint: "One direction. Everything else follows from it." },
-    budget: { label: "The budget", question: "What budget do you have in mind?", hint: "A range is fine. The quote is free either way." },
-    project: { label: "The project", question: "What have you got in mind?", hint: "Two sentences are enough. Details come later on a call." },
-    contact: { label: "The contact", question: "Where can we reach you?", hint: "Reply within one working day, from a real person." },
+    service: {
+      question: "What could we build for your business?",
+      hint: "Pick the sentence that sounds like you. The rest adapts.",
+    },
+    context: {
+      question: "What business do you run?",
+      hint: "The name is enough to start. The rest can follow.",
+    },
+    goal: {
+      question: "What should this change?",
+      hint: "One direction. Everything else follows from it.",
+      lead: "I want to",
+    },
+    project: {
+      site: {
+        question: "What kind of site do you need?",
+        hint: "We start there. The exact format is settled when we read the brief.",
+        mode: "single",
+        options: [
+          { id: "vitrine", label: "A brochure site", note: "Five clear pages that explain and reassure." },
+          { id: "boutique", label: "An online shop", note: "Sell, take payment, ship." },
+          { id: "page", label: "A campaign page", note: "One page, built to convert." },
+          { id: "avis", label: "I don’t know yet", note: "We suggest the format in our reply." },
+        ],
+      },
+      refonte: {
+        question: "What is not working today?",
+        hint: "One point is enough to start.",
+        mode: "single",
+        options: [
+          { id: "design", label: "The design feels dated", note: "It no longer looks like the business." },
+          { id: "lent", label: "The site is slow", note: "Visitors leave before it loads." },
+          { id: "mobile", label: "It is unusable on a phone", note: "Where most of the traffic is." },
+          { id: "demandes", label: "It brings no enquiries", note: "People visit, nobody writes." },
+        ],
+        website: "required",
+      },
+      seo: {
+        question: "Where do you want to be found?",
+        hint: "The area decides the strategy, not the other way round.",
+        mode: "single",
+        options: [
+          { id: "local", label: "Around my area", note: "A radius of a few kilometres." },
+          { id: "france", label: "Across the country", note: "National searches." },
+          { id: "monde", label: "Internationally", note: "Other languages, other markets." },
+        ],
+        website: "required",
+      },
+      social: {
+        question: "Which channels matter to you?",
+        hint: "Several answers allowed. We only work the ones that earn their place.",
+        mode: "multi",
+        options: [
+          { id: "instagram", label: "Instagram", note: "Image, process, products." },
+          { id: "linkedin", label: "LinkedIn", note: "Credibility and prospecting." },
+          { id: "tiktok", label: "TikTok", note: "Organic reach, short formats." },
+          { id: "facebook", label: "Facebook", note: "Local community and events." },
+          { id: "youtube", label: "YouTube", note: "Long form and search." },
+        ],
+        extra: { label: "Who posts today?", options: ["Me", "Nobody", "A team"] },
+      },
+      ads: {
+        question: "What do you expect from advertising?",
+        hint: "The objective decides the channel, the budget and the message.",
+        mode: "single",
+        options: [
+          { id: "demandes", label: "Incoming enquiries", note: "People who write or call." },
+          { id: "ventes", label: "Direct sales", note: "A basket that fills." },
+          { id: "appels", label: "Calls", note: "For a local shop or service." },
+          { id: "notoriete", label: "Awareness", note: "Be seen by the right audience." },
+        ],
+        extra: { label: "Where should the campaign point?", options: ["My current site", "A dedicated page", "Not decided yet"] },
+        website: "optional",
+      },
+      strategie: {
+        question: "What is the priority for the next three months?",
+        hint: "The plan is built around that date.",
+        mode: "single",
+        options: [
+          { id: "asap", label: "As soon as possible", note: "Everything goes into the first version." },
+          { id: "mois", label: "Within a month", note: "A paced launch, nothing rushed." },
+          { id: "trimestre", label: "Within three months", note: "Time to do things in order." },
+          { id: "rien", label: "No rush", note: "We start with what pays back fastest." },
+        ],
+      },
+      autre: {
+        question: "Put it in two words.",
+        hint: "We reply with a concrete starting point, not a brochure.",
+        mode: "text",
+        placeholder: "e.g. launch a ceramics shop online…",
+      },
+    },
+    budget: {
+      question: "A starting budget?",
+      hint: "Optional. Just tell us what feels reasonable.",
+      note: "The quote is free, and no card is ever asked for.",
+      options: ["€195 / month", "€200 – 500 / month", "€500 – 1,000 / month", "More than €1,000 / month", "Let’s work it out"],
+    },
+    contact: {
+      question: "Where can we reply?",
+      hint: "Written reply within one working day, from a real person.",
+    },
   },
   services: [
-    { id: "site", label: "Build a website", note: "Clear, fast, delivered in 48–72 h." },
-    { id: "refonte", label: "Redesign a website", note: "Bring an ageing site back, without starting over." },
-    { id: "seo", label: "SEO & Google", note: "Be found for the searches that matter." },
-    { id: "social", label: "Social media", note: "Publish consistently without living on it." },
-    { id: "ads", label: "Online advertising", note: "Campaigns that bring in enquiries." },
-    { id: "strategie", label: "Marketing strategy", note: "One clear plan, from site to social." },
-    { id: "autre", label: "Something else", note: "Two words will do — we’ll take it from there." },
+    { id: "site", label: "Build my website.", note: "Clear brochure site, delivered in 48–72 h." },
+    { id: "refonte", label: "Redesign my current site.", note: "Bring a dated site back, without starting over." },
+    { id: "seo", label: "Make me visible on Google.", note: "Be found for the searches that matter." },
+    { id: "social", label: "Run my social channels.", note: "Publish consistently without living on it." },
+    { id: "ads", label: "Launch online advertising.", note: "Campaigns that bring in enquiries." },
+    { id: "strategie", label: "Build a marketing strategy.", note: "One clear plan, from site to social." },
+    { id: "autre", label: "Something else.", note: "Two words will do — we’ll take it from there." },
   ],
-  business: { label: "Business name", placeholder: "e.g. Maison Lafleur" },
+  business: { label: "Your business name", placeholder: "e.g. Maison Lafleur" },
   sector: {
     label: "Your sector",
+    optional: "optional",
     options: ["Local retail", "Food & drink", "Health & wellbeing", "Property", "B2B services", "E-commerce", "Other"],
   },
-  website: { label: "Your current website", placeholder: "https://…", optional: "If you have one" },
-  problem: {
-    label: "What no longer works?",
-    options: ["It looks dated", "It’s slow", "It’s hard to read on mobile", "It brings no enquiries"],
+  website: { label: "Your current site", placeholder: "https://…", optional: "optional", required: "required" },
+  problems: [],
+  siteTypes: [],
+  zones: [],
+  platforms: [],
+  publishers: [],
+  adOutcomes: [],
+  adDestinations: [],
+  timeline: [],
+  other: { label: "In two words", placeholder: "e.g. launch a ceramics shop online…" },
+  notes: {
+    label: "The context, in two sentences",
+    hint: "Optional. Details come later.",
+    placeholder: "e.g. we open a second space in June, the site has to follow…",
   },
-  zone: { label: "Where do you want to rank?", options: ["Around my area", "Across the country", "Internationally"] },
-  platforms: { label: "Which platforms matter?", options: ["Instagram", "LinkedIn", "TikTok", "Facebook", "YouTube"] },
-  publishers: { label: "Who publishes today?", options: ["Me", "Nobody", "A team"] },
-  channels: { label: "Which channels interest you?", options: ["Google Ads", "Meta", "TikTok", "LinkedIn"] },
-  history: { label: "Have you advertised before?", options: ["Never", "Yes, with results", "Yes, without results"] },
-  scope: { label: "What should we cover?", options: ["Website", "SEO", "Social", "Advertising", "Content", "Email"] },
-  other: { label: "In two words", placeholder: "e.g. launching an online ceramics shop…" },
   goals: [
-    { id: "clients", label: "Bring in more customers", note: "Enquiries that arrive on their own." },
-    { id: "leads", label: "Generate qualified leads", note: "Fewer contacts, better ones." },
-    { id: "ventes", label: "Increase sales", note: "Sell online without friction." },
-    { id: "visibilite", label: "Gain visibility", note: "Be there when people search." },
-    { id: "confiance", label: "Build trust", note: "A site that makes the right impression." },
+    { id: "clients", label: "Attract more customers", note: "Enquiries that come on their own." },
+    { id: "leads", label: "Generate qualified enquiries", note: "Fewer contacts, better ones." },
+    { id: "ventes", label: "Increase my sales", note: "Sell online without friction." },
+    { id: "visibilite", label: "Gain visibility", note: "Be where people look for me." },
+    { id: "confiance", label: "Inspire trust", note: "A site that makes a good impression." },
   ],
-  budgets: ["€195 / month", "€200 – 500 / month", "€500 – 1,000 / month", "Over €1,000 / month", "Not sure yet"],
-  projectPlaceholder: "e.g. we’re opening a second location in June and the site has to keep up…",
-  projectExample: "Two sentences: what you sell, and what’s getting in the way.",
-  timeline: { label: "By when?", options: ["As soon as possible", "Within a month", "Within three months", "No rush"] },
-  fields: { name: "Your name", email: "Your email", phone: "Phone", phoneOptional: "optional" },
-  namePlaceholder: "First and last name",
-  emailPlaceholder: "you@example.com",
-  phonePlaceholder: "+33 6 00 00 00 00",
+  fields: { name: "Your name", email: "Your email", phone: "Phone", optional: "optional" },
+  placeholders: { name: "First and last name", email: "you@example.com", phone: "06 00 00 00 00" },
   consentBefore: "I agree that my answers may be used to reply to me.",
   consentLink: "Privacy policy",
-  consentAfter: "",
+  requiredNote: "Fields marked * are needed to reply to you.",
+  back: "Back",
+  next: "Continue",
+  pass: "Skip",
+  submit: "Send my brief",
+  sending: "Sending…",
+  review: "What we understood",
+  empty: "—",
   errors: {
-    service: "Pick the closest option.",
+    service: "Pick the sentence that sounds like you.",
     business: "Tell us your business name.",
-    website: "Add your website address.",
+    website: "Give us your site address.",
     goal: "Choose the main goal.",
     name: "Tell us your name.",
-    email: "Enter a valid email address.",
+    email: "Give us a valid email address.",
     consent: "Tick this box to send the brief.",
   },
-  errorTitle: "One answer is missing",
-  errorHint: "Nothing is lost. Fix the field and carry on.",
-  failureTitle: "The brief didn’t go through",
-  failureBody: "Your answers are still here. Try again, or email us directly.",
+  errorHint: "Everything is kept. Fix the highlighted field and continue.",
+  failureTitle: "The brief did not send",
+  failureBody: "Your answers are still here. Try again, or write to us directly.",
   retry: "Try again",
   mailto: "Send by email",
-  successTitle: "That’s in.",
-  successBody: "Your brief reached us. You’ll get a written reply within one working day, with a clear scope and no commitment.",
-  successSteps: ["We read your brief today.", "You get a written scope within one working day.", "If it works for you, we start the first version."],
-  successNote: "No payment is needed to send a brief.",
-  successAgain: "Send another brief",
-  summaryLabels: { service: "Need", business: "Business", goal: "Goal", budget: "Budget", project: "Project", contact: "Contact" },
-  subject: "Brief",
-  localeName: "English",
+  successTitle: "Off it goes.",
+  successBody:
+    "Your brief has reached us. You get a written reply within one working day, with a clear scope and no commitment.",
+  successSteps: [
+    "We read your brief today.",
+    "You get a written scope within one working day.",
+    "If it suits you, we start the first version.",
+  ],
+  successNote: "No payment is asked for to send a brief.",
+  successAgain: "Write another brief",
 };
 
+/* ── العربية ──────────────────────────────────────────────────────────── */
+
 const ar: JourneyCopy = {
-  kicker: "ملف تعريفي، لا استمارة",
-  title: "حدّثنا عن مشروعك",
-  stageNote: "ستة أسئلة. بلا تعقيد ولا مصطلحات.",
-  stepOf: (done, total) => `الخطوة ${done} من ${total}`,
-  back: "رجوع",
-  next: "متابعة",
-  skip: "تخطّي",
-  review: "مراجعة",
-  submit: "إرسال الملف",
-  sending: "جارٍ الإرسال…",
-  optional: "اختياري",
-  requiredNote: "الحقول المعلّمة بـ * ضرورية للرد عليك.",
-  recap: "ملخّصك",
-  empty: "لم يُجب بعد",
-  edit: "تعديل",
+  localeName: "العربية",
+  subject: "بريف",
+  brand: {
+    tag: "بريف",
+    ref: "مرجع",
+    title: "بريفك",
+    untitled: "نشاطك",
+    summary: "فهرس البريف",
+    offer: ["195 € شاملة الضريبة / شهرياً", "بدون رسوم تأسيس", "ردّ مكتوب خلال يوم عمل"],
+  },
+  chapters: {
+    service: "الطلب",
+    context: "نشاطك",
+    goal: "الهدف",
+    project: {
+      site: "موقعك",
+      refonte: "موقعك",
+      seo: "ظهورك",
+      social: "شبكاتك",
+      ads: "حملتك",
+      strategie: "أولويتك",
+      autre: "مشروعك",
+    },
+    budget: "الميزانية",
+    contact: "بيانات التواصل",
+  },
   steps: {
-    service: { label: "الحاجة", question: "ما الذي تحتاجه؟", hint: "اختر الأقرب، وستفصّل لاحقًا." },
-    context: { label: "النشاط", question: "حدّثنا عن شركتك", hint: "إجابتان تكفيان لتحديد السياق." },
-    goal: { label: "الهدف", question: "ما الذي يجب أن يتغيّر؟", hint: "وجهة واحدة، والباقي يتبعها." },
-    budget: { label: "الميزانية", question: "ما الميزانية التي تفكر فيها؟", hint: "نطاق تقريبي يكفي. العرض مجاني." },
-    project: { label: "المشروع", question: "ما الذي يدور في ذهنك؟", hint: "جملتان تكفيان، والتفاصيل تأتي في مكالمة." },
-    contact: { label: "التواصل", question: "أين نرد عليك؟", hint: "الرد خلال يوم عمل واحد، من شخص حقيقي." },
+    service: {
+      question: "ماذا يمكننا أن نبني لنشاطك؟",
+      hint: "اختر الجملة التي تشبهك. البقية تتكيّف.",
+    },
+    context: {
+      question: "ما النشاط الذي تديره؟",
+      hint: "الاسم يكفي للبداية. الباقي يظهر عند القراءة.",
+    },
+    goal: {
+      question: "ما الذي يجب أن يتغيّر؟",
+      hint: "اتجاه واحد. هو الذي يحدّد الباقي.",
+      lead: "أريد أن",
+    },
+    project: {
+      site: {
+        question: "أي نوع من المواقع تحتاج؟",
+        hint: "نبدأ من هنا. الشكل الدقيق يُحدّد عند قراءة البريف.",
+        mode: "single",
+        options: [
+          { id: "vitrine", label: "موقع تعريفي", note: "خمس صفحات واضحة تعرض وتطمئن." },
+          { id: "boutique", label: "متجر إلكتروني", note: "بيع، دفع، توصيل." },
+          { id: "page", label: "صفحة لحملة", note: "صفحة واحدة مبنية للتحويل." },
+          { id: "avis", label: "لا أعرف بعد", note: "نقترح الشكل في الرد." },
+        ],
+      },
+      refonte: {
+        question: "ما الذي لم يعد يعمل اليوم؟",
+        hint: "نقطة واحدة تكفي للبداية.",
+        mode: "single",
+        options: [
+          { id: "design", label: "التصميم قديم", note: "لم يعد يشبه الشركة." },
+          { id: "lent", label: "الموقع بطيء", note: "الزوار يغادرون قبل التحميل." },
+          { id: "mobile", label: "غير مقروء على الهاتف", note: "معظم الزيارات من هناك." },
+          { id: "demandes", label: "لا يجلب طلبات", note: "يُزار، لكن لا أحد يكتب." },
+        ],
+        website: "required",
+      },
+      seo: {
+        question: "أين تريد أن تظهر؟",
+        hint: "النطاق يحدّد الاستراتيجية، وليس العكس.",
+        mode: "single",
+        options: [
+          { id: "local", label: "حول منطقتي", note: "دائرة من عدة كيلومترات." },
+          { id: "france", label: "في كل فرنسا", note: "بحث وطني." },
+          { id: "monde", label: "دولياً", note: "لغات وأسواق أخرى." },
+        ],
+        website: "required",
+      },
+      social: {
+        question: "أي شبكات تهمّك؟",
+        hint: "يمكن اختيار أكثر من واحدة. نعمل فقط ما يستحق.",
+        mode: "multi",
+        options: [
+          { id: "instagram", label: "إنستغرام", note: "صورة، كواليس، منتجات." },
+          { id: "linkedin", label: "لينكدإن", note: "مصداقية واستقطاب." },
+          { id: "tiktok", label: "تيك توك", note: "وصول عضوي، مقاطع قصيرة." },
+          { id: "facebook", label: "فيسبوك", note: "مجتمع محلي وفعاليات." },
+          { id: "youtube", label: "يوتيوب", note: "محتوى طويل وبحث." },
+        ],
+        extra: { label: "من ينشر اليوم؟", options: ["أنا", "لا أحد", "فريق"] },
+      },
+      ads: {
+        question: "ماذا تنتظر من الإعلان؟",
+        hint: "الهدف يحدّد القناة والميزانية والرسالة.",
+        mode: "single",
+        options: [
+          { id: "demandes", label: "طلبات واردة", note: "أشخاص يكتبون أو يتصلون." },
+          { id: "ventes", label: "مبيعات مباشرة", note: "سلة تمتلئ." },
+          { id: "appels", label: "اتصالات هاتفية", note: "لمتجر أو خدمة محلية." },
+          { id: "notoriete", label: "شهرة", note: "أن يراك الجمهور المناسب." },
+        ],
+        extra: { label: "إلى أين توجّه الحملة؟", options: ["موقعي الحالي", "صفحة مخصّصة", "لم يُحدّد بعد"] },
+        website: "optional",
+      },
+      strategie: {
+        question: "ما أولويتك في الأشهر الثلاثة القادمة؟",
+        hint: "الخطة تُبنى حول هذا التاريخ.",
+        mode: "single",
+        options: [
+          { id: "asap", label: "في أسرع وقت", note: "كل شيء في النسخة الأولى." },
+          { id: "mois", label: "خلال شهر", note: "إطلاق متدرّج دون استعجال." },
+          { id: "trimestre", label: "خلال ثلاثة أشهر", note: "وقت لترتيب الأمور." },
+          { id: "rien", label: "لا استعجال", note: "نبدأ بما يعطي أكثر." },
+        ],
+      },
+      autre: {
+        question: "قلها بكلمتين.",
+        hint: "نجيب بنقطة بداية ملموسة، لا بكتيّب.",
+        mode: "text",
+        placeholder: "مثال: إطلاق متجر سيراميك على الإنترنت…",
+      },
+    },
+    budget: {
+      question: "ميزانية البداية؟",
+      hint: "اختياري. قل فقط ما يبدو معقولاً.",
+      note: "العرض مجاني، ولا نطلب أي بطاقة.",
+      options: ["195 € / شهرياً", "200 – 500 € / شهرياً", "500 – 1 000 € / شهرياً", "أكثر من 1 000 € / شهرياً", "نحدّدها معاً"],
+    },
+    contact: {
+      question: "أين نجيبك؟",
+      hint: "ردّ مكتوب خلال يوم عمل، من شخص حقيقي.",
+    },
   },
   services: [
-    { id: "site", label: "إنشاء موقع", note: "واضح وسريع، خلال 48–72 ساعة." },
-    { id: "refonte", label: "إعادة تصميم موقع", note: "نحدّث موقعك دون البدء من الصفر." },
-    { id: "seo", label: "تحسين الظهور على Google", note: "أن تجدك عمليات البحث المناسبة." },
-    { id: "social", label: "شبكات التواصل", note: "نشر منتظم دون أن يستهلك وقتك." },
-    { id: "ads", label: "الإعلانات الرقمية", note: "حملات تجلب طلبات حقيقية." },
-    { id: "strategie", label: "استراتيجية تسويقية", note: "خطة واحدة من الموقع إلى الشبكات." },
-    { id: "autre", label: "شيء آخر", note: "كلمتان تكفيان، ونكمل نحن." },
+    { id: "site", label: "أبني موقعي.", note: "موقع تعريفي واضح، يُسلّم في 48–72 ساعة." },
+    { id: "refonte", label: "أجدّد موقعي الحالي.", note: "إحياء موقع قديم دون البدء من الصفر." },
+    { id: "seo", label: "أظهر على Google.", note: "أن أُوجد في البحث المناسب." },
+    { id: "social", label: "أنشّط شبكاتي الاجتماعية.", note: "نشر منتظم دون أن أقضي أمسياتي فيه." },
+    { id: "ads", label: "أطلق إعلانات على الإنترنت.", note: "حملات تجلب طلبات." },
+    { id: "strategie", label: "أبني استراتيجية تسويق.", note: "خطة واضحة من الموقع إلى الشبكات." },
+    { id: "autre", label: "شيء آخر.", note: "كلمتان تكفيان، ونتولى الباقي." },
   ],
-  business: { label: "اسم الشركة", placeholder: "مثال: دار الياسمين" },
-  sector: { label: "قطاع نشاطك", options: ["تجارة محلية", "مطاعم", "صحة وعافية", "عقارات", "خدمات للشركات", "تجارة إلكترونية", "آخر"] },
-  website: { label: "موقعك الحالي", placeholder: "https://…", optional: "إن وُجد" },
-  problem: { label: "ما الذي لم يعد يعمل؟", options: ["التصميم قديم", "الموقع بطيء", "غير مقروء على الهاتف", "لا يجلب طلبات"] },
-  zone: { label: "أين تريد الظهور؟", options: ["حول منطقتي", "في كل البلد", "دوليًا"] },
-  platforms: { label: "أي شبكات تهمّك؟", options: ["Instagram", "LinkedIn", "TikTok", "Facebook", "YouTube"] },
-  publishers: { label: "من ينشر حاليًا؟", options: ["أنا", "لا أحد", "فريق"] },
-  channels: { label: "أي قنوات تهمّك؟", options: ["Google Ads", "Meta", "TikTok", "LinkedIn"] },
-  history: { label: "هل أعلنت سابقًا؟", options: ["أبدًا", "نعم، بنتائج", "نعم، بلا نتائج"] },
-  scope: { label: "ما النطاق؟", options: ["الموقع", "SEO", "الشبكات", "الإعلانات", "المحتوى", "البريد"] },
-  other: { label: "بكلمتين", placeholder: "مثال: إطلاق متجر خزف إلكتروني…" },
+  business: { label: "اسم شركتك", placeholder: "مثال: Maison Lafleur" },
+  sector: {
+    label: "قطاعك",
+    optional: "اختياري",
+    options: ["تجارة محلية", "مطاعم", "صحة وعافية", "عقارات", "خدمات للشركات", "تجارة إلكترونية", "آخر"],
+  },
+  website: { label: "موقعك الحالي", placeholder: "https://…", optional: "اختياري", required: "إلزامي" },
+  problems: [],
+  siteTypes: [],
+  zones: [],
+  platforms: [],
+  publishers: [],
+  adOutcomes: [],
+  adDestinations: [],
+  timeline: [],
+  other: { label: "بكلمتين", placeholder: "مثال: إطلاق متجر سيراميك على الإنترنت…" },
+  notes: {
+    label: "السياق في جملتين",
+    hint: "اختياري. التفاصيل تأتي لاحقاً.",
+    placeholder: "مثال: نفتح مكاناً ثانياً في يونيو، والموقع يجب أن يواكب…",
+  },
   goals: [
-    { id: "clients", label: "جذب عملاء أكثر", note: "طلبات تصل من تلقاء نفسها." },
-    { id: "leads", label: "طلبات مؤهّلة", note: "تواصل أقل، لكنه الأفضل." },
-    { id: "ventes", label: "زيادة المبيعات", note: "بيع إلكتروني بلا عوائق." },
-    { id: "visibilite", label: "زيادة الظهور", note: "أن تكون حاضرًا عند البحث." },
-    { id: "confiance", label: "بناء الثقة", note: "موقع يترك انطباعًا صحيحًا." },
+    { id: "clients", label: "جذب عملاء أكثر", note: "طلبات تأتي من تلقاء نفسها." },
+    { id: "leads", label: "طلبات مؤهّلة", note: "تواصل أقل، لكنه أفضل." },
+    { id: "ventes", label: "زيادة مبيعاتي", note: "بيع عبر الإنترنت دون عوائق." },
+    { id: "visibilite", label: "زيادة الظهور", note: "أن أكون حيث يبحثون عني." },
+    { id: "confiance", label: "إلهام الثقة", note: "موقع يترك انطباعاً جيداً." },
   ],
-  budgets: ["195 € شهريًا", "200 – 500 € شهريًا", "500 – 1 000 € شهريًا", "أكثر من 1 000 € شهريًا", "نحددها معًا"],
-  projectPlaceholder: "مثال: نفتح فرعًا ثانيًا في يونيو ويجب أن يواكب الموقع ذلك…",
-  projectExample: "جملتان: ماذا تبيع، وما الذي يعيقك اليوم.",
-  timeline: { label: "متى؟", options: ["في أقرب وقت", "خلال شهر", "خلال ثلاثة أشهر", "لا استعجال"] },
-  fields: { name: "اسمك", email: "بريدك الإلكتروني", phone: "الهاتف", phoneOptional: "اختياري" },
-  namePlaceholder: "الاسم واللقب",
-  emailPlaceholder: "you@example.com",
-  phonePlaceholder: "+33 6 00 00 00 00",
-  consentBefore: "أوافق على استخدام إجاباتي للرد عليّ.",
+  fields: { name: "اسمك", email: "بريدك الإلكتروني", phone: "الهاتف", optional: "اختياري" },
+  placeholders: { name: "الاسم واللقب", email: "you@example.com", phone: "06 00 00 00 00" },
+  consentBefore: "أوافق على استخدام إجاباتي للردّ عليّ.",
   consentLink: "سياسة الخصوصية",
-  consentAfter: "",
+  requiredNote: "الحقول المعلّمة بـ * ضرورية للردّ عليك.",
+  back: "رجوع",
+  next: "متابعة",
+  pass: "تخطّي",
+  submit: "أرسل البريف",
+  sending: "جارٍ الإرسال…",
+  review: "ما فهمناه من بريفك",
+  empty: "—",
   errors: {
-    service: "اختر الأقرب.",
+    service: "اختر الجملة التي تشبهك.",
     business: "اذكر اسم شركتك.",
-    website: "أضف عنوان موقعك.",
+    website: "اذكر عنوان موقعك.",
     goal: "اختر الهدف الرئيسي.",
     name: "اذكر اسمك.",
-    email: "أدخل بريدًا إلكترونيًا صحيحًا.",
-    consent: "علّم هذا المربع لإرسال الملف.",
+    email: "اذكر بريداً إلكترونياً صحيحاً.",
+    consent: "علّم هذا المربع لإرسال البريف.",
   },
-  errorTitle: "تنقصنا إجابة",
-  errorHint: "لم يُفقد شيء. صحّح الحقل وتابع.",
+  errorHint: "كل شيء محفوظ. صحّح الحقل المشار إليه وتابع.",
   failureTitle: "لم يتم الإرسال",
-  failureBody: "إجاباتك محفوظة. أعد المحاولة أو راسلنا مباشرة.",
+  failureBody: "إجاباتك ما زالت هنا. أعد المحاولة، أو اكتب إلينا مباشرة.",
   retry: "إعادة المحاولة",
   mailto: "الإرسال بالبريد",
   successTitle: "تم.",
-  successBody: "وصلنا ملفك. ستتلقى ردًا مكتوبًا خلال يوم عمل واحد، بنطاق واضح ودون أي التزام.",
-  successSteps: ["نقرأ ملفك اليوم.", "تتلقى نطاقًا مكتوبًا خلال يوم عمل.", "إن ناسبك، نطلق النسخة الأولى."],
-  successNote: "لا يُطلب أي دفع لإرسال الملف.",
-  successAgain: "إرسال ملف آخر",
-  summaryLabels: { service: "الحاجة", business: "الشركة", goal: "الهدف", budget: "الميزانية", project: "المشروع", contact: "التواصل" },
-  subject: "ملف",
-  localeName: "العربية",
+  successBody: "وصلنا بريفك. تستلم ردّاً مكتوباً خلال يوم عمل، بنطاق واضح ودون أي التزام.",
+  successSteps: [
+    "نقرأ بريفك اليوم.",
+    "تستلم نطاقاً مكتوباً خلال يوم عمل.",
+    "إن ناسبك، نبدأ النسخة الأولى.",
+  ],
+  successNote: "لا نطلب أي دفع لإرسال بريف.",
+  successAgain: "اكتب بريفاً آخر",
 };
 
 export const JOURNEY: Record<Locale, JourneyCopy> = { fr, en, ar };

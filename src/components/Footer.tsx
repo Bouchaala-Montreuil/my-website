@@ -55,6 +55,7 @@ export function Footer({
           </div>
 
           <div>
+            <div className="footer__reach">
             <h3>{c.footer.contactTitle}</h3>
             <ul>
               <li>
@@ -66,15 +67,18 @@ export function Footer({
                 <a href={hrefFor("#dossier")}>{c.footer.briefLink}</a>
               </li>
             </ul>
+            </div>
 
-            <h3 style={{ marginTop: "1.4rem" }}>{c.footer.legalTitle}</h3>
-            <ul>
-              {c.footer.legal.map((link) => (
-                <li key={link.href}>
-                  <a href={hrefFor(link.href)}>{link.label}</a>
-                </li>
-              ))}
-            </ul>
+            <div className="footer__legal">
+              <h3>{c.footer.legalTitle}</h3>
+              <ul>
+                {c.footer.legal.map((link) => (
+                  <li key={link.href}>
+                    <a href={hrefFor(link.href)}>{link.label}</a>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
 
