@@ -22,8 +22,6 @@ export function resolveRoute(pathname: string): Route {
   const path = normalisePath(pathname);
 
   if (path === "/") return { kind: "home", locale: defaultLocale, path: "/" };
-  if (path === "/en/") return { kind: "home", locale: "en", path };
-  if (path === "/ar/") return { kind: "home", locale: "ar", path };
 
   const slug = path.replace(/^\//, "").replace(/\/$/, "");
 
@@ -39,8 +37,6 @@ export function resolveRoute(pathname: string): Route {
 
 export const allRoutePaths: string[] = [
   "/",
-  "/en/",
-  "/ar/",
   ...legalPages.map((page) => `/${page.slug}/`),
   ...[...servicePages, ...resourcePages].map((page) => `/${page.slug}/`),
 ];

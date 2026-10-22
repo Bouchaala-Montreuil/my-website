@@ -11,12 +11,6 @@ interface HeaderProps {
   inPageAnchors?: boolean;
 }
 
-const LOCALES: { locale: Locale; label: string }[] = [
-  { locale: "fr", label: "FR" },
-  { locale: "en", label: "EN" },
-  { locale: "ar", label: "AR" },
-];
-
 export function Header({ c, locale, currentPath, inPageAnchors = false }: HeaderProps) {
   const homeHref = homePath(locale);
   // On legal / 404 pages the section anchors must resolve against the home page.
@@ -107,23 +101,6 @@ export function Header({ c, locale, currentPath, inPageAnchors = false }: Header
         </nav>
 
         <div className="header__actions">
-          <div className="locale" role="group" aria-label={c.menu.language}>
-            {LOCALES.map(({ locale: code, label }) =>
-              code === locale ? (
-                <span key={code} aria-current="true" lang={code}>
-                  {label}
-                </span>
-              ) : (
-                <a key={code} href={homePath(code)} hrefLang={code} lang={code}>
-                  {label}
-                  <span className="sr-only">
-                    {code === "fr" ? " — Français" : code === "en" ? " — English" : " — العربية"}
-                  </span>
-                </a>
-              ),
-            )}
-          </div>
-
           <a className="btn btn--coral btn--sm btn--cta" data-roll="" href={anchor("#dossier")}>
             {c.navCta}
           </a>
@@ -200,25 +177,6 @@ export function Header({ c, locale, currentPath, inPageAnchors = false }: Header
             >
               {c.navCta}
             </a>
-            <div>
-              <p className="mobile-panel__label">{c.menu.language}</p>
-              <div className="locale" role="group" aria-label={c.menu.language}>
-                {LOCALES.map(({ locale: code, label }) =>
-                  code === locale ? (
-                    <span key={code} aria-current="true" lang={code}>
-                      {label}
-                    </span>
-                  ) : (
-                    <a key={code} href={homePath(code)} hrefLang={code} lang={code}>
-                      {label}
-                      <span className="sr-only">
-                        {code === "fr" ? " — Français" : code === "en" ? " — English" : " — العربية"}
-                      </span>
-                    </a>
-                  ),
-                )}
-              </div>
-            </div>
           </div>
 
           <span className="menu-ghost" aria-hidden="true">

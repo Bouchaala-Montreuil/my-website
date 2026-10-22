@@ -7414,6 +7414,7 @@ details[open] .faq__sign {
 }
 
 html.loader .brand-loader {
+  /* kept for reference: the loader is no longer injected (see index.html) */
   display: grid;
   animation: loader-out 0.45s cubic-bezier(0.76, 0, 0.24, 1) 0.78s forwards;
 }
@@ -7622,6 +7623,7 @@ html.loader {
 
 @media (prefers-reduced-motion: reduce) {
   html.loader .brand-loader {
+  /* kept for reference: the loader is no longer injected (see index.html) */
     display: none;
   }
 }
@@ -11361,5 +11363,245 @@ fieldset.br-vocab {
 
   .mobile-panel__foot {
     padding-top: 0.6rem;
+  }
+}
+
+/* ==========================================================================
+   HOME — the website-first hierarchy
+   The offer, then the proof, then the second path. No duplicated record
+   block, no decorative counter, no screenshot of a site that has changed.
+   ========================================================================== */
+
+.v2-primary {
+  margin-top: clamp(1.5rem, 3vw, 2.5rem);
+  padding-top: 1.25rem;
+  border-top: 1.5px solid var(--r-ink, #201d1d);
+  display: grid;
+  gap: 1.5rem;
+}
+
+.v2-primary__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.85rem;
+  max-width: 62ch;
+}
+
+.v2-primary__list li {
+  position: relative;
+  padding-left: 1.15rem;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.v2-primary__list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.62em;
+  width: 0.45rem;
+  height: 1px;
+  background: var(--r-blue, #0004f6);
+}
+
+.v2-primary__list strong {
+  font-weight: 600;
+}
+
+.v2-primary__foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.5rem;
+}
+
+.v2-primary__foot .v2-btn {
+  background: var(--r-ink, #201d1d);
+  color: #fff;
+}
+
+/* the second path: present, visibly smaller, never competing */
+.v2-secondary {
+  padding-block: clamp(2.5rem, 5vw, 4rem);
+  border-top: 1px solid rgba(32, 29, 29, 0.18);
+}
+
+.v2-secondary__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.v2-secondary__list li {
+  display: grid;
+  align-content: start;
+  gap: 0.5rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid rgba(32, 29, 29, 0.14);
+}
+
+.v2-secondary__list h3 {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+.v2-secondary__list p {
+  margin: 0;
+  max-width: 46ch;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: #4a4646;
+}
+
+/* the proof band */
+.v2-proof {
+  padding-block: clamp(2.5rem, 5vw, 4rem);
+  background: var(--r-white, #fff);
+}
+
+.v2-proof__grid {
+  margin-top: clamp(1.5rem, 3vw, 2.25rem);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.v2-proof__card {
+  display: grid;
+  align-content: start;
+  gap: 0.55rem;
+  padding-top: 1rem;
+  border-top: 1.5px solid var(--r-ink, #201d1d);
+}
+
+.v2-proof__num {
+  margin: 0;
+  font-size: clamp(2.75rem, 5vw, 4rem);
+  font-weight: 500;
+  line-height: 0.9;
+  letter-spacing: -0.05em;
+  color: var(--r-blue, #0004f6);
+}
+
+.v2-proof__num span {
+  font-size: 0.3em;
+  letter-spacing: -0.01em;
+  color: var(--r-ink, #201d1d);
+}
+
+.v2-proof__card h3 {
+  margin: 0.2rem 0 0;
+  font-size: 1.2rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+.v2-proof__card p {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: #4a4646;
+  max-width: 46ch;
+}
+
+.v2-proof__card .v2-tier__link {
+  margin-top: 0.35rem;
+}
+
+/* the guarantee */
+.v2-guarantee {
+  padding-block: clamp(2.5rem, 5vw, 4rem);
+  border-top: 1px solid rgba(32, 29, 29, 0.18);
+}
+
+.v2-guarantee__list {
+  list-style: none;
+  margin: clamp(1.5rem, 3vw, 2.25rem) 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem 2.5rem;
+}
+
+.v2-guarantee__list li {
+  padding-top: 0.7rem;
+  border-top: 1px solid rgba(32, 29, 29, 0.14);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  max-width: 46ch;
+}
+
+.v2-guarantee__list strong {
+  display: block;
+  margin-bottom: 0.2rem;
+  font-weight: 600;
+}
+
+/* the objections */
+.v2-faq {
+  padding-block: clamp(2.5rem, 5vw, 4rem);
+  border-top: 1px solid rgba(32, 29, 29, 0.18);
+}
+
+.v2-faq__list {
+  margin-top: clamp(1.25rem, 2.5vw, 1.75rem);
+  border-top: 1px solid rgba(32, 29, 29, 0.22);
+}
+
+.v2-faq__list details {
+  border-bottom: 1px solid rgba(32, 29, 29, 0.14);
+}
+
+.v2-faq__list summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  min-height: 3.5rem;
+  padding-block: 0.9rem;
+  font-size: 1.02rem;
+  cursor: pointer;
+}
+
+.v2-faq__list .faq__answer {
+  padding-bottom: 1rem;
+  max-width: 66ch;
+}
+
+.v2-faq__list .faq__answer p {
+  margin: 0;
+  font-size: 0.96rem;
+  line-height: 1.55;
+  color: #4a4646;
+}
+
+@media (max-width: 767px) {
+  .v2-secondary__list,
+  .v2-proof__grid,
+  .v2-guarantee__list {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .v2-primary__foot {
+    display: grid;
+    gap: 0.35rem;
+    align-items: stretch;
+  }
+
+  .v2-primary__foot .v2-btn,
+  .v2-primary__foot .v2-textlink {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .v2-faq__list summary {
+    font-size: 1rem;
   }
 }

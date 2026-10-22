@@ -1,12 +1,18 @@
+import { useEffect } from "react";
 import { content } from "@/content";
 import type { Route } from "@/lib/routes";
 import { Home } from "@/components/Home";
 import { LegalView } from "@/components/LegalView";
 import { PageView } from "@/components/PageView";
 import { NotFoundView } from "@/components/NotFoundView";
-import { BrandLoader } from "@/components/BrandLoader";
+import { captureFirstTouch } from "@/lib/attribution";
 
 export function App({ route }: { route: Route }) {
+  /* One record per visit, written on the first page the visitor sees. */
+  useEffect(() => {
+    captureFirstTouch();
+  }, []);
+
   const skipLink =
     route.kind === "home" ? content[route.locale].skipLink : content.fr.skipLink;
 
@@ -28,7 +34,6 @@ export function App({ route }: { route: Route }) {
         {skipLink}
       </a>
       {view}
-      <BrandLoader />
     </>
   );
 }

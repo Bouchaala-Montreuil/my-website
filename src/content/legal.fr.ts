@@ -1,12 +1,6 @@
 import type { LegalPage } from "./types";
 
-const UPDATED = "20 octobre 2026";
-
-const notice = {
-  title: "Document à compléter avant mise en ligne",
-  body:
-    "Les mentions marquées « à compléter » sont des informations que seul l’éditeur du site peut fournir. Elles doivent être renseignées avant la publication commerciale du site.",
-};
+const UPDATED = "22 octobre 2026";
 
 export const mentionsLegales: LegalPage = {
   slug: "mentions-legales",
@@ -15,30 +9,28 @@ export const mentionsLegales: LegalPage = {
     "Éditeur, hébergeur, propriété intellectuelle et droit applicable du site feekza.com.",
   updated: UPDATED,
   tocLabel: "Sommaire",
-  notice,
   sections: [
     {
       id: "editeur",
       heading: "1. Éditeur du site",
       blocks: [
-        { type: "p", text: "Le site feekza.com est édité par :" },
+        {
+          type: "p",
+          text:
+            "Le site feekza.com est édité par {{raison sociale}}, {{forme juridique}} au capital de {{capital}}, dont le siège social est situé {{adresse}}.",
+        },
         {
           type: "ul",
           items: [
-            "Dénomination : {{raison sociale}}",
-            "Forme juridique : {{forme juridique}}",
-            "Siège social : {{adresse}}",
             "Immatriculation : SIREN/SIRET {{numéro}} — RCS {{ville}}",
             "Numéro de TVA intracommunautaire : {{TVA}}",
-            "Capital social : {{capital}}",
             "Directeur de la publication : {{nom du responsable}}",
-            "Contact : hello@feekza.com",
+            "Téléphone : {{téléphone}}",
           ],
         },
         {
-          type: "note",
-          text:
-            "Ces informations sont obligatoires pour un site professionnel (article 6 III de la loi n° 2004-575 du 21 juin 2004 pour la confiance dans l’économie numérique).",
+          type: "ul",
+          items: ["Contact : hello@feekza.com"],
         },
       ],
     },
@@ -49,7 +41,7 @@ export const mentionsLegales: LegalPage = {
         {
           type: "p",
           text:
-            "Le site est hébergé par GitHub Pages, service de GitHub, Inc., 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, États-Unis. Site : github.com. Le nom de domaine est enregistré auprès de {{registrar}}.",
+            "Le site est hébergé par GitHub Pages, service de GitHub, Inc., 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, États-Unis. Site : github.com.",
         },
       ],
     },
@@ -83,7 +75,8 @@ export const mentionsLegales: LegalPage = {
           text:
             "Les modalités de collecte et de traitement des données sont décrites dans la politique de confidentialité, accessible depuis le pied de page.",
         },
-        { type: "p", text: "Pour exercer vos droits : {{email de contact RGPD}}." },
+        { type: "p", text: "Pour exercer vos droits : hello@feekza.com." },
+        { type: "p", text: "Adresse dédiée aux demandes de données personnelles : {{email de contact RGPD}}." },
       ],
     },
     {
@@ -109,7 +102,11 @@ export const mentionsLegales: LegalPage = {
         {
           type: "p",
           text:
-            "En cas de litige, une solution amiable sera recherchée avant toute action judiciaire. Conformément aux articles L.612-1 et suivants du Code de la consommation, le consommateur peut recourir gratuitement à un médiateur de la consommation : {{médiateur de la consommation}}.",
+            "En cas de litige, une solution amiable sera recherchée avant toute action judiciaire.",
+        },
+        {
+          type: "p",
+          text: "Médiateur de la consommation : {{médiateur de la consommation}}.",
         },
         {
           type: "p",
@@ -134,7 +131,6 @@ export const confidentialite: LegalPage = {
     "Quelles données le site feekza.com collecte, pourquoi, combien de temps, à qui elles sont transmises et comment exercer vos droits.",
   updated: UPDATED,
   tocLabel: "Sommaire",
-  notice,
   sections: [
     {
       id: "responsable",
@@ -143,7 +139,15 @@ export const confidentialite: LegalPage = {
         {
           type: "p",
           text:
-            "Le responsable du traitement est {{raison sociale}}, joignable à l’adresse {{email de contact RGPD}} et au {{téléphone}}. Les informations d’identification complètes figurent dans les mentions légales.",
+            "Le responsable du traitement est l’éditeur du site feekza.com, joignable à l’adresse hello@feekza.com. Les informations d’identification figurent dans les mentions légales.",
+        },
+        {
+          type: "p",
+          text: "Identité complète du responsable : {{raison sociale}}, {{adresse}}.",
+        },
+        {
+          type: "p",
+          text: "Téléphone : {{téléphone}}.",
         },
       ],
     },
@@ -211,7 +215,7 @@ export const confidentialite: LegalPage = {
             "Formspree (Formspree, Inc., États-Unis) : traitement et transmission du formulaire de dossier par email.",
             "Stripe (Stripe Payments Europe, Ltd., Irlande, et Stripe, Inc., États-Unis) : traitement des paiements par carte.",
             "GitHub Pages (GitHub, Inc., États-Unis) : hébergement du site et journaux techniques.",
-            "Le prestataire d’envoi d’emails utilisé pour répondre à votre demande : {{prestataire email}}.",
+            "Le prestataire d’envoi d’emails utilisé pour répondre à votre demande : Formspree (Formspree, Inc., États-Unis).",
           ],
         },
         {
@@ -243,7 +247,7 @@ export const confidentialite: LegalPage = {
         {
           type: "p",
           text:
-            "Vous disposez d’un droit d’accès, de rectification, d’effacement, de limitation, d’opposition et de portabilité de vos données. Vous pouvez les exercer en écrivant à {{email de contact RGPD}}.",
+            "Vous disposez d’un droit d’accès, de rectification, d’effacement, de limitation, d’opposition et de portabilité de vos données. Vous pouvez les exercer en écrivant à hello@feekza.com.",
         },
         {
           type: "p",
@@ -301,7 +305,6 @@ export const cgv: LegalPage = {
     "Périmètre, prix, engagement de six mois, prévisualisation, remboursement et résiliation de l’offre Feekza.",
   updated: UPDATED,
   tocLabel: "Sommaire",
-  notice,
   sections: [
     {
       id: "objet",
@@ -310,7 +313,7 @@ export const cgv: LegalPage = {
         {
           type: "p",
           text:
-            "Les présentes conditions régissent l’offre de création et de maintenance de site internet proposée par {{raison sociale}} (« Feekza ») aux professionnels et particuliers. Elles s’appliquent à toute commande passée via le site feekza.com ou par email.",
+            "Les présentes conditions régissent l’offre de création et de maintenance de site internet proposée par Feekza aux professionnels et particuliers. Elles s’appliquent à toute commande passée via le site feekza.com ou par email.",
         },
         {
           type: "p",
@@ -486,7 +489,12 @@ export const cgv: LegalPage = {
         {
           type: "p",
           text:
-            "Le consommateur peut recourir gratuitement au médiateur de la consommation suivant : {{médiateur de la consommation}}. À défaut d’accord, les tribunaux compétents sont ceux du ressort du siège de Feekza, sous réserve des règles impératives protégeant les consommateurs.",
+            "Le consommateur peut recourir gratuitement au médiateur de la consommation suivant : {{médiateur de la consommation}}.",
+        },
+        {
+          type: "p",
+          text:
+            "À défaut d’accord, les tribunaux compétents sont ceux du ressort du siège de Feekza, sous réserve des règles impératives protégeant les consommateurs.",
         },
         {
           type: "p",

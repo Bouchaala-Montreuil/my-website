@@ -23,7 +23,7 @@ export const contactPage: PageDoc = {
   factsTitle: "Ce qu’il faut savoir",
   facts: [
     { k: "Réponse", v: "Sous 1 jour ouvré" },
-    { k: "Langues", v: "Français, anglais, arabe" },
+    { k: "Langues", v: "Sites en français, anglais ou arabe" },
     { k: "Prix du site", v: "195 € TTC / mois" },
     { k: "Frais de lancement", v: "0 €" },
     { k: "Engagement", v: "6 mois, puis 1 mois de préavis" },
@@ -79,7 +79,7 @@ export const contactPage: PageDoc = {
         {
           type: "p",
           text:
-            "Écrivez à contact@feekza.com. Précisez l’objet en une ligne et, si votre message concerne un site existant, l’adresse du site. Nous répondons dans les mêmes délais que pour le formulaire.",
+            "Écrivez à hello@feekza.com. Précisez l’objet en une ligne et, si votre message concerne un site existant, l’adresse du site. Nous répondons dans les mêmes délais que pour le formulaire.",
         },
         {
           type: "ul",
@@ -89,6 +89,7 @@ export const contactPage: PageDoc = {
             "Pour une facture ou un changement de coordonnées, indiquez le nom utilisé lors de la commande.",
           ],
         },
+        { type: "identity" },
       ],
     },
     {
@@ -621,7 +622,7 @@ export const guideChecklist: PageDoc = {
       ],
     },
     {
-      id: "contenu",
+      id: "pages-et-textes",
       num: "02",
       label: "Contenu",
       title: "Les pages et les textes",

@@ -81,8 +81,6 @@ function escapeHtml(value) {
 
 const routes = [
   "/",
-  "/en/",
-  "/ar/",
   "/creation-site-web/",
   "/referencement-seo/",
   "/marketing-digital/",
@@ -100,7 +98,6 @@ const routes = [
 // Service and company pages outrank legal boilerplate in the sitemap.
 const priorityFor = (route) => {
   if (route === "/") return "1.0";
-  if (route === "/en/" || route === "/ar/") return "0.8";
   if (route === "/realisations/") return "0.8";
   if (route === "/creation-site-web/" || route === "/referencement-seo/" || route === "/marketing-digital/")
     return "0.9";
@@ -145,16 +142,10 @@ ${urls
   .map((route) => {
     const priority = priorityFor(route);
     const alternates =
-      route === "/" || route === "/en/" || route === "/ar/"
-        ? ["fr", "en", "ar"]
-            .map(
-              (locale) =>
-                `    <xhtml:link rel="alternate" hreflang="${locale}" href="${SITE_URL}${locale === "fr" ? "/" : `/${locale}/`}" />`,
-            )
-            .join("\n") +
-          `\n    <xhtml:link rel="alternate" hreflang="x-default" href="${SITE_URL}/" />\n`
+      route === "/"
+        ? `    <xhtml:link rel="alternate" hreflang="fr" href="${SITE_URL}/" />\n    <xhtml:link rel="alternate" hreflang="x-default" href="${SITE_URL}/" />\n`
         : "";
-    return `  <url>\n    <loc>${SITE_URL}${route}</loc>\n    <lastmod>2026-10-20</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>${priority}</priority>\n${alternates}  </url>`;
+    return `  <url>\n    <loc>${SITE_URL}${route}</loc>\n    <lastmod>2026-10-22</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>${priority}</priority>\n${alternates}  </url>`;
   })
   .join("\n")}
 </urlset>

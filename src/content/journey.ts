@@ -239,10 +239,11 @@ const fr: JourneyCopy = {
     { id: "site", label: "Construire mon site.", note: "Vitrine claire, livrée en 48–72 h." },
     { id: "refonte", label: "Refondre mon site actuel.", note: "Reprendre un site daté, sans repartir de zéro." },
     { id: "seo", label: "Me rendre visible sur Google.", note: "Être trouvé par les bonnes recherches." },
-    { id: "social", label: "Animer mes réseaux sociaux.", note: "Publier régulièrement, sans y passer mes soirées." },
-    { id: "ads", label: "Lancer de la publicité en ligne.", note: "Des campagnes qui ramènent des demandes." },
-    { id: "strategie", label: "Construire une stratégie marketing.", note: "Un plan clair, du site aux réseaux." },
-    { id: "autre", label: "Autre chose.", note: "Dites-le en deux mots, on avisera." },
+    {
+      id: "autre",
+      label: "Autre chose.",
+      note: "Réseaux sociaux, publicité, image de marque : dites-le en deux mots.",
+    },
   ],
   business: { label: "Le nom de votre entreprise", placeholder: "Ex. Maison Lafleur" },
   sector: {

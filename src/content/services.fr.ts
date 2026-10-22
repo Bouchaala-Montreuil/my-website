@@ -22,7 +22,7 @@ export const serviceCreation: PageDoc = {
     { k: "Délai", v: "48⁠–⁠72 h" },
     { k: "Pages", v: "5 maximum" },
     { k: "Engagement", v: "6 mois, puis 1 mois de préavis" },
-    { k: "Langues", v: "Français, anglais, arabe" },
+    { k: "Langues", v: "Sites en français, anglais ou arabe" },
   ],
   primaryCta: {
     label: "Ouvrir un dossier",
@@ -242,7 +242,7 @@ export const serviceCreation: PageDoc = {
     },
     {
       label: "Le prix, sans astérisque",
-      href: "/#prix",
+      href: "/creation-site-web/#prix",
       note: "Le calcul complet sur douze mois et le comparatif de marché.",
     },
   ],
@@ -495,7 +495,7 @@ export const serviceMarketing: PageDoc = {
   factsTitle: "Le cadre",
   facts: [
     { k: "Objectif", v: "Un seul, mesurable" },
-    { k: "Honoraires", v: "Sur devis, périmètre écrit" },
+    { k: "Honoraires", v: "Devis gratuit sous 2 jours ouvrés" },
     { k: "Budget média", v: "Payé directement à la plateforme" },
     { k: "Durée minimale", v: "Annoncée dans le devis" },
     { k: "Commission sur le média", v: "Aucune" },
@@ -593,6 +593,11 @@ export const serviceMarketing: PageDoc = {
         "Vous devez pouvoir lire votre facture sans calculateur. Voici comment elle est construite.",
       blocks: [
         {
+          type: "p",
+          text:
+            "Nous ne publions pas de tarif marketing, parce qu’une mission commence toujours par un audit : le prix juste pour un commerce local qui veut remplir son agenda n’est pas celui d’une entreprise qui veut ouvrir un deuxième établissement. En revanche, le devis est écrit et tient en une page : l’objectif chiffré, le canal retenu, le nombre de jours de travail, le budget média que vous engagez directement et la durée de l’essai. Il est gratuit, envoyé sous deux jours ouvrés, et il indique aussi le seuil en dessous duquel nous refusons la mission.",
+        },
+        {
           type: "ul",
           items: [
             "Honoraires de gestion : un montant fixe, défini dans le devis, pour le travail décrit.",
@@ -610,7 +615,7 @@ export const serviceMarketing: PageDoc = {
       ],
     },
     {
-      id: "limites",
+      id: "ce-que-nous-ne-faisons-pas",
       num: "05",
       label: "Limites",
       title: "Ce que nous ne faisons pas",
@@ -744,40 +749,33 @@ export const workPage: PageDoc = {
         {
           type: "p",
           text:
-            "La refonte a remplacé cette page par un site statique pré-rendu, en trois langues, avec des pages de service, des pages légales complètes et un formulaire dont les états d’erreur sont réels. Le contenu de l’offre est resté identique ; c’est la manière de le dire et de le livrer qui a changé.",
+            "La refonte a remplacé cette page par un site statique pré-rendu, avec des pages de service, des pages légales complètes et un formulaire dont les états d’erreur sont réels. Le contenu de l’offre est resté identique ; c’est la manière de le dire et de le livrer qui a changé.",
         },
         {
           type: "metrics",
           items: [
             { value: "99", label: "Performance mobile", note: "Lighthouse 12, profil mobile par défaut" },
             { value: "100", label: "Accessibilité", note: "Lighthouse 12 / axe-core 4" },
-            { value: "0", label: "Violation WCAG 2.2 AA", note: "axe-core, 16 pages × 2 largeurs" },
-            { value: "2,1 s", label: "LCP mobile simulé", note: "Moto G Power, 4G, CPU ralenti ; pire page mesurée" },
+            { value: "0", label: "Violation WCAG 2.2 AA", note: "axe-core, chaque page publiée, à 390 px et 1440 px" },
+            { value: "0,8 s", label: "LCP mobile simulé", note: "Moto G Power, 4G, CPU ralenti ; pire page mesurée le 20 octobre 2026" },
           ],
         },
         {
           type: "ul",
           items: [
-            "Pages pré-rendues : le contenu et les métadonnées existent sans JavaScript, et l’hydratation attend le chargement complet plutôt que de retarder l’affichage.",
-            "Trois langues avec attributs lang et dir corrects, dont l’arabe en écriture de droite à gauche.",
+            "Quatorze pages pré-rendues : le contenu et les métadonnées existent sans JavaScript, et l’hydratation attend le chargement complet plutôt que de retarder l’affichage.",
+            "Une seule langue, tenue de bout en bout : la version française est la seule publiée, plutôt que trois approximatives.",
             "Formulaire en six questions, validation explicite, message d’échec honnête, solution de repli par email.",
             "Pages légales complètes, avec les informations que seul l’éditeur peut fournir signalées comme telles.",
             "Zéro requête tierce : polices auto-hébergées, aucune mesure d’audience, aucune image distante.",
           ],
         },
         {
-          type: "gallery",
-          layout: "single",
+          type: "ul",
           items: [
-            {
-              src: "/case-feekza.webp",
-              alt:
-                "Comparaison de la page d’accueil de feekza.com sur ordinateur et sur téléphone : le titre, la fiche offre à 195 € TTC par mois et le bouton d’ouverture de dossier.",
-              width: 1600,
-              height: 1000,
-              caption:
-                "La même page à 1440 px et à 390 px, capture du 20 octobre 2026. Les deux versions sont produites par la même feuille de style.",
-            },
+            "Le code source est public : github.com/Bouchaala-Montreuil/my-website. Vous pouvez lire chaque décision, y compris celles qui ont été annulées.",
+            "Aucune capture d’écran ici : une capture vieillit en silence, et celle de ce site montrait déjà une version qui n’existe plus. La page que vous lisez est la démonstration.",
+            "Les mesures ci-dessus se refont en trois minutes : Lighthouse et axe-core sont gratuits, et la méthode exacte est décrite juste en dessous.",
           ],
         },
       ],
@@ -815,6 +813,11 @@ export const workPage: PageDoc = {
       note:
         "Trois emplacements, prêts à recevoir des projets réels. Aucun ne sera rempli avec un exemple fictif.",
       blocks: [
+        {
+          type: "p",
+          text:
+            "Les trois premiers dossiers bénéficient du même prix et du même périmètre que les suivants. Ce qui change : vous acceptez que le projet soit documenté publiquement — le contexte, les décisions, la mesure avant et après — et nous fournissons ce dossier complet, sans le réécrire après coup.",
+        },
         {
           type: "steps",
           items: [
@@ -898,7 +901,7 @@ export const workPage: PageDoc = {
     {
       q: "Puis-je voir le code de ce site ?",
       a: [
-        "Oui. Le HTML, le CSS et les données structurées sont publics. Le dépôt de code peut être partagé sur demande, à des fins d’évaluation technique.",
+        "Oui. Le dépôt est public : github.com/Bouchaala-Montreuil/my-website. Le HTML, le CSS, les données structurées et l’historique des décisions s’y trouvent, y compris les modifications annulées.",
       ],
     },
     {
@@ -945,8 +948,8 @@ export const aboutPage: PageDoc = {
     "Feekza conçoit et maintient des sites pour des indépendants et des petites entreprises. Le studio est volontairement petit, le périmètre est écrit, et ce que nous ne savons pas faire est dit avant la signature.",
   factsTitle: "En bref",
   facts: [
-    { k: "Ce que nous faisons", v: "Sites, référencement, acquisition" },
-    { k: "Langues", v: "Français, anglais, arabe" },
+    { k: "Ce que nous faisons", v: "Des sites web ; le reste à la demande" },
+    { k: "Langues", v: "Sites en français, anglais ou arabe" },
     { k: "Prix", v: "Affiché, pas de devis surprise" },
     { k: "Réponse", v: "Sous un jour ouvré" },
     { k: "Engagement", v: "6 mois, puis 1 mois de préavis" },
@@ -962,7 +965,7 @@ export const aboutPage: PageDoc = {
       num: "01",
       label: "Pratique",
       title: "Ce que nous faisons, et pour qui",
-      note: "Trois services, un même standard de livraison.",
+      note: "Un métier principal, deux compléments qui ne s’imposent à personne.",
       blocks: [
         {
           type: "p",
@@ -1201,11 +1204,11 @@ export const homeWork: HomeWork = {
   },
   title: "Ce site, mesuré et documenté",
   body:
-    "Lighthouse mobile : 99 en performance, 100 en accessibilité, 100 en bonnes pratiques, 100 en SEO. Zéro violation axe-core sur seize pages. Les conditions de mesure sont publiées, pas seulement les scores.",
+    "Lighthouse mobile : 99 en performance, 100 en accessibilité, 100 en bonnes pratiques, 100 en SEO. Zéro violation axe-core sur chaque page publiée. Les conditions de mesure sont publiées, pas seulement les scores.",
   metrics: [
     { value: "99", label: "Performance mobile" },
     { value: "0", label: "Violation WCAG 2.2 AA" },
-    { value: "2,1 s", label: "LCP mobile simulé" },
+    { value: "0,8 s", label: "LCP mobile simulé" },
   ],
   cta: { label: "Voir l’étude de cas", href: "/realisations/" },
 };

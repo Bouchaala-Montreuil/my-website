@@ -267,7 +267,8 @@ export interface LegalPage {
   description: string;
   updated: string;
   tocLabel: string;
-  notice: { title: string; body: string };
+  /** Optional: a legal page with nothing to warn about shows no banner. */
+  notice?: { title: string; body: string };
   sections: { id: string; heading: string; blocks: LegalBlock[] }[];
   backHome: string;
   otherPagesTitle: string;
@@ -290,6 +291,10 @@ export type PageBlock =
   | { type: "note"; text: string }
   | { type: "quote"; text: string; source: string }
   | { type: "links"; items: { label: string; href: string; note?: string }[] }
+  /** Publisher identity, filled from src/legal-identity.ts. Renders nothing
+   *  while the fields are null: a page waiting for a real address, not a
+   *  template with placeholders. */
+  | { type: "identity"; title?: string }
   | {
       type: "gallery";
       layout?: "pair" | "single";
