@@ -7,6 +7,7 @@ import { ArrowRight, Check } from "./Icons";
 import { Split } from "./Split";
 import { DitherImage } from "./DitherImage";
 import { Amount } from "./Amount";
+import { LEGAL_IDENTITY } from "@/legal-identity";
 
 function Blocks({ blocks }: { blocks: PageBlock[] }) {
   return (
@@ -96,6 +97,30 @@ function Blocks({ blocks }: { blocks: PageBlock[] }) {
                 </figure>
               ))}
             </div>
+          );
+        }
+        if (block.type === "identity") {
+          const rows: { k: string; v: string }[] = [
+            ["nom du responsable", "Responsable de la publication"],
+            ["raison sociale", "Raison sociale"],
+            ["adresse", "Adresse"],
+            ["téléphone", "Téléphone"],
+            ["email de contact RGPD", "Email"],
+          ]
+            .map(([key, label]) => ({ k: label, v: LEGAL_IDENTITY[key] ?? "" }))
+            .filter((row) => row.v);
+          if (!rows.length) return null;
+          return (
+            <ul className="doc-list" key={index}>
+              {rows.map((row) => (
+                <li key={row.k}>
+                  <Check size={14} />
+                  <span>
+                    <strong>{row.k} :</strong> {row.v}
+                  </span>
+                </li>
+              ))}
+            </ul>
           );
         }
         if (block.type === "links") {

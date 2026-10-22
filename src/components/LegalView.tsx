@@ -2,50 +2,45 @@ import type { Content, LegalBlock, LegalPage } from "@/content/types";
 import { Header } from "./Header";
 import { Footer } from "./Footer";
 import { CONTACT_EMAIL } from "@/config";
+import { LEGAL_IDENTITY } from "@/legal-identity";
 import { Split } from "./Split";
 
-/** Renders a string where {{token}} marks a field only the publisher can supply. */
-function WithPlaceholders({ text }: { text: string }) {
-  const parts = text.split(/(\{\{[^}]+\}\})/g).filter(Boolean);
-  return (
-    <>
-      {parts.map((part, index) => {
-        const match = part.match(/^\{\{([^}]+)\}\}$/);
-        if (match) {
-          return (
-            <span className="todo" key={`${part}-${index}`}>
-              {match[1]}
-            </span>
-          );
-        }
-        return <span key={index}>{part}</span>;
-      })}
-    </>
-  );
+/**
+ * Fills {{token}} from the publisher's identity file.
+ * Returns null when a value is still unpublished: the caller then drops the
+ * whole line, so the page never shows a placeholder to a visitor.
+ */
+function fill(text: string): string | null {
+  let missing = false;
+  const out = text.replace(/\{\{([^}]+)\}\}/g, (_match, token: string) => {
+    const value = LEGAL_IDENTITY[token.trim()];
+    if (!value) {
+      missing = true;
+      return "";
+    }
+    return value;
+  });
+  return missing ? null : out;
 }
 
 function Block({ block }: { block: LegalBlock }) {
   if (block.type === "p") {
-    return (
-      <p>
-        <WithPlaceholders text={block.text} />
-      </p>
-    );
+    const text = fill(block.text);
+    return text ? <p>{text}</p> : null;
   }
   if (block.type === "h3") return <h3>{block.text}</h3>;
   if (block.type === "note") {
-    return (
-      <p style={{ fontSize: ".8125rem", color: "var(--muted)" }}>
-        <WithPlaceholders text={block.text} />
-      </p>
-    );
+    const text = fill(block.text);
+    return text ? <p style={{ fontSize: ".8125rem", color: "var(--muted)" }}>{text}</p> : null;
   }
+  const items = block.items
+    .map((item) => fill(item))
+    .filter((item): item is string => Boolean(item));
+  if (items.length === 0) return null;
   return (
     <ul>
-      {block.items.map((item) => (
-        <li key={item}>
-          <WithPlaceholders text={item} />
-        </li>
+      {items.map((item) => (
+        <li key={item}>{item}</li>
       ))}
     </ul>
   );
@@ -73,11 +68,6 @@ export function LegalView({
             </p>
             <Split as="h1" className="legal__title" text={page.title} mode="load" step={12} />
             <p className="legal__meta">Dernière mise à jour : {page.updated}</p>
-          </div>
-
-          <div className="legal__notice" role="note">
-            <strong>{page.notice.title}</strong>
-            {page.notice.body}
           </div>
 
           <div className="legal__layout">

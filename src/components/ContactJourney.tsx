@@ -3,6 +3,7 @@ import type { Content, FormService, Locale } from "@/content/types";
 import { CONTACT_EMAIL, FORMSPREE_ENDPOINT } from "@/config";
 import { JOURNEY, type JourneyServiceId } from "@/content/journey";
 import { ArrowRight, MailIcon } from "./Icons";
+import { captureFirstTouch, readFirstTouch } from "@/lib/attribution";
 
 /**
  * THE FEEKZA BRIEF
@@ -201,6 +202,12 @@ export function ContactJourney({
   useEffect(() => {
     const now = new Date();
     setDocRef(`FZ-${pad(now.getDate())}${pad(now.getMonth() + 1)}${String(now.getFullYear()).slice(2)}`);
+  }, []);
+
+  /* The record is normally written on the first page of the visit (App);
+     this call covers a journey mounted before that effect has run. */
+  useEffect(() => {
+    captureFirstTouch();
   }, []);
 
   const prompt = answers.service ? j.steps.project[answers.service] : null;
@@ -451,6 +458,7 @@ export function ContactJourney({
           phone: answers.phone,
           consent: true,
           consentAt: new Date().toISOString(),
+          source: readFirstTouch(),
           message,
           company_url: honeypotRef.current?.value ?? "",
         }),
@@ -989,7 +997,7 @@ export function ContactJourney({
           </div>
 
           <div className="br-hp" aria-hidden="true">
-            <label htmlFor={`${uid}-company-url`}>Company URL</label>
+            <label htmlFor={`${uid}-company-url`}>Ne pas remplir ce champ</label>
             <input ref={honeypotRef} id={`${uid}-company-url`} name="company_url" tabIndex={-1} autoComplete="off" />
           </div>
 

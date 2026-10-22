@@ -1,6 +1,7 @@
 import type { Content, Locale } from "@/content/types";
 import { homePath } from "@/content";
 import { CONTACT_EMAIL } from "@/config";
+import { LEGAL_IDENTITY } from "@/legal-identity";
 import { MailIcon } from "./Icons";
 
 export function Footer({
@@ -63,6 +64,13 @@ export function Footer({
                   <MailIcon size={14} /> {CONTACT_EMAIL}
                 </a>
               </li>
+              {LEGAL_IDENTITY["téléphone"] && (
+                <li>
+                  <a href={`tel:${(LEGAL_IDENTITY["téléphone"] as string).replace(/[^+\d]/g, "")}`}>
+                    {LEGAL_IDENTITY["téléphone"]}
+                  </a>
+                </li>
+              )}
               <li>
                 <a href={hrefFor("#dossier")}>{c.footer.briefLink}</a>
               </li>

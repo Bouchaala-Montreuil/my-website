@@ -6,27 +6,8 @@
     <meta name="theme-color" content="#f2f2f2" />
     <script>
       document.documentElement.classList.add("js");
-      // the brand loader is a first-visit ritual: one per session, skipped for
-      // anyone who asks for reduced motion
-      try {
-        if (!sessionStorage.getItem("feekza:loader")) {
-          document.documentElement.classList.add("loader");
-          sessionStorage.setItem("feekza:loader", "1");
-          var mark = document.createElement("link");
-          mark.rel = "preload";
-          mark.as = "image";
-          mark.type = "image/webp";
-          mark.href = "/brand/feekza-f.webp";
-          document.head.appendChild(mark);
-          // CSS takes the loader away on its own; this only releases the
-          // scroll lock if the bundle never gets there.
-          window.setTimeout(function () {
-            document.documentElement.classList.remove("loader");
-          }, 5000);
-        }
-      } catch (error) {
-        /* storage blocked: no loader */
-      }
+      // The full-screen brand loader was removed: on paid traffic it delayed
+      // the only sentence that matters by more than a second.
       window.setTimeout(function () {
         if (!document.documentElement.classList.contains("motion-on")) {
           document.documentElement.classList.add("no-motion");
